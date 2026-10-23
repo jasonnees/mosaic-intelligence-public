@@ -47,14 +47,17 @@ def simulate(data, weights, start, end, balance=100_000, real=False):
     wealth = pd.concat([pd.Series({start - 1: float(balance)}), balance * (1 + returns).cumprod()])
     scope = wealth.loc[:end]
     drawdown = scope / scope.cummax() - 1
-    trough = int(drawdown.idxmin())
-    peak = int(scope.loc[:trough].idxmax())
-    recovery = None
+    peak = trough = recovery = None
     if drawdown.min() < -1e-12:
+        trough = int(drawdown.idxmin())
+        peak = int(scope.loc[:trough].idxmax())
         recovered = wealth.loc[trough + 1:]
         recovered = recovered[recovered >= wealth.loc[peak] - 1e-8]
         recovery = int(recovered.index[0]) if len(recovered) else None
     return {'wealth': wealth, 'returns': returns, 'contributions': contributions,
             'period_return': scope.iloc[-1] / balance - 1, 'drawdown': float(drawdown.min()),
             'peak': peak, 'trough': trough, 'recovery': recovery,
-            'worst_year': float(returns.loc[start:end].min())}
+            'worst_year': float(returns.loc[start:end].min()),
+            'worst_year_date': int(returns.loc[start:end].idxmin()),
+            'ending_year': end, 'ending_value': float(scope.loc[end]),
+            'year_end_drawdown': drawdown}

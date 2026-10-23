@@ -57,14 +57,18 @@ def render_portfolio():
     cols[0].metric('Return over stress years', f'{result["period_return"]:+.1%}', help=f'January {start} through December {end}.')
     cols[1].metric('Worst year-end drawdown', f'{result["drawdown"]:.1%}', help='Decline from a prior year-end high, including the starting balance. Intra-year losses are not measured.')
     if result['drawdown'] >= -1e-12:
-        recovery_text = 'No year-end loss'
+        recovery_text = 'Not applicable'
     elif result['recovery'] is None:
         recovery_text = f'Not by {data.index.max()}'
     else:
         recovery_text = f'{result["recovery"]} ({result["recovery"] - result["peak"]} years)'
     cols[2].metric('Recovery to prior year-end high', recovery_text,
-                   help=f'Measured from the {result["peak"]} high before the worst stress-period year-end drawdown. Recovery may be after the stress years.')
-    st.write(rf'Ending value: **\${balance * (1 + result["period_return"]):,.0f}** from \${balance:,.0f}. Worst calendar-year return during this stress: **{result["worst_year"]:+.1%}**.')
+                   help='First later year end that regains the high preceding the worst year-end drawdown. Not applicable when there is no year-end decline.')
+    if result['trough'] is None:
+        st.caption(f'Drawdown date: not applicable · No decline at the sampled year ends in {start}–{end}. Recovery is not applicable. Losses within a year are not captured.')
+    else:
+        st.caption(f'Worst drawdown at December 31, {result["trough"]}, measured from the December 31, {result["peak"]} high.')
+    st.write(rf'Value at December 31, **{end}**: **\${result["ending_value"]:,.0f}** from \${balance:,.0f}. Worst calendar-year return: **{result["worst_year"]:+.1%} in {result["worst_year_date"]}**.')
     display_end = max(end, result['recovery'] or end)
     path = result['wealth'].loc[:display_end]
     fig = go.Figure(go.Scatter(x=[f'{y}-12-31' for y in path.index], y=path.values, mode='lines+markers', name='Your allocation', line={'color': '#48dff5', 'width': 3}))
@@ -78,6 +82,14 @@ def render_portfolio():
     st.plotly_chart(style(fig, 350), use_container_width=True)
     if result['recovery'] is None and result['drawdown'] < -1e-12:
         st.caption(f'No recovery through {data.index.max()}; chart shows the selected stress years. Full follow-up is included in the download.')
+    st.markdown('#### Results at each year end')
+    annual = pd.DataFrame({
+        'Year end': list(range(start, end + 1)),
+        'Portfolio return (%)': 100 * result['returns'].loc[start:end].values,
+        'Year-end value ($)': result['wealth'].loc[start:end].values,
+        'Drawdown from prior year-end high (%)': 100 * result['year_end_drawdown'].loc[start:end].values,
+    })
+    st.dataframe(annual.round(2), hide_index=True, use_container_width=True)
     st.markdown('#### What drove each year’s return?')
     st.caption('Contributions are percentage points of nominal annual portfolio return. Inflation is applied to the combined portfolio separately.')
     contributions = result['contributions'].loc[start:end]
@@ -91,11 +103,12 @@ def render_portfolio():
     rows = []
     for name, (first, last, _) in SCENARIOS.items():
         trial = simulate(data, weights, first, last, balance, real)
-        rows.append({'Stress': name, 'Period return (%)': 100 * trial['period_return'], 'Worst year-end drawdown (%)': 100 * trial['drawdown'], 'Ending value ($)': balance * (1 + trial['period_return'])})
+        rows.append({'Stress': name, 'Period return (%)': 100 * trial['period_return'], 'Worst year-end drawdown (%)': 100 * trial['drawdown'], 'Drawdown year': str(trial['trough']) if trial['trough'] is not None else 'Not applicable', 'Ending year': last, 'Ending value ($)': trial['ending_value']})
     st.dataframe(pd.DataFrame(rows).round(2), hide_index=True, use_container_width=True)
     export = result['contributions'].rename(columns={a: a + '_contribution_decimal' for a in ASSETS}).copy()
     export['portfolio_return_decimal'] = result['returns']
     export['year_end_value'] = result['wealth']
+    export['year_end_drawdown_decimal'] = result['wealth'] / result['wealth'].cummax() - 1
     export['basis'] = basis
     export['stress_start'] = start
     export['stress_end'] = end
