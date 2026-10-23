@@ -92,3 +92,30 @@ def test_filtered_row_positions_and_history_changes():
         assert any('No indicators match' in info.value for info in app.info)
         assert not app.get('plotly_chart')
     st.cache_data.clear()
+
+
+def test_all_indicators_render_populated_charts_with_specific_guidance():
+    import streamlit as st
+    from risk_catalog import INDICATORS
+    from indicator_guidance import GUIDES
+    st.cache_data.clear()
+    original_dataframe = st.dataframe
+    position = []
+    def select_row(*args, **kwargs):
+        original_dataframe(*args, **kwargs)
+        return {'selection': {'rows': position.copy()}}
+    def fixture_fetch(self, indicator, *args, **kwargs):
+        dates = pd.date_range(end=pd.Timestamp.now(tz='UTC').tz_localize(None).normalize(), periods=1100)
+        values = [100 + n / 20 for n in range(len(dates))]
+        return FetchResult(pd.DataFrame({'date': dates, indicator.series_id: values}),
+                           f'{indicator.source.upper()} API', 'fixture')
+    with patch('risk_data.RiskDataService.fetch', fixture_fetch), patch('streamlit.dataframe', side_effect=select_row):
+        app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py'),default_timeout=30).run()
+        app.sidebar.radio[0].set_value('Data catalog').run()
+        for index, indicator in enumerate(INDICATORS):
+            position[:] = [index]
+            app.run()
+            assert not app.exception, indicator.series_id
+            assert len(app.get('plotly_chart')) == 1, indicator.series_id
+            assert any(GUIDES[indicator.series_id].caution in item.value for item in app.markdown), indicator.series_id
+    st.cache_data.clear()
