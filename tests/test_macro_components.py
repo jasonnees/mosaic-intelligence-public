@@ -128,11 +128,12 @@ def test_cpi_sidebar_controls_chart_table_and_full_history():
     path = str(Path(__file__).resolve().parents[1]/'app.py')
     with patch('risk_data.RiskDataService.fetch',empty_fetch),patch('macro_pages.load_cpi',return_value=MacroData(frame)),patch('streamlit.download_button',wraps=st.download_button) as downloads:
         app = AppTest.from_file(path,default_timeout=30).run()
-        # Other pages retain their default; CPI adds All available to this same control.
+        # One persistent sidebar setting controls every live-data section.
         assert app.sidebar.selectbox[0].value == 730
         app.sidebar.radio[0].set_value('CPI & components').run()
         assert not app.exception
-        assert app.sidebar.selectbox[0].value == 0
+        assert app.sidebar.selectbox[0].value == 730
+        app.sidebar.selectbox[0].set_value(0).run()
         assert not [s for s in app.selectbox if s.label == 'Component history range']
         spec = json.loads(app.get('plotly_chart')[-1].proto.spec)
         headline = next(t for t in spec['data'] if t['name']=='Headline CPI')
@@ -158,7 +159,8 @@ def test_cpi_sidebar_controls_chart_table_and_full_history():
             spec = json.loads(app.get('plotly_chart')[-1].proto.spec)
             headline = next(t for t in spec['data'] if t['name']=='Headline CPI')
             earliest = pd.Timestamp(headline['x'][0])
-            cutoff = pd.Timestamp.now().normalize()-pd.Timedelta(days=days)
+            from history_window import history_start
+            cutoff = history_start(days)
             assert cutoff <= earliest < cutoff+pd.Timedelta(days=32)
             table = next(d.value for d in app.dataframe if 'Headline CPI' in d.value.columns)
             table_start = pd.to_datetime(table.index[-1],format='%b %Y')

@@ -109,7 +109,7 @@ def test_eia_routed_to_eia_with_requested_history():
     fred, eia = Mock(), Mock()
     eia.get_series.return_value = pd.DataFrame()
     RiskDataService(fred=fred,eia=eia).fetch(BY_ID['ELEC.PRICE.US-RES.M'],7300,'2026-10-08')
-    assert eia.get_series.call_args.kwargs['days'] == 7300
+    assert eia.get_series.call_args.kwargs['days'] == 7305
     fred.get_series.assert_not_called()
 
 

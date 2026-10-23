@@ -1,21 +1,32 @@
 """Dedicated CPI/GDP pages with terminal charts and inspectable source tables."""
 import pandas as pd
 import streamlit as st
+from history_window import clip_history
 from macro_components import (fetch_cpi,fetch_gdp,calendar_change,cpi_effects,contribution_chart,
                               CPI_GROUPS,CPI_DETAIL,CPI_WEIGHTS,GDP_ROWS,GDP_STACK)
 
+def macro_payload(data):
+    return dict(frame=data.frame, errors=list(data.errors), retrieved=data.retrieved, source=data.source)
+
 @st.cache_data(ttl=3600,show_spinner=False)
+def cpi_payload():
+    return macro_payload(fetch_cpi())
+
+@st.cache_data(ttl=3600,show_spinner=False)
+def gdp_payload():
+    return macro_payload(fetch_gdp())
+
 def load_cpi():
-    return fetch_cpi()
+    from macro_components import MacroData
+    return MacroData(**cpi_payload())
 
-@st.cache_data(ttl=3600,show_spinner=False)
 def load_gdp():
-    return fetch_gdp()
-
+    from macro_components import MacroData
+    return MacroData(**gdp_payload())
 
 def refresh():
-    load_cpi.clear()
-    load_gdp.clear()
+    cpi_payload.clear()
+    gdp_payload.clear()
 
 
 def heatmap(frame, label, quarterly=False, percent=False, periods=12, transpose=True):
@@ -30,8 +41,8 @@ def heatmap(frame, label, quarterly=False, percent=False, periods=12, transpose=
         index_label = 'Component'
     else:
         table = selected_frame.sort_index(ascending=False).copy()
-        table.index = table.index.strftime('%b %Y')
-        index_label = 'Month'
+        table.index = [f'{d.year} Q{d.quarter}' for d in table.index] if quarterly else table.index.strftime('%b %Y')
+        index_label = 'Quarter' if quarterly else 'Month'
     table.index.name = index_label
     def cell(value):
         if pd.isna(value):
@@ -71,9 +82,7 @@ def source_status(data,frame,budget):
 
 
 def window(frame, days, all_history):
-    if all_history or frame.empty:
-        return frame
-    return frame.loc[frame.index >= pd.Timestamp.now().normalize()-pd.Timedelta(days=days)]
+    return clip_history(frame, 0 if all_history else days)
 
 
 def render_cpi(days):
@@ -108,7 +117,7 @@ def render_cpi(days):
         if effects.index[-1] < data.frame.dropna(how='all').index.max():
             st.warning(f'Latest complete effect estimate is {effects.index[-1]:%B %Y}; a comparison endpoint or dated basket is missing for newer periods.')
         st.plotly_chart(contribution_chart(effects,[*CPI_GROUPS.values(),'Unallocated difference'],'Headline CPI',
-            f'US CPI · {period} estimated component effects','Percent / percentage points'),use_container_width=True)
+            f'US CPI · {period} estimated component effects','Percent / percentage points'),use_container_width=True,key=f'cpi_effects:{days}:{months}')
         heatmap(effects,'Component effects · percentage points')
         last = effects.iloc[-1]
         ranked = last[list(CPI_GROUPS.values())].sort_values()
@@ -168,7 +177,7 @@ def render_cpi(days):
 def render_gdp(days):
     st.subheader('GDP & components')
     st.write('Separate underlying domestic demand from inventory swings, trade and government spending.')
-    all_history = st.checkbox('Show all available GDP history')
+    all_history = days == 0
     with st.spinner('Loading official GDP contributions…'):
         data = load_gdp()
     if not source_status(data,data.frame,210):
@@ -190,17 +199,19 @@ def render_gdp(days):
         cols[2].metric('Inventories + trade',f'{last[14]+last[15]:+.2f} pp')
         st.caption(f'Common reference quarter {complete.index[-1].year} Q{complete.index[-1].quarter} · Seasonally adjusted annual rates')
         chart = visible.rename(columns={**GDP_STACK,1:'Real GDP'})
-        st.plotly_chart(contribution_chart(chart,list(GDP_STACK.values()),'Real GDP','Contributions to US real GDP · QoQ annualized','Percent / percentage points'),use_container_width=True)
+        st.plotly_chart(contribution_chart(chart,list(GDP_STACK.values()),'Real GDP','Contributions to US real GDP · QoQ annualized','Percent / percentage points'),use_container_width=True,key=f'gdp_contributions:{days}')
         residual = last[1]-last[list(GDP_STACK)].sum(min_count=5)
         if abs(residual) > .15:
             st.warning(f'Component sum differs from headline growth by {residual:+.2f} pp, beyond the rounding allowance. Verify the source before interpreting.')
         if last[1] < 0:
             st.warning('Real GDP contracted this quarter. One negative quarter does not establish an NBER recession.')
-    heatmap(visible.rename(columns=GDP_ROWS),'GDP contribution table · pp; Real GDP row is % annualized',quarterly=True)
+    table_history = st.radio('GDP table history', ['Full selected history', 'Latest 12 periods'], horizontal=True)
+    table_periods = None if table_history == 'Full selected history' else 12
+    heatmap(visible.rename(columns=GDP_ROWS),'GDP contribution table · pp; Real GDP row is % annualized',quarterly=True, periods=table_periods, transpose=table_periods is not None)
     st.subheader('The cyclical parts of GDP')
     st.write('Durable consumer goods, residential investment and business equipment can move sharply with the cycle. Compare their contributions alongside the broader economy.')
     cyclical = visible.reindex(columns=[4,13,11]).rename(columns={4:'Durable consumer goods',13:'Residential investment',11:'Business equipment'})
-    heatmap(cyclical,'Selected cyclical contributions · percentage points',quarterly=True)
+    heatmap(cyclical,'Selected cyclical contributions · percentage points',quarterly=True, periods=table_periods, transpose=table_periods is not None)
     st.caption('These are contributions to real GDP growth, not sector growth rates or GDP shares. This selection does not reproduce an EPB proprietary index or predict recession.')
     st.markdown('[Framework reference: Eric Basmajian, EPB Research — The 20% of the Economy That Drives 100% of Recessions](https://blog.epbresearch.com/p/the-20-of-the-economy-that-drives)')
     st.download_button('Download GDP contributions',visible.rename(columns=GDP_ROWS).to_csv(index_label='Quarter start'),'gdp-contributions.csv','text/csv')

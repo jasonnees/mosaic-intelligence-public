@@ -6,29 +6,14 @@ import config
 from risk_catalog import INDICATORS, BY_ID, DOMAINS, WATCH_RULES, RULE_SOURCES
 from indicator_guidance import GUIDES, direction, data_warning
 from brand import masthead, style_chart
-from risk_data import RiskDataService, assess, transform_frame
+from risk_data import assess, transform_frame
 from macro_pages import render_cpi, render_gdp, refresh as refresh_macro
 from market_history_page import render_market_history
 from portfolio_page import render_portfolio
+from app_cache import service, fetch
+from history_window import HISTORY_OPTIONS, HISTORY_LABELS, clip_history
 
 st.set_page_config(page_title='Market Risk Explorer', page_icon='◉', layout='wide')
-
-@st.cache_resource
-def service():
-    archive = None
-    if config.DATA_SOURCE_MODE == 's3':
-        try:
-            from s3_reader import S3DataReader
-            candidate = S3DataReader()
-            if candidate.available:
-                archive = candidate
-        except Exception:
-            pass
-    return RiskDataService(archive=archive)
-
-@st.cache_data(ttl=3600, show_spinner=False)
-def fetch(series_id, days):
-    return service().fetch(BY_ID[series_id], days)
 
 
 def table_row(indicator, result):
@@ -107,16 +92,20 @@ def render_indicator_chart(indicator, result, days):
         st.write(indicator.note)
     frame = transform_frame(result.frame, indicator)
     if not frame.empty:
-        cutoff = pd.Timestamp.now(tz='UTC').tz_localize(None) - pd.Timedelta(days=days)
-        frame = frame[frame['date'] >= cutoff]
+        frame = clip_history(frame, days, date_column='date')
         if frame[indicator.series_id].notna().any():
+            usable = frame.loc[frame[indicator.series_id].notna()].index
+            frame = frame.loc[usable[0]:usable[-1]]
             fig = px.line(frame, x='date', y=indicator.series_id, labels={indicator.series_id: indicator.unit, 'date': 'Observation period'})
             fig = style_chart(fig, indicator.domain)
             rule = WATCH_RULES.get(indicator.series_id)
             if rule:
                 fig.add_hline(y=rule[1], line_dash='dot', line_color='#ffbd69',
                               annotation_text=f'Watch reference: {rule[1]} {indicator.unit}', annotation_position='top left')
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, key=f'indicator_chart:{indicator.series_id}:{days}')
+            st.caption(f'Displayed history: {frame.date.min():%d %b %Y} → {frame.date.max():%d %b %Y}. Source coverage may be shorter than the selected window.')
+            st.download_button('Download selected indicator history', frame.to_csv(index=False),
+                               f'{indicator.series_id}-history.csv', 'text/csv')
         else:
             st.info('No usable transformed values in this chart window. A valid prior-year base is required.')
     else:
@@ -137,6 +126,9 @@ def render_indicator_chart(indicator, result, days):
         st.markdown(f'[Series definition and methodology]({indicator.source_url})')
 
 
+def remember_history():
+    st.session_state.history_days = st.session_state.history_selector
+
 def main():
     masthead()
     st.title('Market Risk Explorer')
@@ -151,11 +143,13 @@ def main():
         if requested == 'Portfolio implications':
             requested = 'Portfolio Stress Lab'
         view = st.radio('View', views, index=views.index(requested) if requested in views else 0)
-        days = 730
-        if view != 'Portfolio Stress Lab':
-            history_options = [0, 365, 730, 1825, 3650, 7300] if view == 'CPI & components' else [365, 730, 1825, 3650, 7300]
-            days = st.selectbox('History', history_options, index=0 if view == 'CPI & components' else 1,
-                                format_func=lambda n: {0:'All available', 365:'1 year', 730:'2 years', 1825:'5 years', 3650:'10 years', 7300:'20 years'}[n])
+        st.session_state.history_days = st.session_state.get('history_days', 730)
+        days = st.session_state.history_days
+        if view not in {'Market history', 'Portfolio Stress Lab'}:
+            days = st.selectbox('History', HISTORY_OPTIONS, index=HISTORY_OPTIONS.index(days), key='history_selector',
+                                format_func=HISTORY_LABELS.get, on_change=remember_history)
+        elif view == 'Market history':
+            st.caption('History window: choose a historical case on the page.')
         if view == 'Portfolio Stress Lab':
             st.caption('Bundled historical returns; no API key required. Choose stress years on the page.')
         if st.button('Refresh data'):
