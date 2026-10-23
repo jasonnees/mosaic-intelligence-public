@@ -170,3 +170,33 @@ table defaults to the complete selected history, with an optional latest-12-peri
 view. The coverage expander reports each component's first and latest usable
 inflation observation, and CSV exports use the selected history range. Historical
 basket-weight limits apply only to contribution estimates, not these rate charts.
+
+### Portfolio Stress Lab
+
+**Portfolio Stress Lab** replaces Portfolio implications (old query links still work).
+Set stock, 10-year Treasury and Treasury bill weights totaling 100%, choose a
+starting balance, and compare seven calendar-year stress windows. The inflation
+switch changes wealth, returns, drawdowns and the comparison table together;
+asset contribution bars remain explicitly nominal percentage points.
+
+Bundled annual observations cover 1928–2025, from Aswath Damodaran's NYU Stern
+January 2026 workbook. Stocks include dividends and predecessor indexes before
+1957. Treasury returns use the source's constant-maturity repricing model, not a
+fund or yield change; cash uses the average annual three-month bill rate.
+Inflation uses the workbook's December-over-December CPI series.
+
+The hypothetical portfolio rebalances annually, reinvests income, and excludes
+withdrawals, taxes and fees. Drawdown includes the starting balance and only
+observes year ends within the stress window. Recovery follows the same allocation
+after that window through the snapshot's final year and reports the first year
+end that regains the high preceding the worst stress-period drawdown. Annual
+results can conceal intra-year crashes, especially 2020. No forecast or suitable
+allocation is inferred. No API keys are required for this page.
+
+Source returns, assumptions, results and provenance are downloadable. The scenario
+CSV includes all annual follow-up through 2025 and marks the selected stress years.
+`data/portfolio_history/manifest.json` records source URLs, dates, units and SHA-256
+checksums. Rebuild from the downloaded workbook with
+`python scripts/build_portfolio_history.py /path/to/histretSP.xls` (build-time pandas
+and xlrd); runtime only needs the bundled CSV. The loader rejects corrupt snapshots
+and calculations reject incomplete active-asset history rather than filling gaps.

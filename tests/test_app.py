@@ -14,7 +14,7 @@ def test_navigation_missing_data_filters_and_catalog():
         app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py'),default_timeout=30).run()
         assert not app.exception
         assert app.title[0].value == 'Market Risk Explorer'
-        for view in ['Equity risk','Recession & growth risk','Inflation risk','Interest-rate risk','Credit stress','Housing conditions','Portfolio implications','Data catalog','Overview']:
+        for view in ['Equity risk','Recession & growth risk','Inflation risk','Interest-rate risk','Credit stress','Housing conditions','Portfolio Stress Lab','Data catalog','Overview']:
             app.sidebar.radio[0].set_value(view).run()
             assert not app.exception, view
         next(r for r in app.radio if r.label == 'Filter observations').set_value('Needs attention').run()

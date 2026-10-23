@@ -1,0 +1,20 @@
+{
+  "source_url": "https://www.stern.nyu.edu/~adamodar/pc/datasets/histretSP.xls",
+  "source_notes": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/histretSP.html",
+  "source_updated": "2026-01-01",
+  "retrieved_utc": "2026-10-23T05:00:57.274271+00:00",
+  "workbook_sha256": "28b8110916a15a4dcc11c87c6422510704608ddedcdfa67a1298abdc22e49c69",
+  "csv_sha256": "bedea4708a1bfdd48158ec1efe29ab17fceb89a747cecef41e672375b38ac488",
+  "first_year": 1928,
+  "last_year": 2025,
+  "frequency": "calendar year",
+  "units": "decimal annual return; inflation is December-over-December CPI change",
+  "sheets": [
+    "Returns by year",
+    "Nominal vs Real Data"
+  ],
+  "stocks": "S&P 500 including dividends; backfilled large-cap indexes before 1957.",
+  "treasuries": "Damodaran modeled constant-maturity 10-year Treasury return: coupon and repricing; not a fund return.",
+  "cash": "Average 3-month Treasury bill rate during each year; an approximation of cash earnings.",
+  "inflation": "CPI-U not seasonally adjusted; workbook annual inflation series."
+}
