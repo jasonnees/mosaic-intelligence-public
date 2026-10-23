@@ -82,3 +82,39 @@ def test_lab_controls_scenarios_and_invalid_allocation():
     app.number_input(key='portfolio:cash').set_value(10.).run()
     assert not app.exception and not app.metric
     assert any('exactly 100%' in w.value for w in app.warning)
+
+
+@pytest.mark.parametrize('start,end', [(1980, 1982), (2020, 2020)])
+def test_positive_year_ends_have_explicit_end_and_no_fabricated_drawdown_date(start, end):
+    data, _ = load_history()
+    result = simulate(data, dict(stocks=60, treasuries=30, cash=10), start, end)
+    assert result['drawdown'] == 0
+    assert result['peak'] is None and result['trough'] is None and result['recovery'] is None
+    assert result['ending_year'] == end
+    assert result['ending_value'] == result['wealth'].loc[end]
+    assert result['worst_year_date'] in range(start, end + 1)
+    assert result['year_end_drawdown'].eq(0).all()
+    # Different allocations/bases must still produce actual loss dates when present.
+    changed = simulate(data, dict(stocks=100, treasuries=0, cash=0), start, end, real=True)
+    if start == 1980:
+        assert changed['drawdown'] < 0
+        assert changed['trough'] == 1981
+
+
+@pytest.mark.parametrize('label,end', [('Volcker tightening · 1980–1982', 1982), ('Pandemic · 2020', 2020)])
+def test_lab_displays_no_decline_status_and_dated_annual_results(label, end):
+    app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py'), default_timeout=30)
+    app.query_params['view'] = 'Portfolio Stress Lab'
+    app.run()
+    next(b for b in app.button if b.label == label).click().run()
+    assert not app.exception
+    assert app.metric[1].value == '0.0%'
+    assert app.metric[2].value == 'Not applicable'
+    assert any('Drawdown date: not applicable' in c.value for c in app.caption)
+    assert any(f'Value at December 31, **{end}**:' in m.value for m in app.markdown)
+    annual = app.dataframe[0].value
+    assert annual['Year end'].iloc[-1] == end
+    assert annual['Drawdown from prior year-end high (%)'].eq(0).all()
+    comparison = app.dataframe[1].value.set_index('Stress')
+    assert comparison.loc[label, 'Ending year'] == end
+    assert comparison.loc[label, 'Drawdown year'] == 'Not applicable'
