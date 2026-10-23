@@ -14,13 +14,13 @@
 
    Top-level Streamlit secrets are exposed as environment variables, which the existing app reads. Obtain keys from https://fred.stlouisfed.org/docs/api/api_key.html and https://www.eia.gov/opendata/register.php. Do not commit keys or paste them in chat.
 4. Click **Deploy**. Copy the resulting `https://…streamlit.app` URL. Open the app and check the overview, domain navigation and populated charts.
-5. Edit the repository's `monitoring.json`: set `deployment_status` to `deployed`, `site_url` to the actual app URL, and `health_url` to that same origin with `/_stcore/health`. Keep `chart_views` configured. Commit this configuration only after deployment. For example, with your real hostname substituted:
+5. Edit the repository's `monitoring.json`: set `deployment_status` to `deployed`, `site_url` to the actual app URL, and `health_url` to the actual app server health route. On the current Community Cloud deployment, the app is embedded at `/~/+/`, so its health route is `/~/+/_stcore/health` (a direct Streamlit server normally uses `/_stcore/health`). Keep `chart_views` configured. Commit this configuration only after deployment. For example, with your real hostname substituted:
 
    ```json
    {
      "deployment_status": "deployed",
      "site_url": "https://YOUR-ACTUAL-APP.streamlit.app",
-     "health_url": "https://YOUR-ACTUAL-APP.streamlit.app/_stcore/health",
+     "health_url": "https://YOUR-ACTUAL-APP.streamlit.app/~/+/_stcore/health",
      "chart_views": ["Overview", "Inflation risk", "Housing conditions"]
    }
    ```
@@ -38,7 +38,7 @@ Open **Actions → Live monitoring → Run workflow** after merging the monitori
 The two independent jobs check:
 
 - Every catalog entry using authenticated APIs, requiring fresh observations under the existing frequency-specific budgets, successful FRED metadata and complete catalog coverage. Missing credentials fail immediately. A triggered market watch rule is not an operational failure.
-- The configured deployed page and Streamlit health response, then a real Chromium browser opening the overview, inflation and housing views and requiring drawn chart lines. These are representative charts, not exhaustive verification of every series or interaction. Missing app keys, empty charts or application exceptions fail the browser check.
+- The configured deployed page and plain `ok` Streamlit health response, then a real Chromium browser opening all 11 configured chart views and requiring drawn data lines. The browser supports the Community Cloud iframe and direct-server layout, waits for each run to finish, and rejects stale charts or application exceptions. This checks chart pages, not every series or interaction; offline regressions cover all history ranges and catalog rows. Missing app keys, empty charts or application exceptions fail the browser check.
 
 Each run saves timestamped JSON reports as Actions artifacts for 30 days, including failed runs. Reports in `docs/` remain historical evidence and are not silently rewritten by monitoring. Offline CI remains independent and credential free. A green offline test does not mean production is healthy, and a `not_deployed` report does not verify availability.
 
@@ -52,3 +52,12 @@ python scripts/check_deployment.py --output deployment-report.json
 ```
 
 The deployment command exits 2 for `not_deployed`, 1 for failure and 0 for success. `--http-only` is a diagnostic mode and reports `http_only`, not full success. The scheduled workflow always includes browser checks when deployed. Freshness budgets are observation-age heuristics, not official release calendars; a delayed release inside its budget can still pass.
+
+## Current deployment
+
+[Open Market Risk Explorer](https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/).
+`monitoring.json` records this owner-provided target and its verified server health
+route. The older `mosaic-intelligence.streamlit.app` hostname is a different
+deployment and must not be substituted for this target. The outer Community Cloud
+page can return HTML with HTTP 200 even at the wrong health path; a health check
+requires the literal `ok` response, followed separately by browser chart checks.
