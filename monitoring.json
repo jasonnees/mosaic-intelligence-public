@@ -1,6 +1,18 @@
 {
-  "deployment_status": "not_deployed",
-  "site_url": null,
-  "health_url": null,
-  "chart_views": ["Overview", "Inflation risk", "Housing conditions"]
+  "deployment_status": "deployed",
+  "site_url": "https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/",
+  "health_url": "https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/~/+/_stcore/health",
+  "chart_views": [
+    "Overview",
+    "Equity risk",
+    "Recession & growth risk",
+    "Inflation risk",
+    "Interest-rate risk",
+    "Credit stress",
+    "Housing conditions",
+    "CPI & components",
+    "GDP & components",
+    "Market history",
+    "Portfolio Stress Lab"
+  ]
 }

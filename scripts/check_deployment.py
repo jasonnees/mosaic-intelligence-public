@@ -2,6 +2,7 @@
 import argparse
 from datetime import datetime, timezone
 import json
+import re
 from pathlib import Path
 from urllib.parse import urlsplit
 import requests
@@ -41,27 +42,39 @@ def check_http(target, get=requests.get):
 
 
 def check_charts(target, timeout_ms=180000):
-    from playwright.sync_api import sync_playwright
+    from playwright.sync_api import sync_playwright, expect
     checks = []
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         page = browser.new_page(viewport={'width': 1440, 'height': 1000})
         page.set_default_timeout(timeout_ms)
+        current_view = 'startup'
         try:
             page.goto(target['site_url'], wait_until='domcontentloaded')
-            page.get_by_role('heading', name='Market Risk Explorer', exact=True).wait_for()
+            # Community Cloud wraps the actual app in a named iframe. A direct
+            # Streamlit server has no wrapper; wait for either surface to exist.
+            page.wait_for_function("""() => document.querySelector('iframe[title="streamlitApp"]')
+                || [...document.querySelectorAll('h1')].some(h => h.textContent.trim() === 'Market Risk Explorer')""")
+            app = (page.frame_locator('iframe[title="streamlitApp"]')
+                   if page.locator('iframe[title="streamlitApp"]').count() else page)
+            app.get_by_role('heading', name='Market Risk Explorer', exact=True).wait_for()
             for view in target['chart_views']:
-                page.get_by_test_id('stSidebar').get_by_text(view, exact=True).click()
-                page.get_by_role('heading', name=view if view != 'Overview' else 'Household risk overview', exact=True).wait_for()
-                # Require a drawn data line, not merely an empty chart container.
-                page.wait_for_function("""() => [...document.querySelectorAll('[data-testid="stPlotlyChart"] .js-line')]
-                    .some(line => (line.getAttribute('d') || '').length > 10)""")
-                if page.locator('[data-testid="stException"]').count():
+                current_view = view
+                app.get_by_test_id('stSidebar').get_by_text(view, exact=True).click()
+                app.get_by_role('heading', name=view if view != 'Overview' else 'Household risk overview', exact=True).wait_for()
+                # Wait for the new run, not a stale chart left by the prior view.
+                expect(app.get_by_test_id('stApp')).to_have_attribute(
+                    'data-test-script-state', 'notRunning', timeout=timeout_ms)
+                expect(app.locator('[data-testid="stElementContainer"][data-stale="true"]')).to_have_count(0, timeout=timeout_ms)
+                if app.locator('[data-testid="stException"]').count():
                     raise RuntimeError('Application exception')
+                # An actual SVG data path is required, not an empty plot container.
+                expect(app.locator('[data-testid="stPlotlyChart"] .js-line').first).to_have_attribute(
+                    'd', re.compile(r'.{11,}'), timeout=timeout_ms)
                 checks.append({'check': f'chart:{view}', 'passed': True})
         except Exception:
             # Browser exceptions can contain URLs; keep diagnostics credential free.
-            checks.append({'check': 'browser', 'passed': False, 'error': 'App title, navigation or populated chart check failed'})
+            checks.append({'check': 'browser', 'passed': False, 'view': current_view, 'error': 'App title, navigation, completed run or populated chart check failed'})
         finally:
             browser.close()
     return checks

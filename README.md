@@ -244,3 +244,13 @@ and [2026 release calendar](https://fred.stlouisfed.org/releases/calendar?rid=19
 
 Live monitoring no longer reports a successful deployment job when no deployed
 URL is configured. Source health and deployment health are independent checks.
+
+### Live deployment monitoring
+
+[Open the deployed app](https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/).
+The owner-provided URL and actual `/~/+/_stcore/health` route are configured in
+`monitoring.json`. Community Cloud embeds the dashboard in `iframe[title="streamlitApp"]`;
+the browser check enters that frame, waits for the new run to finish, rejects
+stale content and exceptions, and requires a drawn SVG data path on each of the
+11 configured chart pages. A direct Streamlit server is also supported. HTTP
+health alone does not verify charts, feeds or history controls.
