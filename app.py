@@ -9,6 +9,7 @@ from brand import masthead, style_chart
 from risk_data import RiskDataService, assess, transform_frame
 from macro_pages import render_cpi, render_gdp, refresh as refresh_macro
 from market_history_page import render_market_history
+from portfolio_page import render_portfolio
 
 st.set_page_config(page_title='Market Risk Explorer', page_icon='◉', layout='wide')
 
@@ -145,20 +146,26 @@ def main():
         st.markdown('### MOSAIC INCOME')
         st.caption('MARKET RISK EXPLORER')
         st.header('Explore risks')
-        views = ['Overview'] + [d[0] for d in DOMAINS.values()] + ['CPI & components', 'GDP & components', 'Market history', 'Portfolio implications', 'Data catalog']
+        views = ['Overview'] + [d[0] for d in DOMAINS.values()] + ['CPI & components', 'GDP & components', 'Market history', 'Portfolio Stress Lab', 'Data catalog']
         requested = st.query_params.get('view', 'Overview')
+        if requested == 'Portfolio implications':
+            requested = 'Portfolio Stress Lab'
         view = st.radio('View', views, index=views.index(requested) if requested in views else 0)
-        history_options = [0, 365, 730, 1825, 3650, 7300] if view == 'CPI & components' else [365, 730, 1825, 3650, 7300]
-        days = st.selectbox('History', history_options, index=0 if view == 'CPI & components' else 1,
-                            format_func=lambda n: {0:'All available', 365:'1 year', 730:'2 years', 1825:'5 years', 3650:'10 years', 7300:'20 years'}[n])
+        days = 730
+        if view != 'Portfolio Stress Lab':
+            history_options = [0, 365, 730, 1825, 3650, 7300] if view == 'CPI & components' else [365, 730, 1825, 3650, 7300]
+            days = st.selectbox('History', history_options, index=0 if view == 'CPI & components' else 1,
+                                format_func=lambda n: {0:'All available', 365:'1 year', 730:'2 years', 1825:'5 years', 3650:'10 years', 7300:'20 years'}[n])
+        if view == 'Portfolio Stress Lab':
+            st.caption('Bundled historical returns; no API key required. Choose stress years on the page.')
         if st.button('Refresh data'):
             fetch.clear()
             refresh_macro()
             st.rerun()
         st.caption('S3 history enabled; APIs refresh current data.' if service().archive else 'Direct public APIs; no AWS required.')
-        if not config.FRED_API_KEY:
+        if view != 'Portfolio Stress Lab' and not config.FRED_API_KEY:
             st.warning('Add a free FRED_API_KEY to load FRED observations.')
-        if not config.EIA_API_KEY:
+        if view != 'Portfolio Stress Lab' and not config.EIA_API_KEY:
             st.info('EIA_API_KEY enables the electricity price series. Other energy series use FRED.')
     if view == 'Market history':
         render_market_history()
@@ -188,13 +195,8 @@ def main():
         st.write('Official means produced by a public agency or Federal Reserve bank. Third-party series are freely accessible through FRED, but have source-specific licensing and history limits. Check the linked source notes before redistribution.')
         st.write('Freshness budgets include reporting lag and reference-period dating. They are operational heuristics, not official release deadlines. Fresh does not mean unrevised or real time.')
         return
-    if view == 'Portfolio implications':
-        st.subheader('Connect the evidence to your household plan')
-        st.write('These are planning questions, not a model portfolio or trading recommendations. No allocation is inferred from the indicator count or watch conditions.')
-        for title, explanation, implication in DOMAINS.values():
-            st.markdown(f'**{title}**')
-            st.write(implication)
-        st.info('Use your time horizon, planned withdrawals, liabilities and capacity for loss when reviewing exposures. National indicators cannot establish the right allocation for an individual household.')
+    if view == 'Portfolio Stress Lab':
+        render_portfolio()
         return
     domain = next((key for key, value in DOMAINS.items() if value[0] == view), None)
     # Overview loads a small representative basket; details load only one domain.
