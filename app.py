@@ -163,9 +163,9 @@ def main():
             refresh_macro()
             st.rerun()
         st.caption('S3 history enabled; APIs refresh current data.' if service().archive else 'Direct public APIs; no AWS required.')
-        if not config.FRED_API_KEY:
+        if view != 'Portfolio Stress Lab' and not config.FRED_API_KEY:
             st.warning('Add a free FRED_API_KEY to load FRED observations.')
-        if not config.EIA_API_KEY:
+        if view != 'Portfolio Stress Lab' and not config.EIA_API_KEY:
             st.info('EIA_API_KEY enables the electricity price series. Other energy series use FRED.')
     if view == 'Market history':
         render_market_history()
