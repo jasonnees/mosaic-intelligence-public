@@ -81,7 +81,7 @@ def render_cpi(days):
     st.write('See which parts of the household basket are raising prices, and which are offsetting them.')
     period = st.radio('Inflation comparison',['12-month','1-month'],horizontal=True)
     months = 12 if period == '12-month' else 1
-    all_history = st.checkbox('Show all available contribution history')
+    all_history = days == 0
     with st.spinner('Loading CPI components…'):
         data = load_cpi()
     if not source_status(data,data.frame,100):
@@ -118,12 +118,10 @@ def render_cpi(days):
         st.download_button('Download CPI component effects',effects.to_csv(index_label='Month'),'cpi-effects.csv','text/csv')
     st.subheader('Component inflation history')
     st.caption('Each series is its own inflation rate. Subcomponents overlap; these rates must not be added together.')
-    history_options = {'All available': None, '20 years': 7300, '10 years': 3650, '5 years': 1825, '2 years': 730, '1 year': 365}
-    history = st.selectbox('Component history range', list(history_options), key='cpi_component_history')
-    st.caption('This range controls component inflation history below, independently of the sidebar and contribution chart.')
+    st.caption('The sidebar History selector controls this chart, its table and CSV download. Choose All available for the complete source history. Contribution estimates above remain limited by available basket weights.')
     available = rates.columns[rates.notna().any()].tolist()
     selected = st.multiselect('Compare CPI components',available,default=[c for c in ['Headline CPI','Core CPI','Shelter','Energy'] if c in available])
-    visible = window(rates,history_options[history],history == 'All available')
+    visible = window(rates,days,all_history)
     if visible.first_valid_index() is not None:
         visible = visible.loc[visible.first_valid_index():visible.last_valid_index()]
     if selected:
@@ -141,7 +139,7 @@ def render_cpi(days):
             dict(count=20,label='20y',step='year',stepmode='backward'),
             dict(label='All',step='all')]))
         fig.update_layout(height=490,legend=dict(orientation='h',y=1.18),margin=dict(l=65,r=30,t=105,b=55))
-        st.plotly_chart(fig,use_container_width=True)
+        st.plotly_chart(fig,use_container_width=True,key=f'cpi_component_chart:{days}:{months}')
         if not comparison.empty:
             st.caption(f'History loaded: {comparison.index[0]:%b %Y} → {comparison.index[-1]:%b %Y}. Drag the handles below the chart to zoom. Each component begins when its own data becomes available; gaps remain gaps.')
     table_history = st.radio('Component table history',['Full selected history','Latest 12 periods'],horizontal=True)

@@ -148,8 +148,9 @@ def main():
         views = ['Overview'] + [d[0] for d in DOMAINS.values()] + ['CPI & components', 'GDP & components', 'Market history', 'Portfolio implications', 'Data catalog']
         requested = st.query_params.get('view', 'Overview')
         view = st.radio('View', views, index=views.index(requested) if requested in views else 0)
-        days = st.selectbox('History', [365, 730, 1825, 3650, 7300], index=1,
-                            format_func=lambda n: {365:'1 year', 730:'2 years', 1825:'5 years', 3650:'10 years', 7300:'20 years'}[n])
+        history_options = [0, 365, 730, 1825, 3650, 7300] if view == 'CPI & components' else [365, 730, 1825, 3650, 7300]
+        days = st.selectbox('History', history_options, index=0 if view == 'CPI & components' else 1,
+                            format_func=lambda n: {0:'All available', 365:'1 year', 730:'2 years', 1825:'5 years', 3650:'10 years', 7300:'20 years'}[n])
         if st.button('Refresh data'):
             fetch.clear()
             refresh_macro()

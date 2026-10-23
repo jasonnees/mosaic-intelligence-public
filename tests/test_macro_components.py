@@ -114,8 +114,10 @@ def test_gdp_works_with_only_fred_key_and_sanitizes_source_errors():
     assert 'secret' not in str(result.errors)
 
 
-def test_component_chart_and_table_default_to_entire_source_history():
+def test_cpi_sidebar_controls_chart_table_and_full_history():
+    import io
     import json
+    import streamlit as st
     from tests.test_app import empty_fetch
     dates = pd.date_range('1913-01-01',pd.Timestamp.now().to_period('M').to_timestamp(),freq='MS')
     frame = pd.DataFrame({series:100*1.002**np.arange(len(dates)) for series in {**CPI_GROUPS,**CPI_DETAIL}},index=dates)
@@ -124,13 +126,14 @@ def test_component_chart_and_table_default_to_entire_source_history():
     frame.loc[frame.index<'1957-01-01','CPILFENS'] = np.nan
     frame.loc[frame.index<'1960-01-01','CPIENGNS'] = np.nan
     path = str(Path(__file__).resolve().parents[1]/'app.py')
-    with patch('risk_data.RiskDataService.fetch',empty_fetch),patch('macro_pages.load_cpi',return_value=MacroData(frame)):
+    with patch('risk_data.RiskDataService.fetch',empty_fetch),patch('macro_pages.load_cpi',return_value=MacroData(frame)),patch('streamlit.download_button',wraps=st.download_button) as downloads:
         app = AppTest.from_file(path,default_timeout=30).run()
-        # The sidebar stays on its short default; component history must not inherit it.
+        # Other pages retain their default; CPI adds All available to this same control.
         assert app.sidebar.selectbox[0].value == 730
         app.sidebar.radio[0].set_value('CPI & components').run()
         assert not app.exception
-        assert app.selectbox(key='cpi_component_history').value == 'All available'
+        assert app.sidebar.selectbox[0].value == 0
+        assert not [s for s in app.selectbox if s.label == 'Component history range']
         spec = json.loads(app.get('plotly_chart')[-1].proto.spec)
         headline = next(t for t in spec['data'] if t['name']=='Headline CPI')
         assert pd.Timestamp(headline['x'][0]) == pd.Timestamp('1914-01-01')
@@ -150,14 +153,22 @@ def test_component_chart_and_table_default_to_entire_source_history():
         # A later-starting component retains its own source boundary in the table.
         assert pd.isna(full_tables[0].loc['Jan 1914','Energy'])
         for label,days in [('5 years',1825),('10 years',3650),('20 years',7300)]:
-            app.selectbox(key='cpi_component_history').set_value(label).run()
+            app.sidebar.selectbox[0].set_value(days).run()
             assert not app.exception
             spec = json.loads(app.get('plotly_chart')[-1].proto.spec)
             headline = next(t for t in spec['data'] if t['name']=='Headline CPI')
             earliest = pd.Timestamp(headline['x'][0])
             cutoff = pd.Timestamp.now().normalize()-pd.Timedelta(days=days)
             assert cutoff <= earliest < cutoff+pd.Timedelta(days=32)
-        app.selectbox(key='cpi_component_history').set_value('All available').run()
+            table = next(d.value for d in app.dataframe if 'Headline CPI' in d.value.columns)
+            table_start = pd.to_datetime(table.index[-1],format='%b %Y')
+            assert earliest == table_start
+            csv = next(call.args[1] for call in reversed(downloads.call_args_list) if call.args[0]=='Download CPI inflation history')
+            exported = pd.read_csv(io.StringIO(csv),parse_dates=['Month'])
+            assert exported.Month.min() == earliest
+            assert len(exported) == len(table)
+            assert any(f'History loaded: {earliest:%b %Y}' in caption.value for caption in app.caption)
+        app.sidebar.selectbox[0].set_value(0).run()
         spec = json.loads(app.get('plotly_chart')[-1].proto.spec)
         assert pd.Timestamp(next(t for t in spec['data'] if t['name']=='Headline CPI')['x'][0]) == pd.Timestamp('1914-01-01')
 
