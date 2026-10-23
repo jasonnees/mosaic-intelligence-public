@@ -120,3 +120,44 @@ Index/rate history uses each series' full available FRED history, independently
 of weight coverage. No filling of missing comparison endpoints or weight pivots.
 Monthly NSA changes contain seasonality; they are not annualized. CPI does not
 inherit the Federal Reserve's 2% PCE target.
+
+### Market History
+
+**Market history** opens twelve historical stress cases: 1929–32, 1973–74,
+1980–82, 1987, 1998, 2000–02, 2007–09, 2011, 2018, 2020, 2022 and the 2023
+banking stress. Each button selects fixed before/during/after windows, sourced
+context, specific stress mechanisms, relevant macro charts and blind spots.
+These windows override the general sidebar History selector. Deep links support
+`?view=Market%20history&regime=gfc` (IDs are in `market_history_catalog.py`).
+
+This page is independent of API keys: `data/market_history/` holds a bounded,
+compressed teaching snapshot through December 2024, with source metadata and
+SHA-256 checksums. It includes twenty public-agency macro series, Kenneth
+French's broad U.S. daily total returns, and 108 selected FRED/ALFRED archive
+checks from the prior research. It does not publish the private research folder,
+third-party FRED equity/credit histories, or credentials. Missing period data and
+archive gaps remain explicit.
+
+The equity benchmark is the French market factor plus the risk-free return,
+compounded daily and rebased at the first displayed close. Drawdowns are relative
+to the running high within that displayed window. They are not S&P 500 price
+returns, and there is no splicing with Shiller, Nasdaq or Dow history. Pink
+shading denotes the selected study interval, not recession dates.
+
+Macro charts and comparison tables contain revised reference-period history;
+only the separate archived section uses as-of vintages. **Show pre-stress
+reference periods only** withholds reference periods ending on or after stress
+starts, including incomplete months/quarters. It does not remove revision
+hindsight or simulate release lags. The before/during table uses the last valid,
+completed pre-stress reference period with bounded staleness; it never labels a
+missing value as zero. Period downloads contain the exact visible market and
+indicator rows, comparison readings, archive checks and source/calculation scope.
+
+To rebuild from the original saved public-source research, run
+`python scripts/build_market_history.py --research-dir PATH`. The builder checks
+raw source hashes against that research manifest, copies only the explicit
+series allowlist and fetches long CPI history via a server-side FRED key when
+needed. Source retrieval arguments, units, transformations and snapshot bounds
+are retained in `manifest.json`. Updating this static study is a deliberate
+source/data revision; the ordinary refresh button does not replace historical
+snapshots with current feed data.

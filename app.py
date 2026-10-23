@@ -8,6 +8,7 @@ from indicator_guidance import GUIDES, direction, data_warning
 from brand import masthead, style_chart
 from risk_data import RiskDataService, assess, transform_frame
 from macro_pages import render_cpi, render_gdp, refresh as refresh_macro
+from market_history_page import render_market_history
 
 st.set_page_config(page_title='Market Risk Explorer', page_icon='◉', layout='wide')
 
@@ -144,7 +145,7 @@ def main():
         st.markdown('### MOSAIC INCOME')
         st.caption('MARKET RISK EXPLORER')
         st.header('Explore risks')
-        views = ['Overview'] + [d[0] for d in DOMAINS.values()] + ['CPI & components', 'GDP & components', 'Portfolio implications', 'Data catalog']
+        views = ['Overview'] + [d[0] for d in DOMAINS.values()] + ['CPI & components', 'GDP & components', 'Market history', 'Portfolio implications', 'Data catalog']
         requested = st.query_params.get('view', 'Overview')
         view = st.radio('View', views, index=views.index(requested) if requested in views else 0)
         days = st.selectbox('History', [365, 730, 1825, 3650, 7300], index=1,
@@ -158,6 +159,9 @@ def main():
             st.warning('Add a free FRED_API_KEY to load FRED observations.')
         if not config.EIA_API_KEY:
             st.info('EIA_API_KEY enables the electricity price series. Other energy series use FRED.')
+    if view == 'Market history':
+        render_market_history()
+        return
     if view == 'CPI & components':
         render_cpi(days)
         return
