@@ -21,7 +21,7 @@ def snapshot():
 
 def style(fig,height=350):
     fig.update_layout(template='plotly_dark',paper_bgcolor='#0b121d',plot_bgcolor='#0b121d',
-                      font=dict(color='#dce8f5'),height=height,margin=dict(l=25,r=25,t=40,b=35),
+                      font=dict(color='#dce8f5',size=14),height=height,margin=dict(l=25,r=25,t=40,b=35),
                       hovermode='x unified',showlegend=False)
     fig.update_xaxes(showgrid=True,gridcolor='#233043')
     fig.update_yaxes(gridcolor='#233043',zerolinecolor='#526277')
@@ -89,12 +89,19 @@ def render_market_history():
         requested=st.query_params.get('regime',DEFAULT_REGIME)
         st.session_state.history_regime=requested if requested in BY_REGIME else DEFAULT_REGIME
     current=st.session_state.history_regime
-    for offset in range(0,len(REGIMES),3):
-        for column,regime in zip(st.columns(3),REGIMES[offset:offset+3]):
-            if column.button(regime.button,key='regime:'+regime.id,
-                             type='primary' if current==regime.id else 'secondary',use_container_width=True):
-                st.session_state.history_regime=regime.id
-                st.rerun()
+    def pick_regime():
+        st.session_state.history_regime = st.session_state['history:picker']
+    st.session_state['history:picker'] = current
+    with st.container(key='regime-picker'):
+        st.selectbox('Historical period', list(BY_REGIME), key='history:picker',
+                     format_func=lambda key: BY_REGIME[key].button, on_change=pick_regime)
+    with st.container(key='regime-buttons'):
+        for offset in range(0,len(REGIMES),3):
+            for column,regime in zip(st.columns(3),REGIMES[offset:offset+3]):
+                if column.button(regime.button,key='regime:'+regime.id,
+                                 type='primary' if current==regime.id else 'secondary',use_container_width=True):
+                    st.session_state.history_regime=regime.id
+                    st.rerun()
     regime=BY_REGIME[st.session_state.history_regime]
     st.markdown(f'### {regime.title}')
     st.caption(f'{regime.kind} · Highlighted stress: {regime.start} → {regime.end}')

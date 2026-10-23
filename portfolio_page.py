@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+from brand import readable_chart
 from portfolio_stress import ASSETS, SCENARIOS, load_history, simulate
 from market_history_page import style as history_style
 
@@ -23,25 +24,31 @@ def render_portfolio():
         return
     st.caption(f'Annual history: {data.index.min()}–{data.index.max()} · Snapshot updated {metadata["source_updated"]} · No live market prices')
     st.info('Annual observations can hide severe losses within a year. Drawdowns and recovery dates below use year-end values only; they are not daily peak-to-trough losses.')
-    with st.expander('Your illustrative allocation', expanded=True):
+    with st.expander('Edit allocation & inflation settings', expanded=False):
         columns = st.columns(3)
         weights = {a: col.number_input(label + ' (%)', min_value=0.0, max_value=100.0, value=default, step=5.0, key=f'portfolio:{a}')
                    for (a, label), col, default in zip(ASSETS.items(), columns, [60.0, 30.0, 10.0])}
-        st.caption(f'Allocation total: {sum(weights.values()):g}% · Starting mix is an example, not a recommendation.')
         balance = st.number_input('Starting portfolio ($)', min_value=100.0, value=100000.0, step=10000.0)
         real = st.toggle('Adjust for inflation', value=False)
+    st.caption(f'Your mix: {weights["stocks"]:g}% stocks · {weights["treasuries"]:g}% Treasuries · {weights["cash"]:g}% cash · Total {sum(weights.values()):g}%. Illustrative, not a recommendation.')
     if abs(sum(weights.values()) - 100) > 1e-8:
         st.warning('Set allocation weights to exactly 100% to calculate results.')
         return
     if 'portfolio:scenario' not in st.session_state:
         st.session_state['portfolio:scenario'] = 'Inflation & rate shock · 2022'
-    st.markdown('#### Choose a historical stress')
-    buttons = st.columns(3)
-    for i, label in enumerate(SCENARIOS):
-        if buttons[i % 3].button(label, key=f'choose:{label}', use_container_width=True,
-                                  type='primary' if st.session_state['portfolio:scenario'] == label else 'secondary'):
-            st.session_state['portfolio:scenario'] = label
-            st.rerun()
+    def pick_scenario():
+        st.session_state['portfolio:scenario'] = st.session_state['portfolio:picker']
+    st.session_state['portfolio:picker'] = st.session_state['portfolio:scenario']
+    with st.container(key='stress-picker'):
+        st.selectbox('Historical stress', list(SCENARIOS), key='portfolio:picker', on_change=pick_scenario)
+    with st.container(key='stress-buttons'):
+        st.markdown('#### Choose a historical stress')
+        buttons = st.columns(3)
+        for i, label in enumerate(SCENARIOS):
+            if buttons[i % 3].button(label, key=f'choose:{label}', use_container_width=True,
+                                      type='primary' if st.session_state['portfolio:scenario'] == label else 'secondary'):
+                st.session_state['portfolio:scenario'] = label
+                st.rerun()
     label = st.session_state['portfolio:scenario']
     start, end, context = SCENARIOS[label]
     st.markdown(f'### {label}')
@@ -64,8 +71,9 @@ def render_portfolio():
         recovery_text = f'{result["recovery"]} ({result["recovery"] - result["peak"]} years)'
     cols[2].metric('Recovery to prior year-end high', recovery_text,
                    help='First later year end that regains the high preceding the worst year-end drawdown. Not applicable when there is no year-end decline.')
+    stress_years = str(start) if start == end else f'{start}–{end}'
     if result['trough'] is None:
-        st.caption(f'Drawdown date: not applicable · No decline at the sampled year ends in {start}–{end}. Recovery is not applicable. Losses within a year are not captured.')
+        st.caption(f'Drawdown date: not applicable · No decline at the sampled year ends in {stress_years}. Recovery is not applicable. Losses within a year are not captured.')
     else:
         st.caption(f'Worst drawdown at December 31, {result["trough"]}, measured from the December 31, {result["peak"]} high.')
     st.write(rf'Value at December 31, **{end}**: **\${result["ending_value"]:,.0f}** from \${balance:,.0f}. Worst calendar-year return: **{result["worst_year"]:+.1%} in {result["worst_year_date"]}**.')
@@ -79,7 +87,7 @@ def render_portfolio():
     fig.add_hline(y=balance, line_dash='dot', line_color='#ffbd69', annotation_text='Starting balance')
     fig.add_vrect(x0=f'{start}-01-01', x1=f'{end}-12-31', fillcolor='#ff839b', opacity=.1, line_width=0)
     fig.update_layout(title=f'{basis} portfolio value at year ends', yaxis_title='Dollars', xaxis_title='Year end', xaxis_type='date')
-    st.plotly_chart(style(fig, 350), use_container_width=True)
+    readable_chart(style(fig, 350))
     if result['recovery'] is None and result['drawdown'] < -1e-12:
         st.caption(f'No recovery through {data.index.max()}; chart shows the selected stress years. Full follow-up is included in the download.')
     st.markdown('#### Results at each year end')
@@ -89,7 +97,12 @@ def render_portfolio():
         'Year-end value ($)': result['wealth'].loc[start:end].values,
         'Drawdown from prior year-end high (%)': 100 * result['year_end_drawdown'].loc[start:end].values,
     })
-    st.dataframe(annual.round(2), hide_index=True, use_container_width=True)
+    with st.container(key='annual-summary'):
+        year = st.selectbox('Year-end details', list(range(start, end + 1)), index=end-start,
+                            key=f'portfolio:annual:{label}')
+        st.markdown(f'**December 31, {year}**  \nAnnual return: **{result["returns"].loc[year]:+.1%}**  \nPortfolio value: **\\${result["wealth"].loc[year]:,.0f}**  \nDrawdown from prior year-end high: **{result["year_end_drawdown"].loc[year]:.1%}**')
+    with st.container(key='annual-table'):
+        st.dataframe(annual.round(2), hide_index=True, use_container_width=True)
     st.markdown('#### What drove each year’s return?')
     st.caption('Contributions are percentage points of nominal annual portfolio return. Inflation is applied to the combined portfolio separately.')
     contributions = result['contributions'].loc[start:end]
@@ -98,13 +111,15 @@ def render_portfolio():
         fig.add_bar(x=contributions.index.astype(str), y=100 * contributions[asset], name=title, marker_color=COLORS[asset])
     fig.add_scatter(x=contributions.index.astype(str), y=100 * contributions.sum(axis=1), name='Portfolio return', mode='lines+markers', line={'color': 'white'})
     fig.update_layout(barmode='relative', yaxis_title='Percentage points', xaxis_title='Calendar year')
-    st.plotly_chart(style(fig, 390), use_container_width=True)
+    readable_chart(style(fig, 390))
     st.markdown('#### Compare the same allocation across stresses')
     rows = []
     for name, (first, last, _) in SCENARIOS.items():
         trial = simulate(data, weights, first, last, balance, real)
         rows.append({'Stress': name, 'Period return (%)': 100 * trial['period_return'], 'Worst year-end drawdown (%)': 100 * trial['drawdown'], 'Drawdown year': str(trial['trough']) if trial['trough'] is not None else 'Not applicable', 'Ending year': last, 'Ending value ($)': trial['ending_value']})
-    st.dataframe(pd.DataFrame(rows).round(2), hide_index=True, use_container_width=True)
+    with st.expander('Open comparison table for all stresses'):
+        st.caption('Swipe the table sideways for drawdown dates and ending values. Download the table from its toolbar.')
+        st.dataframe(pd.DataFrame(rows).round(2), hide_index=True, use_container_width=True)
     export = result['contributions'].rename(columns={a: a + '_contribution_decimal' for a in ASSETS}).copy()
     export['portfolio_return_decimal'] = result['returns']
     export['year_end_value'] = result['wealth']
