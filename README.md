@@ -162,8 +162,11 @@ are retained in `manifest.json`. Updating this static study is a deliberate
 source/data revision; the ordinary refresh button does not replace historical
 snapshots with current feed data.
 
-On the CPI page the sidebar **History** selector defaults to **All available**
-and supports 1, 2, 5, 10 and 20 years. This one selector controls the component
+The shared sidebar **History** selector defaults to **2 years** and supports
+1, 2, 5, 10 and 20 calendar years plus **All available**. Its selection persists
+across Overview, all six risk domains, Data catalog, CPI and GDP. Market history
+and Portfolio Stress Lab use their own case/scenario periods and hide the sidebar
+selector. GDP has no competing all-history checkbox. This one selector controls the component
 chart, table, source coverage and CSV download, plus the available contribution
 estimates. Chart buttons and a draggable timeline allow closer inspection. Each component retains its own source start and gaps. The component
 table defaults to the complete selected history, with an optional latest-12-period
@@ -200,3 +203,20 @@ checksums. Rebuild from the downloaded workbook with
 `python scripts/build_portfolio_history.py /path/to/histretSP.xls` (build-time pandas
 and xlrd); runtime only needs the bundled CSV. The loader rejects corrupt snapshots
 and calculations reject incomplete active-asset history rather than filling gaps.
+
+### History and cache regression coverage
+
+Calendar-year cutoffs include leap years and use a shared UTC date boundary.
+Fetching includes the prior-year inputs needed for growth rates; chart and CSV
+windows exclude that calculation buffer. GDP component and cyclical tables
+default to the full selected window with an optional latest-12-period view.
+Indicator charts offer a selected-history CSV and show actual source coverage.
+Provider retention limits and CPI basket-weight limits still apply.
+
+Streamlit data caches store DataFrames and built-in metadata, then reconstruct
+`FetchResult`, `MacroData` and `HistoryData` outside the serialization boundary.
+This avoids stale custom-class identities causing `PicklingError` after reloads
+without sharing mutable cached result objects between sessions. Regression tests
+cover cold/warm cache reads, class replacement, all 77 source routes at all six
+ranges, all live-data sections, matching chart/export dates, and navigation
+through the fixed-window pages.

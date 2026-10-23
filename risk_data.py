@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import math
 import pandas as pd
 from risk_catalog import WATCH_RULES
+from history_window import history_start
 
 
 def clean_frame(frame, series_id):
@@ -93,8 +94,8 @@ class RiskDataService:
     def fetch(self, indicator, lookback_days=730, now=None):
         from data_fetcher import FREDClient, EIAClient
         current = pd.Timestamp(now if now is not None else datetime.now(timezone.utc))
-        start = current - pd.Timedelta(days=lookback_days)
-        if indicator.transform == 'yoy':
+        start = history_start(lookback_days, current)
+        if indicator.transform == 'yoy' and lookback_days != 0:
             start -= pd.DateOffset(years=1)
             start -= pd.Timedelta(days=10)
         empty = pd.DataFrame(columns=['date', indicator.series_id])
@@ -116,7 +117,7 @@ class RiskDataService:
                                          end_date=current.date().isoformat())
             elif indicator.source == 'eia':
                 client = self.eia if self.eia is not None else EIAClient()
-                live = client.get_series(indicator.series_id, days=(current - start).days)
+                live = client.get_series(indicator.series_id, days=(pd.Timestamp(current.date()) - start).days)
             else:
                 raise ValueError('Unsupported source')
         except Exception:

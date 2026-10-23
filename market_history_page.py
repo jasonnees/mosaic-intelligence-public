@@ -10,8 +10,13 @@ from market_history_catalog import REGIMES,BY_REGIME,DEFAULT_REGIME,SERIES
 from market_history_data import load_history,slice_market,indicator_window,evidence_rows,archived_rows
 
 @st.cache_data(show_spinner=False)
+def snapshot_payload():
+    data = load_history()
+    return dict(market=data.market, macro=data.macro, vintages=data.vintages, manifest=data.manifest)
+
 def snapshot():
-    return load_history()
+    from market_history_data import HistoryData
+    return HistoryData(**snapshot_payload())
 
 
 def style(fig,height=350):
@@ -79,7 +84,7 @@ def render_market_history():
     st.markdown('<style>button[kind="primary"] {color: #08111d !important; font-weight: 700;}</style>',unsafe_allow_html=True)
     st.subheader('Market history')
     st.write('Explore how different stresses reached markets—and which indicators helped explain them.')
-    st.caption('Historical case studies · Fixed period windows override the sidebar History setting · Saved evidence, not today’s regime classification')
+    st.caption('Historical case studies · The selected case sets the history window · Saved evidence, not today’s regime classification')
     if 'history_regime' not in st.session_state:
         requested=st.query_params.get('regime',DEFAULT_REGIME)
         st.session_state.history_regime=requested if requested in BY_REGIME else DEFAULT_REGIME
