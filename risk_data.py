@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 import math
 import pandas as pd
-from risk_catalog import WATCH_RULES
+from risk_catalog import WATCH_RULES, CASE_SHILLER_GRACE_DAYS, CASE_SHILLER_SOURCE
 from history_window import history_start
 
 
@@ -44,6 +44,21 @@ class Observation:
     detail: str
 
 
+def freshness_context(indicator, observed_at):
+    """Publication timing is series-specific; grace is an app assumption."""
+    if indicator.series_id != 'CSUSHPINSA' or observed_at is None:
+        return {'method': 'observation age', 'max_age_days': indicator.max_age_days}
+    reference = pd.Timestamp(observed_at).to_period('M').to_timestamp()
+    # July's successor is August, published in October: +3 calendar months.
+    release_month = reference + pd.DateOffset(months=3)
+    month_end = release_month + pd.offsets.MonthEnd(0)
+    release = month_end - pd.Timedelta(days=(month_end.weekday() - 1) % 7)
+    deadline = release + pd.Timedelta(days=CASE_SHILLER_GRACE_DAYS)
+    return {'method': 'expected monthly release', 'next_update_expected': release.date().isoformat(),
+            'grace_calendar_days': CASE_SHILLER_GRACE_DAYS, 'deadline': deadline.date().isoformat(),
+            'max_age_days': indicator.max_age_days, 'source_url': CASE_SHILLER_SOURCE}
+
+
 def assess(frame, indicator, now=None):
     now = pd.Timestamp(now if now is not None else datetime.now(timezone.utc))
     if now.tzinfo is not None:
@@ -58,8 +73,14 @@ def assess(frame, indicator, now=None):
     value = float(value) if pd.notna(value) and math.isfinite(value) else None
     if age < 0:
         return Observation(None, date.date().isoformat(), age, 'invalid', 'Unavailable', 'Future-dated observation')
-    if age > indicator.max_age_days:
-        return Observation(value, date.date().isoformat(), age, 'stale', 'Unavailable', 'Observation exceeds the freshness budget')
+    timing = freshness_context(indicator, date)
+    overdue = (now.normalize() > pd.Timestamp(timing['deadline'])
+               if timing['method'] == 'expected monthly release' else age > indicator.max_age_days)
+    if overdue:
+        detail = (f'Next monthly update expected {timing["next_update_expected"]}; '
+                  f'{timing["grace_calendar_days"]}-day operational grace ended {timing["deadline"]}'
+                  if timing['method'] == 'expected monthly release' else 'Observation exceeds the freshness budget')
+        return Observation(value, date.date().isoformat(), age, 'stale', 'Unavailable', detail)
     if value is None:
         return Observation(None, date.date().isoformat(), age, 'insufficient history', 'Unavailable', 'Prior-year comparison is missing or nonpositive')
     rule = WATCH_RULES.get(indicator.series_id)

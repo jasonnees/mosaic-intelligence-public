@@ -65,8 +65,8 @@ jobs:
           result=$?
           if [ "$result" -eq 2 ]; then
             echo '### Not deployed — availability and charts remain unverified' >> "$GITHUB_STEP_SUMMARY"
-            echo '::notice::Deploy the app and update monitoring.json to enable production checks.'
-            exit 0
+            echo '::error::No deployment target configured. Availability and charts are unverified; deploy the app and update monitoring.json.'
+            exit 2
           fi
           exit "$result"
       - uses: actions/upload-artifact@v4

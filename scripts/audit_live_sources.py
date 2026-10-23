@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import requests
 import config
 from risk_catalog import INDICATORS
-from risk_data import RiskDataService, assess
+from risk_data import RiskDataService, assess, freshness_context
 
 def audit_failures(rows, expected_ids):
     """Fail closed on incomplete coverage, unhealthy observations or source errors."""
@@ -54,6 +54,7 @@ def main():
                 row['metadata_error'] = 'Metadata request failed'
         fetched = service.fetch(indicator,730)
         row['observation'] = asdict(assess(fetched.frame,indicator))
+        row['freshness_rule'] = freshness_context(indicator, row['observation']['observed_at'])
         row['provenance'] = fetched.provenance
         row['error'] = fetched.error
         rows.append(row)

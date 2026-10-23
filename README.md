@@ -220,3 +220,27 @@ without sharing mutable cached result objects between sessions. Regression tests
 cover cold/warm cache reads, class replacement, all 77 source routes at all six
 ranges, all live-data sections, matching chart/export dates, and navigation
 through the fixed-window pages.
+
+### Case-Shiller release timing
+
+The national Case-Shiller index is dated to its reference month and normally
+published two months later on the last Tuesday. For example, July 2026 was
+released September 29, with the next monthly update scheduled October 27. A
+generic 100-day observation-age cutoff incorrectly flagged that current release
+as stale on October 23.
+
+This series now uses the next expected monthly publication date plus seven
+calendar days of operational delivery grace. This is an app allowance, not an
+official deadline or delivery guarantee. Once that deadline passes, market
+interpretation is withheld until newer data arrives. The displayed 130-day
+maximum covers the longest reference-to-deadline interval, but assessment uses
+the actual calculated calendar deadline rather than a blanket 130-day pass.
+Other monthly indicators retain their 100-day budgets. Missing inputs and future
+dates remain invalid, and a prior-year base is still required for growth.
+
+The chart and authenticated audit include the timing method, expected update and
+grace deadline. Sources: [publisher overview](https://www.spglobal.com/spdji/en/index-family/indicators/sp-cotality-case-shiller/)
+and [2026 release calendar](https://fred.stlouisfed.org/releases/calendar?rid=199&y=2026).
+
+Live monitoring no longer reports a successful deployment job when no deployed
+URL is configured. Source health and deployment health are independent checks.

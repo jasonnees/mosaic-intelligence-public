@@ -1,11 +1,8 @@
 {
-  "checked_at": "2026-10-23T01:42:00.695973+00:00",
+  "checked_at": "2026-10-23T15:15:06.222111+00:00",
   "scope": "Authenticated API metadata and observations; point-in-time availability only",
-  "status": "failed",
-  "failures": [
-    "CSUSHPINSA: source error or observation not fresh",
-    "ELEC.PRICE.US-RES.M: source error or observation not fresh"
-  ],
+  "status": "passed",
+  "failures": [],
   "series": [
     {
       "series_id": "SP500",
@@ -23,8 +20,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -37,16 +38,20 @@
         "frequency": "Daily, Close",
         "units": "Index Feb 5, 1971=100",
         "seasonal_adjustment": "Not Seasonally Adjusted",
-        "observation_end": "2026-10-21",
-        "last_updated": "2026-10-21 22:38:47-05"
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 22:38:53-05"
       },
       "observation": {
-        "value": 16.333727896236216,
-        "observed_at": "2026-10-21",
-        "age_days": 2,
+        "value": 14.372922200137195,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -67,8 +72,12 @@
         "observed_at": "2026-10-22",
         "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -81,16 +90,20 @@
         "frequency": "Daily, Close",
         "units": "Index",
         "seasonal_adjustment": "Not Seasonally Adjusted",
-        "observation_end": "2026-10-21",
-        "last_updated": "2026-10-22 08:37:32-05"
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-23 08:38:37-05"
       },
       "observation": {
-        "value": 16.68,
-        "observed_at": "2026-10-21",
-        "age_days": 2,
+        "value": 19.03,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
         "status": "fresh",
         "watch": "Not triggered",
-        "detail": "Elevated implied equity volatility; rule: gt 30 index"
+        "detail": "No rule breach; value 19.03 index; watch condition: Elevated implied equity volatility (gt 30 index). This is not an all-clear."
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -112,7 +125,11 @@
         "age_days": 205,
         "status": "fresh",
         "watch": "Not triggered",
-        "detail": "Real output contracted this quarter; rule: lt 0 % annualized"
+        "detail": "No rule breach; value 2.2 % annualized; watch condition: Real output contracted this quarter (lt 0 % annualized). This is not an all-clear."
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -133,8 +150,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -155,8 +176,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -177,8 +202,12 @@
         "observed_at": "2026-10-17",
         "age_days": 6,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 21
       },
       "provenance": "FRED API",
       "error": ""
@@ -199,8 +228,12 @@
         "observed_at": "2026-10-10",
         "age_days": 13,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 21
       },
       "provenance": "FRED API",
       "error": ""
@@ -221,8 +254,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -243,8 +280,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -265,8 +306,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -287,8 +332,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -309,8 +358,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -331,8 +384,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -353,8 +410,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -375,8 +436,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -397,8 +462,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -419,8 +488,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -441,8 +514,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -463,8 +540,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -485,8 +566,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -507,8 +592,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -529,8 +618,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -551,8 +644,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -573,8 +670,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -595,8 +696,12 @@
         "observed_at": "2026-10-01",
         "age_days": 22,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -617,8 +722,12 @@
         "observed_at": "2026-10-01",
         "age_days": 22,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -639,8 +748,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -661,8 +774,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -683,8 +800,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -705,8 +826,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "Watch",
+        "detail": "PCE inflation above the longer-run 2% benchmark; value 3.41903 % year over year; rule: gt 2 % year over year"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -727,8 +852,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -749,8 +878,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -771,8 +904,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -793,8 +930,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -815,8 +956,12 @@
         "observed_at": "2026-10-22",
         "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -837,8 +982,12 @@
         "observed_at": "2026-10-22",
         "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -859,8 +1008,12 @@
         "observed_at": "2026-10-22",
         "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -881,8 +1034,12 @@
         "observed_at": "2026-10-20",
         "age_days": 3,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -903,8 +1060,12 @@
         "observed_at": "2026-10-20",
         "age_days": 3,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -925,8 +1086,12 @@
         "observed_at": "2026-10-20",
         "age_days": 3,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -947,8 +1112,12 @@
         "observed_at": "2026-10-19",
         "age_days": 4,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 21
       },
       "provenance": "FRED API",
       "error": ""
@@ -969,8 +1138,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -983,16 +1156,20 @@
         "frequency": "Daily",
         "units": "Percent",
         "seasonal_adjustment": "Not Seasonally Adjusted",
-        "observation_end": "2026-10-21",
-        "last_updated": "2026-10-22 07:02:37-05"
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-23 07:02:33-05"
       },
       "observation": {
-        "value": 3.88,
-        "observed_at": "2026-10-21",
-        "age_days": 2,
+        "value": 3.9,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1013,8 +1190,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1035,8 +1216,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1057,8 +1242,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1079,8 +1268,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1101,8 +1294,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1124,7 +1321,11 @@
         "age_days": 1,
         "status": "fresh",
         "watch": "Not triggered",
-        "detail": "Inverted Treasury curve; rule: lt 0 percentage points"
+        "detail": "No rule breach; value 0.31 percentage points; watch condition: Inverted Treasury curve (lt 0 percentage points). This is not an all-clear."
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1146,7 +1347,11 @@
         "age_days": 1,
         "status": "fresh",
         "watch": "Not triggered",
-        "detail": "Inverted Treasury curve; rule: lt 0 percentage points"
+        "detail": "No rule breach; value 0.74 percentage points; watch condition: Inverted Treasury curve (lt 0 percentage points). This is not an all-clear."
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1167,8 +1372,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1189,8 +1398,12 @@
         "observed_at": "2026-10-21",
         "age_days": 2,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 21
       },
       "provenance": "FRED API",
       "error": ""
@@ -1203,16 +1416,20 @@
         "frequency": "Daily, Close",
         "units": "Percent",
         "seasonal_adjustment": "Not Seasonally Adjusted",
-        "observation_end": "2026-10-21",
-        "last_updated": "2026-10-22 08:56:34-05"
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-23 08:32:20-05"
       },
       "observation": {
-        "value": 0.88,
-        "observed_at": "2026-10-21",
-        "age_days": 2,
+        "value": 0.89,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1225,16 +1442,20 @@
         "frequency": "Daily, Close",
         "units": "Percent",
         "seasonal_adjustment": "Not Seasonally Adjusted",
-        "observation_end": "2026-10-21",
-        "last_updated": "2026-10-22 08:56:50-05"
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-23 08:34:01-05"
       },
       "observation": {
-        "value": 3.27,
-        "observed_at": "2026-10-21",
-        "age_days": 2,
+        "value": 3.4,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 10
       },
       "provenance": "FRED API",
       "error": ""
@@ -1255,8 +1476,12 @@
         "observed_at": "2026-07-01",
         "age_days": 114,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -1277,8 +1502,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -1299,8 +1528,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -1321,8 +1554,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -1343,8 +1580,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -1365,8 +1606,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -1387,8 +1632,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -1410,7 +1659,11 @@
         "age_days": 7,
         "status": "fresh",
         "watch": "Not triggered",
-        "detail": "Financial stress above the index historical average; rule: gt 0 index"
+        "detail": "No rule breach; value -0.6328 index; watch condition: Financial stress above the index historical average (gt 0 index). This is not an all-clear."
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 21
       },
       "provenance": "FRED API",
       "error": ""
@@ -1432,7 +1685,11 @@
         "age_days": 7,
         "status": "fresh",
         "watch": "Not triggered",
-        "detail": "Financial conditions tighter than the index historical average; rule: gt 0 index"
+        "detail": "No rule breach; value -0.496 index; watch condition: Financial conditions tighter than the index historical average (gt 0 index). This is not an all-clear."
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 21
       },
       "provenance": "FRED API",
       "error": ""
@@ -1453,8 +1710,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -1475,8 +1736,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -1497,8 +1762,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -1519,8 +1788,12 @@
         "observed_at": "2026-09-01",
         "age_days": 52,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -1540,9 +1813,17 @@
         "value": 1.928847496245334,
         "observed_at": "2026-07-01",
         "age_days": 114,
-        "status": "stale",
-        "watch": "Unavailable",
-        "detail": "Observation exceeds the freshness budget"
+        "status": "fresh",
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "expected monthly release",
+        "next_update_expected": "2026-10-27",
+        "grace_calendar_days": 7,
+        "deadline": "2026-11-03",
+        "max_age_days": 130,
+        "source_url": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-cotality-case-shiller/"
       },
       "provenance": "FRED API",
       "error": ""
@@ -1563,8 +1844,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -1585,8 +1870,12 @@
         "observed_at": "2026-10-22",
         "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 21
       },
       "provenance": "FRED API",
       "error": ""
@@ -1607,8 +1896,12 @@
         "observed_at": "2026-10-22",
         "age_days": 1,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 21
       },
       "provenance": "FRED API",
       "error": ""
@@ -1629,8 +1922,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -1651,8 +1948,12 @@
         "observed_at": "2026-04-01",
         "age_days": 205,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 210
       },
       "provenance": "FRED API",
       "error": ""
@@ -1673,8 +1974,12 @@
         "observed_at": "2026-08-01",
         "age_days": 83,
         "status": "fresh",
-        "watch": "Context",
-        "detail": "Descriptive indicator; no risk threshold assigned"
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "FRED API",
       "error": ""
@@ -1683,12 +1988,16 @@
       "series_id": "ELEC.PRICE.US-RES.M",
       "url": "https://www.eia.gov/electricity/data/browser/",
       "observation": {
-        "value": 18.31,
-        "observed_at": "2026-07-01",
-        "age_days": 114,
-        "status": "stale",
-        "watch": "Unavailable",
-        "detail": "Observation exceeds the freshness budget"
+        "value": 18.16,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "No fixed threshold",
+        "detail": "No fixed warning threshold assigned; use direction and series-specific guidance"
+      },
+      "freshness_rule": {
+        "method": "observation age",
+        "max_age_days": 100
       },
       "provenance": "EIA API",
       "error": ""

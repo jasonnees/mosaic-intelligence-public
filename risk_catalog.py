@@ -14,6 +14,13 @@ DOMAINS = {
 # Operational budgets, not claims about official release deadlines.
 AGE_BUDGET = {'daily': 10, 'weekly': 21, 'monthly': 100, 'quarterly': 210}
 
+# Case-Shiller reference months are released two months later, on the last
+# Tuesday. The next month's release plus a 7-day operational grace can reach
+# 129 days from the dated reference month. Assessment uses that calendar
+# deadline, not a blanket 130-day pass. Other monthly budgets stay at 100.
+CASE_SHILLER_GRACE_DAYS = 7
+CASE_SHILLER_SOURCE = 'https://www.spglobal.com/spdji/en/index-family/indicators/sp-cotality-case-shiller/'
+
 @dataclass(frozen=True)
 class Indicator:
     series_id: str
@@ -32,7 +39,7 @@ class Indicator:
 
     @property
     def max_age_days(self):
-        return AGE_BUDGET[self.frequency]
+        return 130 if self.series_id == 'CSUSHPINSA' else AGE_BUDGET[self.frequency]
 
     @property
     def source_url(self):
