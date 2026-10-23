@@ -7,6 +7,7 @@ from risk_catalog import INDICATORS, BY_ID, DOMAINS, WATCH_RULES, RULE_SOURCES
 from indicator_guidance import GUIDES, direction, data_warning
 from brand import masthead, style_chart
 from risk_data import RiskDataService, assess, transform_frame
+from macro_pages import render_cpi, render_gdp, refresh as refresh_macro
 
 st.set_page_config(page_title='Market Risk Explorer', page_icon='◉', layout='wide')
 
@@ -143,17 +144,26 @@ def main():
         st.markdown('### MOSAIC INCOME')
         st.caption('MARKET RISK EXPLORER')
         st.header('Explore risks')
-        view = st.radio('View', ['Overview'] + [d[0] for d in DOMAINS.values()] + ['Portfolio implications', 'Data catalog'])
+        views = ['Overview'] + [d[0] for d in DOMAINS.values()] + ['CPI & components', 'GDP & components', 'Portfolio implications', 'Data catalog']
+        requested = st.query_params.get('view', 'Overview')
+        view = st.radio('View', views, index=views.index(requested) if requested in views else 0)
         days = st.selectbox('History', [365, 730, 1825, 3650, 7300], index=1,
                             format_func=lambda n: {365:'1 year', 730:'2 years', 1825:'5 years', 3650:'10 years', 7300:'20 years'}[n])
         if st.button('Refresh data'):
             fetch.clear()
+            refresh_macro()
             st.rerun()
         st.caption('S3 history enabled; APIs refresh current data.' if service().archive else 'Direct public APIs; no AWS required.')
         if not config.FRED_API_KEY:
             st.warning('Add a free FRED_API_KEY to load FRED observations.')
         if not config.EIA_API_KEY:
             st.info('EIA_API_KEY enables the electricity price series. Other energy series use FRED.')
+    if view == 'CPI & components':
+        render_cpi(days)
+        return
+    if view == 'GDP & components':
+        render_gdp(days)
+        return
     if view == 'Data catalog':
         catalog = pd.DataFrame([{
             'Series': i.series_id, 'Indicator': i.name, 'Domain': DOMAINS[i.domain][0],
