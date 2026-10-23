@@ -180,6 +180,6 @@ def contribution_chart(frame, components, headline, title, unit):
         yaxis=dict(title=unit,side='right',gridcolor='#292d31',zerolinecolor='#777'),
         xaxis=dict(title=None,gridcolor='#202427',showgrid=True))
     if headline == 'Real GDP':
-        ticks = frame.index[::max(1,(len(frame)+11)//12)]
+        ticks = frame.index[::max(1,(len(frame)+5)//6)]
         fig.update_xaxes(tickmode='array',tickvals=ticks,ticktext=[f'Q{d.quarter} {d.year}' for d in ticks])
     return fig

@@ -1,6 +1,7 @@
 """Dedicated CPI/GDP pages with terminal charts and inspectable source tables."""
 import pandas as pd
 import streamlit as st
+from brand import readable_chart
 from history_window import clip_history
 from macro_components import (fetch_cpi,fetch_gdp,calendar_change,cpi_effects,contribution_chart,
                               CPI_GROUPS,CPI_DETAIL,CPI_WEIGHTS,GDP_ROWS,GDP_STACK)
@@ -54,8 +55,19 @@ def heatmap(frame, label, quarterly=False, percent=False, periods=12, transpose=
         color = tuple(round(base[i]+(rgb[i]-base[i])*strength) for i in range(3))
         return f'background-color: rgb{color}; color: #f0f0f0'
     styled = table.style.map(cell).format('{:+.2f}%' if percent else '{:+.3f}',na_rep='—')
-    st.dataframe(styled,use_container_width=True,height=min(850,38+36*len(table)),
-                 column_config={'_index':st.column_config.TextColumn(index_label,width='medium')})
+    newest = selected_frame.iloc[-1]
+    reference = selected_frame.index[-1]
+    period_label = f'{reference.year} Q{reference.quarter}' if quarterly else reference.strftime('%b %Y')
+    snapshot = newest.rename(period_label).to_frame()
+    snapshot.index.name = 'Component'
+    st.caption(f'Latest period: {period_label}. Units and arithmetic signs follow the table heading.')
+    st.dataframe(snapshot.style.map(cell).format('{:+.2f}%' if percent else '{:+.3f}', na_rep='—'),
+                 use_container_width=True, height=min(480, 38 + 36 * len(snapshot)),
+                 column_config={'_index':st.column_config.TextColumn('Component', width='medium')})
+    with st.expander(f'Explore history: {label}'):
+        st.caption('Swipe sideways for more columns. Use the table toolbar to download or expand it.')
+        st.dataframe(styled,use_container_width=True,height=min(600,38+36*len(table)),
+                     column_config={'_index':st.column_config.TextColumn(index_label,width='medium')})
     scope = f'Table shows all {len(selected_frame):,} periods in the selected window, newest first. Scroll the rows to explore earlier readings.' if periods is None else f'Table shows the latest {min(periods,len(frame))} visible periods.'
     st.caption('Green = positive; rose = negative. Color shows arithmetic sign, not a risk rating. Missing values are blank. ' + scope)
 
@@ -116,8 +128,8 @@ def render_cpi(days):
     else:
         if effects.index[-1] < data.frame.dropna(how='all').index.max():
             st.warning(f'Latest complete effect estimate is {effects.index[-1]:%B %Y}; a comparison endpoint or dated basket is missing for newer periods.')
-        st.plotly_chart(contribution_chart(effects,[*CPI_GROUPS.values(),'Unallocated difference'],'Headline CPI',
-            f'US CPI · {period} estimated component effects','Percent / percentage points'),use_container_width=True,key=f'cpi_effects:{days}:{months}')
+        readable_chart(contribution_chart(effects,[*CPI_GROUPS.values(),'Unallocated difference'],'Headline CPI',
+            f'US CPI · {period} estimated component effects','% / pp'),key=f'cpi_effects:{days}:{months}')
         heatmap(effects,'Component effects · percentage points')
         last = effects.iloc[-1]
         ranked = last[list(CPI_GROUPS.values())].sort_values()
@@ -148,7 +160,7 @@ def render_cpi(days):
             dict(count=20,label='20y',step='year',stepmode='backward'),
             dict(label='All',step='all')]))
         fig.update_layout(height=490,legend=dict(orientation='h',y=1.18),margin=dict(l=65,r=30,t=105,b=55))
-        st.plotly_chart(fig,use_container_width=True,key=f'cpi_component_chart:{days}:{months}')
+        readable_chart(fig,key=f'cpi_component_chart:{days}:{months}')
         if not comparison.empty:
             st.caption(f'History loaded: {comparison.index[0]:%b %Y} → {comparison.index[-1]:%b %Y}. Drag the handles below the chart to zoom. Each component begins when its own data becomes available; gaps remain gaps.')
     table_history = st.radio('Component table history',['Full selected history','Latest 12 periods'],horizontal=True)
@@ -199,7 +211,7 @@ def render_gdp(days):
         cols[2].metric('Inventories + trade',f'{last[14]+last[15]:+.2f} pp')
         st.caption(f'Common reference quarter {complete.index[-1].year} Q{complete.index[-1].quarter} · Seasonally adjusted annual rates')
         chart = visible.rename(columns={**GDP_STACK,1:'Real GDP'})
-        st.plotly_chart(contribution_chart(chart,list(GDP_STACK.values()),'Real GDP','Contributions to US real GDP · QoQ annualized','Percent / percentage points'),use_container_width=True,key=f'gdp_contributions:{days}')
+        readable_chart(contribution_chart(chart,list(GDP_STACK.values()),'Real GDP','Contributions to US real GDP · QoQ annualized','% / pp'),key=f'gdp_contributions:{days}')
         residual = last[1]-last[list(GDP_STACK)].sum(min_count=5)
         if abs(residual) > .15:
             st.warning(f'Component sum differs from headline growth by {residual:+.2f} pp, beyond the rounding allowance. Verify the source before interpreting.')
