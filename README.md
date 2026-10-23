@@ -161,3 +161,12 @@ needed. Source retrieval arguments, units, transformations and snapshot bounds
 are retained in `manifest.json`. Updating this static study is a deliberate
 source/data revision; the ordinary refresh button does not replace historical
 snapshots with current feed data.
+
+CPI component inflation history defaults to **All available**, independently of
+the sidebar range and the contribution chart. Its own range selector supports
+1, 2, 5, 10 and 20 years; chart buttons and a draggable timeline allow closer
+inspection. Each component retains its own source start and gaps. The component
+table defaults to the complete selected history, with an optional latest-12-period
+view. The coverage expander reports each component's first and latest usable
+inflation observation, and CSV exports use the selected history range. Historical
+basket-weight limits apply only to contribution estimates, not these rate charts.

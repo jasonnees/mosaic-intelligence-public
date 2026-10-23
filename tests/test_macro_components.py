@@ -112,3 +112,67 @@ def test_gdp_works_with_only_fred_key_and_sanitizes_source_errors():
     assert result.frame[19].isna().all()
     assert len(result.errors) == 1
     assert 'secret' not in str(result.errors)
+
+
+def test_component_chart_and_table_default_to_entire_source_history():
+    import json
+    from tests.test_app import empty_fetch
+    dates = pd.date_range('1913-01-01',pd.Timestamp.now().to_period('M').to_timestamp(),freq='MS')
+    frame = pd.DataFrame({series:100*1.002**np.arange(len(dates)) for series in {**CPI_GROUPS,**CPI_DETAIL}},index=dates)
+    frame.index.name = 'date'
+    frame.loc['2025-10-01',:] = np.nan
+    frame.loc[frame.index<'1957-01-01','CPILFENS'] = np.nan
+    frame.loc[frame.index<'1960-01-01','CPIENGNS'] = np.nan
+    path = str(Path(__file__).resolve().parents[1]/'app.py')
+    with patch('risk_data.RiskDataService.fetch',empty_fetch),patch('macro_pages.load_cpi',return_value=MacroData(frame)):
+        app = AppTest.from_file(path,default_timeout=30).run()
+        # The sidebar stays on its short default; component history must not inherit it.
+        assert app.sidebar.selectbox[0].value == 730
+        app.sidebar.radio[0].set_value('CPI & components').run()
+        assert not app.exception
+        assert app.selectbox(key='cpi_component_history').value == 'All available'
+        spec = json.loads(app.get('plotly_chart')[-1].proto.spec)
+        headline = next(t for t in spec['data'] if t['name']=='Headline CPI')
+        assert pd.Timestamp(headline['x'][0]) == pd.Timestamp('1914-01-01')
+        assert spec['layout']['xaxis']['rangeslider']['visible']
+        # An internal missing month must survive rendering; connectgaps=False
+        # cannot help if the empty calendar row was removed before plotting.
+        missing_position = next(i for i,date in enumerate(headline['x']) if pd.Timestamp(date)==pd.Timestamp('2025-10-01'))
+        values = headline['y']
+        if isinstance(values,dict):
+            import base64
+            values = np.frombuffer(base64.b64decode(values['bdata']),dtype=values['dtype'])
+        assert pd.isna(values[missing_position])
+        assert headline.get('connectgaps') is False
+        full_tables = [d.value for d in app.dataframe if 'Headline CPI' in d.value.columns and len(d.value)>1000]
+        assert len(full_tables)==1
+        assert full_tables[0].index[-1]=='Jan 1914'
+        # A later-starting component retains its own source boundary in the table.
+        assert pd.isna(full_tables[0].loc['Jan 1914','Energy'])
+        for label,days in [('5 years',1825),('10 years',3650),('20 years',7300)]:
+            app.selectbox(key='cpi_component_history').set_value(label).run()
+            assert not app.exception
+            spec = json.loads(app.get('plotly_chart')[-1].proto.spec)
+            headline = next(t for t in spec['data'] if t['name']=='Headline CPI')
+            earliest = pd.Timestamp(headline['x'][0])
+            cutoff = pd.Timestamp.now().normalize()-pd.Timedelta(days=days)
+            assert cutoff <= earliest < cutoff+pd.Timedelta(days=32)
+        app.selectbox(key='cpi_component_history').set_value('All available').run()
+        spec = json.loads(app.get('plotly_chart')[-1].proto.spec)
+        assert pd.Timestamp(next(t for t in spec['data'] if t['name']=='Headline CPI')['x'][0]) == pd.Timestamp('1914-01-01')
+
+
+def test_cpi_fetch_preserves_long_and_differing_source_histories():
+    from macro_components import fetch_cpi
+    calls=[]
+    def source(self,series,**kwargs):
+        calls.append(kwargs.get('start_date'))
+        start = '1913-01-01' if series=='CPIAUCNS' else '1960-01-01'
+        return pd.DataFrame({'date':pd.to_datetime([start,'2026-09-01']),series:[100.,200.]})
+    with patch('config.FRED_API_KEY','test-only'),patch('data_fetcher.FREDClient.get_series',source):
+        data=fetch_cpi()
+    assert not data.errors
+    assert data.frame['CPIAUCNS'].first_valid_index()==pd.Timestamp('1913-01-01')
+    assert data.frame['CPIENGNS'].first_valid_index()==pd.Timestamp('1960-01-01')
+    assert len(calls)==len({**CPI_GROUPS,**CPI_DETAIL})
+    assert all(date=='1913-01-01' for date in calls)
