@@ -89,3 +89,34 @@ See [deployment instructions](docs/DEPLOYMENT.md) for Streamlit Community Cloud 
 The infrastructure, backfill and target-range scripts are retained for existing users. They are not part of the active Explorer and their legacy indicator lists are not the curated catalog. The custom ingestion API remains separate from the curated dashboard.
 
 Educational information only; not individualized investment advice.
+
+### CPI and GDP component pages
+
+Choose **CPI & components** or **GDP & components** in the sidebar. The existing
+FRED key loads CPI and official BEA GDP contributions. An optional free
+`BEA_API_KEY` in Streamlit's secrets (top-level TOML string) loads the entire
+GDP table directly; FRED remains the fallback if BEA is unavailable. Do not commit keys.
+Direct links can use `?view=CPI%20%26%20components` or
+`?view=GDP%20%26%20components`.
+
+Both pages include a dark stacked contribution chart, white headline line,
+component heatmaps, history controls and CSV exports. GDP uses published real,
+annualized quarterly contributions, not changes in chained-dollar component
+levels. Nested table rows must not be added together. The cyclical section
+compares durable consumption, residential investment and business equipment,
+with a link to Eric Basmajian's public EPB framework; it does not reproduce an
+EPB index.
+
+CPI uses BLS unadjusted indexes delivered by FRED. Its contribution bars are
+**Mosaic estimates**, using price-updated, dated December BLS CPI-U relative
+importance shares. Intervals crossing an annual basket pivot are calculated
+in separate segments and expressed against the same headline-index base.
+Rounded basket shares/indexes and reweighting can cause a difference from
+headline inflation; that difference is displayed, never normalized away.
+The current verified baskets cover December 2024 and December 2025; monthly
+effects cover 2025–2026 and 12-month effects start December 2025. Weights expire
+after a year. Add a sourced annual basket to `CPI_WEIGHTS` to extend coverage.
+Index/rate history uses each series' full available FRED history, independently
+of weight coverage. No filling of missing comparison endpoints or weight pivots.
+Monthly NSA changes contain seasonality; they are not annualized. CPI does not
+inherit the Federal Reserve's 2% PCE target.
