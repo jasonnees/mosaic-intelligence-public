@@ -10,7 +10,7 @@ The active catalog replaces the 239-row framework with 77 distinct, explicitly d
 
 Names now describe what the source actually measures: corporate option-adjusted spreads rather than CDX, all-loan delinquency rather than auto delinquency, and the actual four-week claims average (`IC4WSA`). Units remain explicit; Treasury spreads are percentage points, not mislabeled basis points. Price indexes, income and selected activity series use calendar-year growth with a required prior-year comparison.
 
-There are no preset bullish/bearish fallbacks, allocation recommendations or opaque composite score. Six explicit watch rules identify conditions worth examining; most indicators provide context. Stale, missing, future-dated and insufficient-history observations cannot trigger or clear a watch condition. Counts are never presented as a calibrated probability or portfolio score.
+There are no preset bullish/bearish fallbacks, allocation recommendations or opaque composite score. Seven explicit watch rules identify conditions worth examining; most indicators provide context. Stale, missing, future-dated and insufficient-history observations cannot trigger or clear a watch condition. Counts are never presented as a calibrated probability or portfolio score.
 
 ## Setup
 
@@ -37,6 +37,14 @@ pip install -r requirements-aws.txt
 ```
 
 In the Explorer, S3 supplements history and public APIs refresh observations. API values win overlapping dates, including revisions. If an API fails, archived observations remain visible with their actual observation age and archive provenance. No new AWS infrastructure is provisioned. The optional legacy `HybridDataManager` retains its S3-first contract for existing scripts. Data Exchange is disabled by default.
+
+## Mosaic Income theme and indicator guidance
+
+The app uses the original [Mosaic Income](https://mosaicincome.substack.com/) wordmark, a dark navy background and domain-specific cyan, violet, amber, blue, rose and mint chart colors. The wordmark is unchanged; display brightness is adjusted with CSS for contrast. Its source is recorded in `assets/README.md`.
+
+Every one of the 77 indicators has a rising interpretation, a falling interpretation and a series-specific caution. Direction compares the displayed value with about three months earlier (one year for quarterly series); year-over-year series compare growth rates, not price levels. Actual comparison dates and changes are shown. Missing or stale observations, future dates and missing prior-year bases cannot support direction. Gappy comparison history produces “No comparison.”
+
+Seven explicit watch rules remain separate from direction and data-quality warnings. Headline PCE inflation above 2% is a comparison with the Fed's longer-run benchmark, not a forecast of policy action. Core PCE and CPI are not assigned that policy benchmark. VIX 30 is an operational app threshold, not an official crisis boundary. Every rule links to its source and limitation. An untriggered rule is not an all-clear. No thresholds were invented for the other indicators; each displays descriptive context and its own limitations.
 
 ## Reliability
 

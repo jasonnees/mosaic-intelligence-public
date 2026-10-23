@@ -62,12 +62,16 @@ def assess(frame, indicator, now=None):
     if value is None:
         return Observation(None, date.date().isoformat(), age, 'insufficient history', 'Unavailable', 'Prior-year comparison is missing or nonpositive')
     rule = WATCH_RULES.get(indicator.series_id)
-    watch, detail = 'Context', 'Descriptive indicator; no risk threshold assigned'
+    watch, detail = 'No fixed threshold', 'No fixed warning threshold assigned; use direction and series-specific guidance'
     if rule:
         operator, threshold, reason = rule
-        triggered = value > threshold if operator == 'gt' else value < threshold
+        # Arithmetic growth rates can place an exact boundary a few ulps above it.
+        at_boundary = math.isclose(value, threshold, rel_tol=1e-12, abs_tol=1e-12)
+        triggered = not at_boundary and (value > threshold if operator == 'gt' else value < threshold)
         watch = 'Watch' if triggered else 'Not triggered'
-        detail = f'{reason}; rule: {operator} {threshold} {indicator.unit}'
+        condition = f'{operator} {threshold} {indicator.unit}'
+        detail = (f'{reason}; value {value:.6g} {indicator.unit}; rule: {condition}' if triggered
+                  else f'No rule breach; value {value:.6g} {indicator.unit}; watch condition: {reason} ({condition}). This is not an all-clear.')
     return Observation(value, date.date().isoformat(), age, 'fresh', watch, detail)
 
 

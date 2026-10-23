@@ -138,4 +138,24 @@ WATCH_RULES = {
     'STLFSI4': ('gt', 0, 'Financial stress above the index historical average'),
     'NFCI': ('gt', 0, 'Financial conditions tighter than the index historical average'),
     'A191RL1Q225SBEA': ('lt', 0, 'Real output contracted this quarter'),
+    'PCEPI': ('gt', 2, 'PCE inflation above the longer-run 2% benchmark'),
+}
+
+
+# References establish the series' meaning; VIX 30 remains an operational app rule.
+RULE_SOURCES = {
+    'VIXCLS': ('App watch threshold', 'https://www.cboe.com/tradable-products/volatility-trading/',
+               'VIX measures expected volatility, not its direction; 30 is not an official crisis boundary.'),
+    'T10Y2Y': ('Curve inversion', 'https://fred.stlouisfed.org/series/T10Y2Y',
+               'An inverted curve has variable lead times; no recession date or probability is inferred.'),
+    'T10Y3M': ('Curve inversion', 'https://fred.stlouisfed.org/series/T10Y3M',
+               'An inverted curve is a risk context signal, not a trading instruction.'),
+    'STLFSI4': ('Historical-average reference', 'https://fred.stlouisfed.org/series/STLFSI4',
+               'Above zero means above-average measured stress, not a calibrated crisis classification.'),
+    'NFCI': ('Historical-average reference', 'https://www.chicagofed.org/research/data/nfci/background',
+               'Above zero means tighter-than-average financial conditions; below zero does not mean no risk.'),
+    'A191RL1Q225SBEA': ('Real-output contraction', 'https://fred.stlouisfed.org/series/A191RL1Q225SBEA',
+               'A single negative quarter does not establish a recession; estimates are revised.'),
+    'PCEPI': ('Longer-run policy benchmark', 'https://www.federalreserve.gov/faqs/economy_14400.htm',
+               'The 2% objective is for headline PCE inflation over the longer run, not a monthly policy trigger.'),
 }

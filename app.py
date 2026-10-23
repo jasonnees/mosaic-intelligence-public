@@ -3,7 +3,9 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 import config
-from risk_catalog import INDICATORS, BY_ID, DOMAINS, WATCH_RULES
+from risk_catalog import INDICATORS, BY_ID, DOMAINS, WATCH_RULES, RULE_SOURCES
+from indicator_guidance import GUIDES, direction, data_warning
+from brand import masthead, style_chart
 from risk_data import RiskDataService, assess, transform_frame
 
 st.set_page_config(page_title='Market Risk Explorer', page_icon='◉', layout='wide')
@@ -28,10 +30,14 @@ def fetch(series_id, days):
 
 def table_row(indicator, result):
     observation = assess(result.frame, indicator)
+    movement = direction(result.frame, indicator)
+    warning = data_warning(observation, indicator) or (observation.detail if indicator.series_id in WATCH_RULES else GUIDES[indicator.series_id].caution)
     return {
         'Indicator': indicator.name, 'Value': observation.value, 'Units': indicator.unit,
         'Observation date': observation.observed_at, 'Age (days)': observation.age_days,
         'Data status': observation.status, 'Watch condition': observation.watch,
+        'Direction': movement.label, 'Interpretation': movement.explanation, 'Warning': warning,
+        'Comparison date': movement.prior_date, 'Change': movement.change,
         'Frequency': indicator.frequency, 'Age budget (days)': indicator.max_age_days,
         'Source': result.provenance, 'Retrieved (UTC)': result.fetched_at,
         'Source class': indicator.reliability, 'Series': indicator.series_id,
@@ -45,8 +51,18 @@ def render_indicator_table(rows, key):
     # A changed row set gets fresh selection state, so a positional selection
     # cannot silently become a different series after filtering or refresh.
     identity = '|'.join(rows['Series'].tolist())
+    detailed = st.checkbox('Show interpretation, warnings & source columns', key=f'details:{key}')
+    primary = (['Indicator', 'Domain', 'Frequency', 'Display unit', 'Watch condition'] if key == 'catalog'
+               else ['Indicator', 'Value', 'Units', 'Data status', 'Watch condition', 'Direction'])
+    status_colors = {'fresh': '#8ce5bd', 'Watch': '#ffbd69', 'stale': '#ff839b',
+                     'missing': '#ff839b', 'invalid': '#ff839b', 'insufficient history': '#ffbd69',
+                     'Unavailable': '#ff839b', 'Not evaluated': '#ff839b',
+                     'Rising': '#78b7ff', 'Falling': '#a9a1ff'}
+    status_columns = [column for column in ['Data status', 'Watch condition', 'Direction'] if column in rows]
+    display = rows.style.map(lambda value: f'color: {status_colors[value]}; font-weight: 600' if value in status_colors else '', subset=status_columns)
     event = st.dataframe(
-        rows, hide_index=True, use_container_width=True,
+        display, hide_index=True, use_container_width=True,
+        column_order=list(rows.columns) if detailed else primary,
         key=f'{key}:{identity}', on_select='rerun', selection_mode='single-row',
         column_config={'Source link': st.column_config.LinkColumn('Source link'),
                        'Value': st.column_config.NumberColumn('Value', format='%.2f')})
@@ -61,7 +77,25 @@ def render_indicator_chart(indicator, result, days):
     observation = assess(result.frame, indicator)
     st.markdown(f'**{indicator.name}** · [{indicator.source.upper()} source notes]({indicator.source_url})')
     st.caption(f'{indicator.series_id} · {indicator.frequency} · {indicator.reliability} · {observation.status} · {result.provenance}')
-    st.write(observation.detail)
+    guide = GUIDES[indicator.series_id]
+    movement = direction(result.frame, indicator)
+    warning = data_warning(observation, indicator)
+    if warning:
+        st.warning(warning)
+    elif observation.watch == 'Watch':
+        st.warning(observation.detail)
+    elif observation.watch == 'Not triggered':
+        st.info(observation.detail)
+    else:
+        st.info('Directional context: this indicator has no fixed warning threshold. It cannot produce an all-clear.')
+    latest, trend = st.columns([1, 2])
+    latest.metric('Latest reading', f'{observation.value:,.3g}' if observation.value is not None else 'Unavailable', help=indicator.unit)
+    trend.metric('Direction over comparison window', movement.label,
+                 help='Compare with roughly three months earlier, or one year earlier for quarterly series. This describes movement, not risk severity.')
+    st.write(movement.explanation)
+    if movement.change is not None:
+        change_unit = 'percentage points' if '%' in indicator.unit or indicator.unit == 'percentage points' else indicator.unit
+        st.caption(f'Change: {movement.change:+.3g} {change_unit} · {movement.prior_date} → {movement.current_date}. Direction compares displayed values, including year-over-year growth where selected.')
     st.caption(f'Observation period: {observation.observed_at or "unavailable"} · Age: {observation.age_days if observation.age_days is not None else "unknown"} days · Freshness budget: {indicator.max_age_days} days · Units: {indicator.unit}')
     st.caption(f'Retrieved: {result.fetched_at} · Transformation: {indicator.transform}')
     if result.error:
@@ -72,18 +106,42 @@ def render_indicator_chart(indicator, result, days):
     if not frame.empty:
         cutoff = pd.Timestamp.now(tz='UTC').tz_localize(None) - pd.Timedelta(days=days)
         frame = frame[frame['date'] >= cutoff]
-        fig = px.line(frame, x='date', y=indicator.series_id, labels={indicator.series_id: indicator.unit, 'date': 'Observation period'})
-        fig.update_traces(connectgaps=False)
-        st.plotly_chart(fig, use_container_width=True)
+        if frame[indicator.series_id].notna().any():
+            fig = px.line(frame, x='date', y=indicator.series_id, labels={indicator.series_id: indicator.unit, 'date': 'Observation period'})
+            fig = style_chart(fig, indicator.domain)
+            rule = WATCH_RULES.get(indicator.series_id)
+            if rule:
+                fig.add_hline(y=rule[1], line_dash='dot', line_color='#ffbd69',
+                              annotation_text=f'Watch reference: {rule[1]} {indicator.unit}', annotation_position='top left')
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info('No usable transformed values in this chart window. A valid prior-year base is required.')
     else:
         st.info('No observations available. Check the source key and availability; no substitute signal is shown.')
 
+    with st.expander('Interpretation & warning method', expanded=True):
+        st.markdown(f'**If rising:** {guide.rising}.')
+        st.markdown(f'**If falling:** {guide.falling}.')
+        st.markdown(f'**Use with care:** {guide.caution}')
+        rule = WATCH_RULES.get(indicator.series_id)
+        if rule:
+            label, url, caveat = RULE_SOURCES[indicator.series_id]
+            sign = '>' if rule[0] == 'gt' else '<'
+            st.markdown(f'**Watch condition:** unrounded value {sign} {rule[1]} {indicator.unit}. [{label}]({url}).')
+            st.caption(caveat + ' The rule uses unrounded data; displayed readings may be rounded.')
+        else:
+            st.caption('No fixed threshold is assigned. A direction is descriptive and is not a risk warning or investment instruction.')
+        st.markdown(f'[Series definition and methodology]({indicator.source_url})')
+
 
 def main():
+    masthead()
     st.title('Market Risk Explorer')
-    st.write('Understand the market conditions that affect household income, purchasing power, borrowing and investments.')
+    st.write('The macro picture, one piece at a time. Explore market conditions, follow the direction of change, and see where the evidence needs attention.')
     st.caption(f'{len(INDICATORS)} curated indicators · Free public feeds · Hourly session cache · Educational context')
     with st.sidebar:
+        st.markdown('### MOSAIC INCOME')
+        st.caption('MARKET RISK EXPLORER')
         st.header('Explore risks')
         view = st.radio('View', ['Overview'] + [d[0] for d in DOMAINS.values()] + ['Portfolio implications', 'Data catalog'])
         days = st.selectbox('History', [365, 730, 1825, 3650, 7300], index=1,
@@ -102,6 +160,9 @@ def main():
             'Source': i.source.upper(), 'Source link': i.source_url, 'Frequency': i.frequency,
             'Raw unit': i.raw_unit, 'Display unit': i.unit, 'Transformation': i.transform,
             'Age budget (days)': i.max_age_days, 'Source class': i.reliability,
+            'Interpretation': GUIDES[i.series_id].rising + ' / ' + GUIDES[i.series_id].falling,
+            'Warning': GUIDES[i.series_id].caution,
+            'Watch condition': (f'{WATCH_RULES[i.series_id][0]} {WATCH_RULES[i.series_id][1]} {i.unit}' if i.series_id in WATCH_RULES else 'No fixed threshold'),
         } for i in INDICATORS])
         indicator = render_indicator_table(catalog, 'catalog')
         if indicator is not None:
@@ -140,7 +201,10 @@ def main():
     left.metric('Fresh data', f'{fresh}/{len(selected)}')
     middle.metric('Watch flags', watches)
     right.metric('Needs attention', len(selected) - fresh)
-    st.caption('Watch counts are not a risk score. Missing and stale observations never count as neutral or safe.')
+    st.caption('Watch flags reflect explicit thresholds. Direction describes change. Data issues are separate. None of these is a calibrated risk score.')
+    if fresh < len(selected):
+        issues = rows.loc[rows['Data status'] != 'fresh', 'Data status'].value_counts()
+        st.warning('Data needs attention: ' + ' · '.join(f'{count} {state}' for state, count in issues.items()) + '. Signals are withheld for these observations; open a row for the reason and next step.')
     status = st.radio('Filter observations', ['All', 'Fresh', 'Needs attention', 'Watch'], horizontal=True)
     filtered = rows
     if status == 'Fresh':
@@ -161,7 +225,7 @@ def main():
         st.write('Observation date is the reported period, not the publication date. Age is measured from that date. Monthly and quarterly budgets allow for reporting lags. Year-over-year calculations require a matching prior-year period; absent comparisons remain gaps.')
         st.write('Watch rules are transparent descriptive heuristics, not recession probabilities or buy/sell advice. Other indicators are shown as context. Source data may be revised, and licensed market indexes may have shorter histories.')
         st.json({sid: {'operator': rule[0], 'threshold': rule[1], 'meaning': rule[2]} for sid, rule in WATCH_RULES.items()})
-    st.caption('Market Risk Explorer · Educational information; not individualized investment advice.')
+    st.caption('Mosaic Income · Market Risk Explorer · Research & education; not individualized investment advice.')
 
 if __name__ == '__main__':
     main()
