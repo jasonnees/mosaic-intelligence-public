@@ -6,7 +6,7 @@ import config
 from risk_catalog import INDICATORS, BY_ID, DOMAINS, WATCH_RULES, RULE_SOURCES
 from indicator_guidance import GUIDES, direction, data_warning
 from brand import masthead, style_chart
-from risk_data import assess, transform_frame
+from risk_data import assess, transform_frame, freshness_context
 from macro_pages import render_cpi, render_gdp, refresh as refresh_macro
 from market_history_page import render_market_history
 from portfolio_page import render_portfolio
@@ -85,6 +85,10 @@ def render_indicator_chart(indicator, result, days):
         change_unit = 'percentage points' if '%' in indicator.unit or indicator.unit == 'percentage points' else indicator.unit
         st.caption(f'Change: {movement.change:+.3g} {change_unit} · {movement.prior_date} → {movement.current_date}. Direction compares displayed values, including year-over-year growth where selected.')
     st.caption(f'Observation period: {observation.observed_at or "unavailable"} · Age: {observation.age_days if observation.age_days is not None else "unknown"} days · Freshness budget: {indicator.max_age_days} days · Units: {indicator.unit}')
+    timing = freshness_context(indicator, observation.observed_at)
+    if timing['method'] == 'expected monthly release':
+        st.caption(f'Publication timing: next update expected {timing["next_update_expected"]}; {timing["grace_calendar_days"]} calendar days of operational grace, through {timing["deadline"]}. This is an expected schedule, not a guarantee of delivery.')
+        st.markdown(f'[Publisher release timing]({timing["source_url"]})')
     st.caption(f'Retrieved: {result.fetched_at} · Transformation: {indicator.transform}')
     if result.error:
         st.warning(result.error)

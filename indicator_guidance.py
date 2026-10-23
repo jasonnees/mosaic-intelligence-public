@@ -84,7 +84,7 @@ TDSP|Debt payments absorbed more disposable income|Debt payments absorbed less d
 HSN1F|New single-family home sales increased|New single-family home sales decreased|Monthly estimates are annualized, volatile and revised; they exclude existing-home sales.
 HOUST|Housing starts increased|Housing starts decreased|Starts include multifamily construction and are annualized; regional supply conditions can differ.
 PERMIT|Housing permits increased|Housing permits decreased|Permits indicate authorizations, not completed homes; not every permit becomes a start.
-CSUSHPINSA|National home-price growth strengthened|National home-price growth weakened|This non-seasonally-adjusted repeat-sales index has a publication lag; national changes differ from local prices.
+CSUSHPINSA|National home-price growth strengthened|National home-price growth weakened|This unadjusted repeat-sales index normally arrives two months after its reference month, on the last Tuesday. Freshness allows seven extra calendar days for delivery; national changes differ from local prices.
 USSTHPI|FHFA home-price growth strengthened|FHFA home-price growth weakened|The all-transactions index includes appraisal-based information and differs from FHFA's purchase-only index.
 MORTGAGE30US|Thirty-year mortgage financing became more expensive|Thirty-year mortgage financing became less expensive|A survey average is not a loan quote; borrower credit, points and down payment affect the offered rate.
 MORTGAGE15US|Fifteen-year mortgage financing became more expensive|Fifteen-year mortgage financing became less expensive|A shorter maturity often raises monthly payments despite a lower rate; the series is a survey average.
@@ -132,6 +132,10 @@ def direction(frame, indicator, now=None):
 
 def data_warning(observation, indicator):
     """An actionable data warning for every invalid state; no market inference."""
+    if observation.status == 'stale' and indicator.series_id == 'CSUSHPINSA':
+        return (f'Last observation {observation.observed_at}: {observation.age_days} days old. '
+                f'{observation.detail}. Refresh or inspect the source release; '
+                'market warnings and direction are withheld.')
     if observation.status == 'stale':
         return (f'Last observation {observation.observed_at}: {observation.age_days} days old, '
                 f'{observation.age_days - indicator.max_age_days} days beyond the {indicator.max_age_days}-day budget. '

@@ -146,3 +146,40 @@ def test_config_defaults_without_aws(monkeypatch):
     from s3_reader import HybridDataManager
     manager = HybridDataManager()
     assert manager.s3_reader is None
+
+
+def test_case_shiller_current_release_is_not_mistaken_for_a_stale_feed():
+    from risk_data import freshness_context
+    from indicator_guidance import data_warning, direction
+    sid = 'CSUSHPINSA'
+    values = frame(sid, ['2025-07-01','2026-07-01'], [100.,102.])
+    timing = freshness_context(BY_ID[sid], '2026-07-01')
+    # Published schedule: July released Sep 29; August next due Oct 27, 2026.
+    assert timing['next_update_expected'] == '2026-10-27'
+    assert timing['deadline'] == '2026-11-03'
+    assert timing['grace_calendar_days'] == 7
+    assert assess(values, BY_ID[sid], '2026-10-23').status == 'fresh'
+    assert assess(values, BY_ID[sid], '2026-11-03').status == 'fresh'
+    overdue = assess(values, BY_ID[sid], '2026-11-04')
+    assert overdue.status == 'stale' and overdue.watch == 'Unavailable'
+    assert '2026-11-03' in data_warning(overdue, BY_ID[sid])
+    assert 'days beyond' not in data_warning(overdue, BY_ID[sid])
+    assert direction(values, BY_ID[sid], '2026-11-04').label == 'Not evaluated'
+    # Generic monthly series still fail at their original 100-day boundary.
+    assert BY_ID['UNRATE'].max_age_days == 100
+    assert assess(frame('UNRATE', ['2026-07-01'], [4.]), BY_ID['UNRATE'], '2026-10-23').status == 'stale'
+
+
+def test_case_shiller_release_rollovers_and_missing_data_fail_closed():
+    from risk_data import freshness_context
+    sid = 'CSUSHPINSA'
+    # October's successor is November, released the following January.
+    assert freshness_context(BY_ID[sid], '2025-10-01')['next_update_expected'] == '2026-01-27'
+    for reference in pd.date_range('2020-01-01','2030-12-01',freq='MS'):
+        rule = freshness_context(BY_ID[sid], reference)
+        release = pd.Timestamp(rule['next_update_expected'])
+        assert release.weekday() == 1 and (release + pd.Timedelta(days=7)).month != release.month
+        assert (pd.Timestamp(rule['deadline']) - reference).days <= BY_ID[sid].max_age_days
+    assert assess(frame(sid, [], []), BY_ID[sid], '2026-10-23').status == 'missing'
+    assert assess(frame(sid, ['2026-11-01'], [100.]), BY_ID[sid], '2026-10-23').status == 'invalid'
+    assert assess(frame(sid, ['2026-07-01'], [100.]), BY_ID[sid], '2026-10-23').status == 'insufficient history'

@@ -25,7 +25,7 @@
    }
    ```
 
-A fresh repository explicitly starts as `not_deployed`. The deployment check records that state and cannot claim production health. GitHub Pages cannot run this Python/Streamlit app. An external login page or sleeping app is not a successful deployment check; inspect the hosted app if monitoring cannot open it.
+A fresh repository explicitly starts as `not_deployed`. The deployment check records that state and fails the hosted deployment job until a verified target is configured; it cannot claim production health. GitHub Pages cannot run this Python/Streamlit app. An external login page or sleeping app is not a successful deployment check; inspect the hosted app if monitoring cannot open it.
 
 Official instructions: https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy and https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/secrets-management.
 
