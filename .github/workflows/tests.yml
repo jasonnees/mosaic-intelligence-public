@@ -1,0 +1,17 @@
+name: Risk Explorer tests
+on: [push, pull_request]
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+        env:
+          DATA_SOURCE_MODE: api
+          FRED_API_KEY: ''
+          EIA_API_KEY: ''

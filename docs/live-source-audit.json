@@ -1,0 +1,1697 @@
+{
+  "checked_at": "2026-10-23T01:42:00.695973+00:00",
+  "scope": "Authenticated API metadata and observations; point-in-time availability only",
+  "status": "failed",
+  "failures": [
+    "CSUSHPINSA: source error or observation not fresh",
+    "ELEC.PRICE.US-RES.M: source error or observation not fresh"
+  ],
+  "series": [
+    {
+      "series_id": "SP500",
+      "url": "https://fred.stlouisfed.org/series/SP500",
+      "metadata": {
+        "title": "S&P 500",
+        "frequency": "Daily, Close",
+        "units": "Index",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-21 19:01:54-05"
+      },
+      "observation": {
+        "value": 15.171000764622477,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "NASDAQCOM",
+      "url": "https://fred.stlouisfed.org/series/NASDAQCOM",
+      "metadata": {
+        "title": "NASDAQ Composite",
+        "frequency": "Daily, Close",
+        "units": "Index Feb 5, 1971=100",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-21 22:38:47-05"
+      },
+      "observation": {
+        "value": 16.333727896236216,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DJIA",
+      "url": "https://fred.stlouisfed.org/series/DJIA",
+      "metadata": {
+        "title": "Dow Jones Industrial Average",
+        "frequency": "Daily, Close",
+        "units": "Index",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 17:01:29-05"
+      },
+      "observation": {
+        "value": 13.473953116102644,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "VIXCLS",
+      "url": "https://fred.stlouisfed.org/series/VIXCLS",
+      "metadata": {
+        "title": "CBOE Volatility Index: VIX",
+        "frequency": "Daily, Close",
+        "units": "Index",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 08:37:32-05"
+      },
+      "observation": {
+        "value": 16.68,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Not triggered",
+        "detail": "Elevated implied equity volatility; rule: gt 30 index"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "A191RL1Q225SBEA",
+      "url": "https://fred.stlouisfed.org/series/A191RL1Q225SBEA",
+      "metadata": {
+        "title": "Real Gross Domestic Product",
+        "frequency": "Quarterly",
+        "units": "Percent Change from Preceding Period",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-09-30 07:59:38-05"
+      },
+      "observation": {
+        "value": 2.2,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Not triggered",
+        "detail": "Real output contracted this quarter; rule: lt 0 % annualized"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "PAYEMS",
+      "url": "https://fred.stlouisfed.org/series/PAYEMS",
+      "metadata": {
+        "title": "All Employees, Total Nonfarm",
+        "frequency": "Monthly",
+        "units": "Thousands of Persons",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-02 08:24:33-05"
+      },
+      "observation": {
+        "value": 0.3128390140525239,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "UNRATE",
+      "url": "https://fred.stlouisfed.org/series/UNRATE",
+      "metadata": {
+        "title": "Unemployment Rate",
+        "frequency": "Monthly",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-02 08:24:37-05"
+      },
+      "observation": {
+        "value": 4.2,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "IC4WSA",
+      "url": "https://fred.stlouisfed.org/series/IC4WSA",
+      "metadata": {
+        "title": "4-Week Moving Average of Initial Claims",
+        "frequency": "Weekly, Ending Saturday",
+        "units": "Number",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-10-17",
+        "last_updated": "2026-10-22 07:34:23-05"
+      },
+      "observation": {
+        "value": 197750.0,
+        "observed_at": "2026-10-17",
+        "age_days": 6,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "CCSA",
+      "url": "https://fred.stlouisfed.org/series/CCSA",
+      "metadata": {
+        "title": "Continued Claims (Insured Unemployment)",
+        "frequency": "Weekly, Ending Saturday",
+        "units": "Number",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-10-10",
+        "last_updated": "2026-10-22 07:34:22-05"
+      },
+      "observation": {
+        "value": 1728000.0,
+        "observed_at": "2026-10-10",
+        "age_days": 13,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "INDPRO",
+      "url": "https://fred.stlouisfed.org/series/INDPRO",
+      "metadata": {
+        "title": "Industrial Production: Total Index",
+        "frequency": "Monthly",
+        "units": "Index 2017=100",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-16 08:20:19-05"
+      },
+      "observation": {
+        "value": 2.2451508832670886,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "TCU",
+      "url": "https://fred.stlouisfed.org/series/TCU",
+      "metadata": {
+        "title": "Capacity Utilization: Total Index",
+        "frequency": "Monthly",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-16 08:18:24-05"
+      },
+      "observation": {
+        "value": 76.8504,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "PCE",
+      "url": "https://fred.stlouisfed.org/series/PCE",
+      "metadata": {
+        "title": "Personal Consumption Expenditures",
+        "frequency": "Monthly",
+        "units": "Billions of Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-30 07:43:37-05"
+      },
+      "observation": {
+        "value": 6.081932523360045,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "RSXFS",
+      "url": "https://fred.stlouisfed.org/series/RSXFS",
+      "metadata": {
+        "title": "Advance Retail Sales: Retail Trade",
+        "frequency": "Monthly",
+        "units": "Millions of Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-15 07:36:32-05"
+      },
+      "observation": {
+        "value": 6.188457786947321,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "PI",
+      "url": "https://fred.stlouisfed.org/series/PI",
+      "metadata": {
+        "title": "Personal Income",
+        "frequency": "Monthly",
+        "units": "Billions of Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-30 07:43:27-05"
+      },
+      "observation": {
+        "value": 4.271733263886546,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "PSAVERT",
+      "url": "https://fred.stlouisfed.org/series/PSAVERT",
+      "metadata": {
+        "title": "Personal Saving Rate",
+        "frequency": "Monthly",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-30 07:43:27-05"
+      },
+      "observation": {
+        "value": 4.1,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "TOTALSA",
+      "url": "https://fred.stlouisfed.org/series/TOTALSA",
+      "metadata": {
+        "title": "Total Vehicle Sales",
+        "frequency": "Monthly",
+        "units": "Millions of Units",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-02 13:19:28-05"
+      },
+      "observation": {
+        "value": 16.378,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "CIVPART",
+      "url": "https://fred.stlouisfed.org/series/CIVPART",
+      "metadata": {
+        "title": "Labor Force Participation Rate",
+        "frequency": "Monthly",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-02 08:26:18-05"
+      },
+      "observation": {
+        "value": 61.8,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "JTSJOL",
+      "url": "https://fred.stlouisfed.org/series/JTSJOL",
+      "metadata": {
+        "title": "Job Openings: Total Nonfarm",
+        "frequency": "Monthly",
+        "units": "Level in Thousands",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-29 09:11:45-05"
+      },
+      "observation": {
+        "value": 7079.0,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "JTSQUR",
+      "url": "https://fred.stlouisfed.org/series/JTSQUR",
+      "metadata": {
+        "title": "Quits: Total Nonfarm",
+        "frequency": "Monthly",
+        "units": "Rate",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-29 09:11:54-05"
+      },
+      "observation": {
+        "value": 1.9,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "TEMPHELPS",
+      "url": "https://fred.stlouisfed.org/series/TEMPHELPS",
+      "metadata": {
+        "title": "All Employees, Temporary Help Services",
+        "frequency": "Monthly",
+        "units": "Thousands of Persons",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-02 08:24:33-05"
+      },
+      "observation": {
+        "value": 0.6149862437287767,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "MANEMP",
+      "url": "https://fred.stlouisfed.org/series/MANEMP",
+      "metadata": {
+        "title": "All Employees, Manufacturing",
+        "frequency": "Monthly",
+        "units": "Thousands of Persons",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-02 08:24:42-05"
+      },
+      "observation": {
+        "value": 0.31715826197271646,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DGORDER",
+      "url": "https://fred.stlouisfed.org/series/DGORDER",
+      "metadata": {
+        "title": "Manufacturers' New Orders: Durable Goods",
+        "frequency": "Monthly",
+        "units": "Millions of Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-10-02 09:06:32-05"
+      },
+      "observation": {
+        "value": 8.432167823206393,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "AMTMNO",
+      "url": "https://fred.stlouisfed.org/series/AMTMNO",
+      "metadata": {
+        "title": "Manufacturers' New Orders: Total Manufacturing",
+        "frequency": "Monthly",
+        "units": "Millions of Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-10-02 09:06:32-05"
+      },
+      "observation": {
+        "value": 8.50859576360996,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "NEWORDER",
+      "url": "https://fred.stlouisfed.org/series/NEWORDER",
+      "metadata": {
+        "title": "Manufacturers' New Orders: Nondefense Capital Goods Excluding Aircraft",
+        "frequency": "Monthly",
+        "units": "Millions of Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-10-02 09:06:38-05"
+      },
+      "observation": {
+        "value": 14.10566882795614,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "ISRATIO",
+      "url": "https://fred.stlouisfed.org/series/ISRATIO",
+      "metadata": {
+        "title": "Total Business: Inventories to Sales Ratio",
+        "frequency": "Monthly, End of Period",
+        "units": "Ratio",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-10-15 09:03:26-05"
+      },
+      "observation": {
+        "value": 1.33,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "OPHPBS",
+      "url": "https://fred.stlouisfed.org/series/OPHPBS",
+      "metadata": {
+        "title": "Business Sector: Labor Productivity (Output per Hour) for All Workers",
+        "frequency": "Quarterly",
+        "units": "Index 2017=100",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-09-03 07:38:40-05"
+      },
+      "observation": {
+        "value": 2.1483180428134574,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "GACDFSA066MSFRBPHI",
+      "url": "https://fred.stlouisfed.org/series/GACDFSA066MSFRBPHI",
+      "metadata": {
+        "title": "Current General Activity; Diffusion Index for Federal Reserve District 3: Philadelphia",
+        "frequency": "Monthly",
+        "units": "Index",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-10-01",
+        "last_updated": "2026-10-15 07:48:29-05"
+      },
+      "observation": {
+        "value": 20.9,
+        "observed_at": "2026-10-01",
+        "age_days": 22,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "GACDISA066MSFRBNY",
+      "url": "https://fred.stlouisfed.org/series/GACDISA066MSFRBNY",
+      "metadata": {
+        "title": "Current General Business Conditions; Diffusion Index for New York",
+        "frequency": "Monthly",
+        "units": "Index",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-10-01",
+        "last_updated": "2026-10-15 07:32:30-05"
+      },
+      "observation": {
+        "value": 25.5,
+        "observed_at": "2026-10-01",
+        "age_days": 22,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "MCUMFN",
+      "url": "https://fred.stlouisfed.org/series/MCUMFN",
+      "metadata": {
+        "title": "Capacity Utilization: Manufacturing (NAICS)",
+        "frequency": "Monthly",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-16 08:19:52-05"
+      },
+      "observation": {
+        "value": 75.9245,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "CPIAUCSL",
+      "url": "https://fred.stlouisfed.org/series/CPIAUCSL",
+      "metadata": {
+        "title": "Consumer Price Index for All Urban Consumers: All Items in U.S. City Average",
+        "frequency": "Monthly",
+        "units": "Index 1982-1984=100",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-14 08:08:29-05"
+      },
+      "observation": {
+        "value": 3.7172508442689933,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "CPILFESL",
+      "url": "https://fred.stlouisfed.org/series/CPILFESL",
+      "metadata": {
+        "title": "Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average",
+        "frequency": "Monthly",
+        "units": "Index 1982-1984=100",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-14 08:08:29-05"
+      },
+      "observation": {
+        "value": 2.565840844021827,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "PCEPI",
+      "url": "https://fred.stlouisfed.org/series/PCEPI",
+      "metadata": {
+        "title": "Personal Consumption Expenditures: Chain-type Price Index",
+        "frequency": "Monthly",
+        "units": "Index 2017=100",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-30 07:43:32-05"
+      },
+      "observation": {
+        "value": 3.419031824505425,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "PCEPILFE",
+      "url": "https://fred.stlouisfed.org/series/PCEPILFE",
+      "metadata": {
+        "title": "Personal Consumption Expenditures Excluding Food and Energy (Chain-Type Price Index)",
+        "frequency": "Monthly",
+        "units": "Index 2017=100",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-30 07:43:28-05"
+      },
+      "observation": {
+        "value": 3.0075959761856064,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "CUSR0000SEHA",
+      "url": "https://fred.stlouisfed.org/series/CUSR0000SEHA",
+      "metadata": {
+        "title": "Consumer Price Index for All Urban Consumers: Rent of Primary Residence in U.S. City Average",
+        "frequency": "Monthly",
+        "units": "Index 1982-1984=100",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-14 08:08:24-05"
+      },
+      "observation": {
+        "value": 2.782056284613099,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "CES0500000003",
+      "url": "https://fred.stlouisfed.org/series/CES0500000003",
+      "metadata": {
+        "title": "Average Hourly Earnings of All Employees, Total Private",
+        "frequency": "Monthly",
+        "units": "Dollars per Hour",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-02 08:26:56-05"
+      },
+      "observation": {
+        "value": 3.0245231607629375,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "ULCNFB",
+      "url": "https://fred.stlouisfed.org/series/ULCNFB",
+      "metadata": {
+        "title": "Nonfarm Business Sector: Unit Labor Costs for All Workers",
+        "frequency": "Quarterly",
+        "units": "Index 2017=100",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-09-03 07:38:53-05"
+      },
+      "observation": {
+        "value": 1.3977263433385234,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "T5YIFR",
+      "url": "https://fred.stlouisfed.org/series/T5YIFR",
+      "metadata": {
+        "title": "5-Year, 5-Year Forward Inflation Expectation Rate",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 16:03:28-05"
+      },
+      "observation": {
+        "value": 2.19,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "T10YIE",
+      "url": "https://fred.stlouisfed.org/series/T10YIE",
+      "metadata": {
+        "title": "10-Year Breakeven Inflation Rate",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 16:03:26-05"
+      },
+      "observation": {
+        "value": 2.32,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "T5YIE",
+      "url": "https://fred.stlouisfed.org/series/T5YIE",
+      "metadata": {
+        "title": "5-Year Breakeven Inflation Rate",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 16:03:27-05"
+      },
+      "observation": {
+        "value": 2.45,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DCOILWTICO",
+      "url": "https://fred.stlouisfed.org/series/DCOILWTICO",
+      "metadata": {
+        "title": "Crude Oil Prices: West Texas Intermediate (WTI) - Cushing, Oklahoma",
+        "frequency": "Daily",
+        "units": "Dollars per Barrel",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-20",
+        "last_updated": "2026-10-21 12:18:25-05"
+      },
+      "observation": {
+        "value": 107.89,
+        "observed_at": "2026-10-20",
+        "age_days": 3,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DCOILBRENTEU",
+      "url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
+      "metadata": {
+        "title": "Crude Oil Prices: Brent - Europe",
+        "frequency": "Daily",
+        "units": "Dollars per Barrel",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-20",
+        "last_updated": "2026-10-21 12:18:26-05"
+      },
+      "observation": {
+        "value": 115.22,
+        "observed_at": "2026-10-20",
+        "age_days": 3,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DHHNGSP",
+      "url": "https://fred.stlouisfed.org/series/DHHNGSP",
+      "metadata": {
+        "title": "Henry Hub Natural Gas Spot Price",
+        "frequency": "Daily",
+        "units": "Dollars per Million BTU",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-20",
+        "last_updated": "2026-10-21 12:32:30-05"
+      },
+      "observation": {
+        "value": 3.1,
+        "observed_at": "2026-10-20",
+        "age_days": 3,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "GASREGW",
+      "url": "https://fred.stlouisfed.org/series/GASREGW",
+      "metadata": {
+        "title": "US Regular All Formulations Gas Price",
+        "frequency": "Weekly, Ending Monday",
+        "units": "Dollars per Gallon",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-19",
+        "last_updated": "2026-10-20 13:48:26-05"
+      },
+      "observation": {
+        "value": 4.284,
+        "observed_at": "2026-10-19",
+        "age_days": 4,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DFF",
+      "url": "https://fred.stlouisfed.org/series/DFF",
+      "metadata": {
+        "title": "Federal Funds Effective Rate",
+        "frequency": "Daily, 7-Day",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 15:16:30-05"
+      },
+      "observation": {
+        "value": 3.88,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "SOFR",
+      "url": "https://fred.stlouisfed.org/series/SOFR",
+      "metadata": {
+        "title": "Secured Overnight Financing Rate",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 07:02:37-05"
+      },
+      "observation": {
+        "value": 3.88,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DGS3MO",
+      "url": "https://fred.stlouisfed.org/series/DGS3MO",
+      "metadata": {
+        "title": "Market Yield on U.S. Treasury Securities at 3-Month Constant Maturity, Quoted on an Investment Basis",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 15:16:27-05"
+      },
+      "observation": {
+        "value": 4.25,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DGS2",
+      "url": "https://fred.stlouisfed.org/series/DGS2",
+      "metadata": {
+        "title": "Market Yield on U.S. Treasury Securities at 2-Year Constant Maturity, Quoted on an Investment Basis",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 15:16:33-05"
+      },
+      "observation": {
+        "value": 4.81,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DGS5",
+      "url": "https://fred.stlouisfed.org/series/DGS5",
+      "metadata": {
+        "title": "Market Yield on U.S. Treasury Securities at 5-Year Constant Maturity, Quoted on an Investment Basis",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 15:16:36-05"
+      },
+      "observation": {
+        "value": 4.95,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DGS10",
+      "url": "https://fred.stlouisfed.org/series/DGS10",
+      "metadata": {
+        "title": "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 15:16:32-05"
+      },
+      "observation": {
+        "value": 5.13,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DGS30",
+      "url": "https://fred.stlouisfed.org/series/DGS30",
+      "metadata": {
+        "title": "Market Yield on U.S. Treasury Securities at 30-Year Constant Maturity, Quoted on an Investment Basis",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 15:16:32-05"
+      },
+      "observation": {
+        "value": 5.42,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "T10Y2Y",
+      "url": "https://fred.stlouisfed.org/series/T10Y2Y",
+      "metadata": {
+        "title": "10-Year Treasury Constant Maturity Minus 2-Year Treasury Constant Maturity",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 16:03:26-05"
+      },
+      "observation": {
+        "value": 0.31,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
+        "status": "fresh",
+        "watch": "Not triggered",
+        "detail": "Inverted Treasury curve; rule: lt 0 percentage points"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "T10Y3M",
+      "url": "https://fred.stlouisfed.org/series/T10Y3M",
+      "metadata": {
+        "title": "10-Year Treasury Constant Maturity Minus 3-Month Treasury Constant Maturity",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 16:03:30-05"
+      },
+      "observation": {
+        "value": 0.74,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
+        "status": "fresh",
+        "watch": "Not triggered",
+        "detail": "Inverted Treasury curve; rule: lt 0 percentage points"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DFII10",
+      "url": "https://fred.stlouisfed.org/series/DFII10",
+      "metadata": {
+        "title": "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis, Inflation-Indexed",
+        "frequency": "Daily",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 15:16:28-05"
+      },
+      "observation": {
+        "value": 2.76,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "WALCL",
+      "url": "https://fred.stlouisfed.org/series/WALCL",
+      "metadata": {
+        "title": "Assets: Total Assets: Total Assets (Less Eliminations from Consolidation): Wednesday Level",
+        "frequency": "Weekly, As of Wednesday",
+        "units": "Millions of U.S. Dollars",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 15:32:30-05"
+      },
+      "observation": {
+        "value": 2.3823405726773883,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "BAMLC0A0CM",
+      "url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
+      "metadata": {
+        "title": "ICE BofA US Corporate Index Option-Adjusted Spread",
+        "frequency": "Daily, Close",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 08:56:34-05"
+      },
+      "observation": {
+        "value": 0.88,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "BAMLH0A0HYM2",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
+      "metadata": {
+        "title": "ICE BofA US High Yield Index Option-Adjusted Spread",
+        "frequency": "Daily, Close",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-21",
+        "last_updated": "2026-10-22 08:56:50-05"
+      },
+      "observation": {
+        "value": 3.27,
+        "observed_at": "2026-10-21",
+        "age_days": 2,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DRTSCILM",
+      "url": "https://fred.stlouisfed.org/series/DRTSCILM",
+      "metadata": {
+        "title": "Net Percentage of Domestic Banks Tightening Standards for Commercial and Industrial Loans to Large and Middle-Market Firms",
+        "frequency": "Quarterly",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-07-01",
+        "last_updated": "2026-08-03 13:01:40-05"
+      },
+      "observation": {
+        "value": 0.0,
+        "observed_at": "2026-07-01",
+        "age_days": 114,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "BUSLOANS",
+      "url": "https://fred.stlouisfed.org/series/BUSLOANS",
+      "metadata": {
+        "title": "Commercial and Industrial Loans, All Commercial Banks",
+        "frequency": "Monthly",
+        "units": "Billions of U.S. Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-16 15:22:17-05"
+      },
+      "observation": {
+        "value": 9.975456758618417,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DRCLACBS",
+      "url": "https://fred.stlouisfed.org/series/DRCLACBS",
+      "metadata": {
+        "title": "Delinquency Rate on Consumer Loans, All Commercial Banks",
+        "frequency": "Quarterly, End of Period",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-08-25 14:18:01-05"
+      },
+      "observation": {
+        "value": 2.62,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DRCCLACBS",
+      "url": "https://fred.stlouisfed.org/series/DRCCLACBS",
+      "metadata": {
+        "title": "Delinquency Rate on Credit Card Loans, All Commercial Banks",
+        "frequency": "Quarterly, End of Period",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-08-25 14:17:54-05"
+      },
+      "observation": {
+        "value": 2.85,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DRALACBS",
+      "url": "https://fred.stlouisfed.org/series/DRALACBS",
+      "metadata": {
+        "title": "Delinquency Rate on All Loans, All Commercial Banks",
+        "frequency": "Quarterly, End of Period",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-08-25 14:17:45-05"
+      },
+      "observation": {
+        "value": 1.42,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "DRSFRMACBS",
+      "url": "https://fred.stlouisfed.org/series/DRSFRMACBS",
+      "metadata": {
+        "title": "Delinquency Rate on Single-Family Residential Mortgages, Booked in Domestic Offices, All Commercial Banks",
+        "frequency": "Quarterly, End of Period",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-08-25 14:17:58-05"
+      },
+      "observation": {
+        "value": 1.86,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "TOTALSL",
+      "url": "https://fred.stlouisfed.org/series/TOTALSL",
+      "metadata": {
+        "title": "Total Consumer Credit Owned and Securitized",
+        "frequency": "Monthly",
+        "units": "Millions of U.S. Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-10-07 14:01:27-05"
+      },
+      "observation": {
+        "value": 2.731762729991072,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "STLFSI4",
+      "url": "https://fred.stlouisfed.org/series/STLFSI4",
+      "metadata": {
+        "title": "St. Louis Fed Financial Stress Index",
+        "frequency": "Weekly, Ending Friday",
+        "units": "Index",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-16",
+        "last_updated": "2026-10-22 08:55:34-05"
+      },
+      "observation": {
+        "value": -0.6328,
+        "observed_at": "2026-10-16",
+        "age_days": 7,
+        "status": "fresh",
+        "watch": "Not triggered",
+        "detail": "Financial stress above the index historical average; rule: gt 0 index"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "NFCI",
+      "url": "https://fred.stlouisfed.org/series/NFCI",
+      "metadata": {
+        "title": "Chicago Fed National Financial Conditions Index",
+        "frequency": "Weekly, Ending Friday",
+        "units": "Index",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-16",
+        "last_updated": "2026-10-21 07:37:28-05"
+      },
+      "observation": {
+        "value": -0.496,
+        "observed_at": "2026-10-16",
+        "age_days": 7,
+        "status": "fresh",
+        "watch": "Not triggered",
+        "detail": "Financial conditions tighter than the index historical average; rule: gt 0 index"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "TDSP",
+      "url": "https://fred.stlouisfed.org/series/TDSP",
+      "metadata": {
+        "title": "Household Debt Service Payments as a Percent of Disposable Personal Income",
+        "frequency": "Quarterly",
+        "units": "Percent",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-09-22 14:31:29-05"
+      },
+      "observation": {
+        "value": 11.111439,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "HSN1F",
+      "url": "https://fred.stlouisfed.org/series/HSN1F",
+      "metadata": {
+        "title": "New One Family Houses Sold: United States",
+        "frequency": "Monthly",
+        "units": "Thousands",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-24 09:03:40-05"
+      },
+      "observation": {
+        "value": 684.0,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "HOUST",
+      "url": "https://fred.stlouisfed.org/series/HOUST",
+      "metadata": {
+        "title": "New Privately-Owned Housing Units Started: Total Units",
+        "frequency": "Monthly",
+        "units": "Thousands of Units",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-20 07:33:37-05"
+      },
+      "observation": {
+        "value": 1221.0,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "PERMIT",
+      "url": "https://fred.stlouisfed.org/series/PERMIT",
+      "metadata": {
+        "title": "New Privately-Owned Housing Units Authorized in Permit-Issuing Places: Total Units",
+        "frequency": "Monthly",
+        "units": "Thousands of Units",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-09-01",
+        "last_updated": "2026-10-20 07:33:50-05"
+      },
+      "observation": {
+        "value": 1400.0,
+        "observed_at": "2026-09-01",
+        "age_days": 52,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "CSUSHPINSA",
+      "url": "https://fred.stlouisfed.org/series/CSUSHPINSA",
+      "metadata": {
+        "title": "S&P Cotality Case-Shiller U.S. National Home Price Index",
+        "frequency": "Monthly",
+        "units": "Index Jan 2000=100",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-07-01",
+        "last_updated": "2026-09-30 16:00:29-05"
+      },
+      "observation": {
+        "value": 1.928847496245334,
+        "observed_at": "2026-07-01",
+        "age_days": 114,
+        "status": "stale",
+        "watch": "Unavailable",
+        "detail": "Observation exceeds the freshness budget"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "USSTHPI",
+      "url": "https://fred.stlouisfed.org/series/USSTHPI",
+      "metadata": {
+        "title": "All-Transactions House Price Index for the United States",
+        "frequency": "Quarterly",
+        "units": "Index 1980:Q1=100",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-08-25 09:05:23-05"
+      },
+      "observation": {
+        "value": 3.0313873105382916,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "MORTGAGE30US",
+      "url": "https://fred.stlouisfed.org/series/MORTGAGE30US",
+      "metadata": {
+        "title": "30-Year Fixed Rate Mortgage Average in the United States",
+        "frequency": "Weekly, Ending Thursday",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 11:02:26-05"
+      },
+      "observation": {
+        "value": 7.32,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "MORTGAGE15US",
+      "url": "https://fred.stlouisfed.org/series/MORTGAGE15US",
+      "metadata": {
+        "title": "15-Year Fixed Rate Mortgage Average in the United States",
+        "frequency": "Weekly, Ending Thursday",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-10-22",
+        "last_updated": "2026-10-22 11:02:26-05"
+      },
+      "observation": {
+        "value": 6.68,
+        "observed_at": "2026-10-22",
+        "age_days": 1,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "MSACSR",
+      "url": "https://fred.stlouisfed.org/series/MSACSR",
+      "metadata": {
+        "title": "Monthly Supply of New Houses in the United States",
+        "frequency": "Monthly",
+        "units": "Months' Supply",
+        "seasonal_adjustment": "Seasonally Adjusted",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-09-24 09:03:38-05"
+      },
+      "observation": {
+        "value": 8.5,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "RRVRUSQ156N",
+      "url": "https://fred.stlouisfed.org/series/RRVRUSQ156N",
+      "metadata": {
+        "title": "Rental Vacancy Rate in the United States",
+        "frequency": "Quarterly",
+        "units": "Percent",
+        "seasonal_adjustment": "Not Seasonally Adjusted",
+        "observation_end": "2026-04-01",
+        "last_updated": "2026-07-28 09:32:26-05"
+      },
+      "observation": {
+        "value": 7.3,
+        "observed_at": "2026-04-01",
+        "age_days": 205,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "TTLCONS",
+      "url": "https://fred.stlouisfed.org/series/TTLCONS",
+      "metadata": {
+        "title": "Total Construction Spending: Total Construction in the United States",
+        "frequency": "Monthly",
+        "units": "Millions of Dollars",
+        "seasonal_adjustment": "Seasonally Adjusted Annual Rate",
+        "observation_end": "2026-08-01",
+        "last_updated": "2026-10-01 09:18:19-05"
+      },
+      "observation": {
+        "value": -1.7348163980403397,
+        "observed_at": "2026-08-01",
+        "age_days": 83,
+        "status": "fresh",
+        "watch": "Context",
+        "detail": "Descriptive indicator; no risk threshold assigned"
+      },
+      "provenance": "FRED API",
+      "error": ""
+    },
+    {
+      "series_id": "ELEC.PRICE.US-RES.M",
+      "url": "https://www.eia.gov/electricity/data/browser/",
+      "observation": {
+        "value": 18.31,
+        "observed_at": "2026-07-01",
+        "age_days": 114,
+        "status": "stale",
+        "watch": "Unavailable",
+        "detail": "Observation exceeds the freshness budget"
+      },
+      "provenance": "EIA API",
+      "error": ""
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "deployment_status": "not_deployed",
+  "site_url": null,
+  "health_url": null,
+  "chart_views": ["Overview", "Inflation risk", "Housing conditions"]
+}

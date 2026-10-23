@@ -1,0 +1,240 @@
+legacy_category,legacy_name,legacy_series,disposition,core_series,reason
+T1_RATES,Federal Funds Rate,DFF,retained / corrected definition,DFF,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_RATES,CME FedWatch Probabilities,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_RATES,2Y–10Y Treasury Spread,T10Y2Y,retained / corrected definition,T10Y2Y,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_RATES,3M–10Y Treasury Spread,T10Y3M,retained / corrected definition,T10Y3M,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_RATES,5Y5Y Forward Inflation,T5YIFR,retained / corrected definition,T5YIFR,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_RATES,10Y TIPS Breakeven,T10YIE,retained / corrected definition,T10YIE,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_RATES,5Y TIPS Breakeven,T5YIE,retained / corrected definition,T5YIE,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_RATES,2Y TIPS Breakeven,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_RATES,Real Yield Curve (TIPS),DFII10,retained / corrected definition,DFII10,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_RATES,SOFR,SOFR,retained / corrected definition,SOFR,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_RATES,Atlanta Fed Probability Tracker,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_RATES,30-Day Fed Funds Futures,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_RATES,Eurodollar Term Structure,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_RATES,Fed Dot Plot,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_RATES,Treasury Bill-Bond Spreads,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_CREDIT,CDX NA Investment Grade,BAMLC0A0CM,retained / corrected definition,BAMLC0A0CM,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_CREDIT,CDX High Yield,BAMLH0A0HYM2,retained / corrected definition,BAMLH0A0HYM2,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_CREDIT,iTraxx Europe,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_CREDIT,EM CDX,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_CREDIT,VIX Index,VIXCLS,retained / corrected definition,VIXCLS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_CREDIT,MOVE Index,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_CREDIT,High Yield Spreads,BAMLH0A0HYM2,consolidated duplicate,BAMLH0A0HYM2,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_CREDIT,Bank CDS Spreads,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_CREDIT,Sovereign CDS Spreads,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_CREDIT,Corporate Issuance Volume,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,S&P 500,SP500,retained / corrected definition,SP500,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_EQUITY,Put/Call Ratio,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,Equity Risk Premium,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,Forward P/E,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,Margin Debt,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,Insider Activity,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,Buyback Announcements,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,IPO Volume,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,Sector Rotation,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_EQUITY,Market Concentration,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_GROWTH,GDP Growth Rate,A191RL1Q225SBEA,retained / corrected definition,A191RL1Q225SBEA,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_GROWTH,Conference Board L.E.I.,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_GROWTH,Nonfarm Payrolls,PAYEMS,retained / corrected definition,PAYEMS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_GROWTH,Unemployment Rate,UNRATE,retained / corrected definition,UNRATE,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_GROWTH,Initial Claims (4-wk),ICSA,retained / corrected definition,IC4WSA,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_GROWTH,Industrial Production,INDPRO,retained / corrected definition,INDPRO,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_GROWTH,Capacity Utilization,TCU,retained / corrected definition,TCU,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_GROWTH,ISM Manufacturing,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_GROWTH,ISM Services,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_GROWTH,Consumer Confidence,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T1_INFLATION,C.P.I. (year-over-year),CPIAUCSL,retained / corrected definition,CPIAUCSL,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_INFLATION,Core C.P.I.,CPILFESL,retained / corrected definition,CPILFESL,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_INFLATION,P.C.E. Price Index,PCEPI,retained / corrected definition,PCEPI,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_INFLATION,Personal Spending,PCE,retained / corrected definition,PCE,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T1_INFLATION,Retail Sales,RSXFS,retained / corrected definition,RSXFS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_FI,30Y Treasury,DGS30,retained / corrected definition,DGS30,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_FI,2Y Treasury,DGS2,retained / corrected definition,DGS2,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_FI,5Y Treasury,DGS5,retained / corrected definition,DGS5,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_FI,Municipal Yields,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Agency MBS Spread,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,CMBS Spreads,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,CLO Spreads (AAA),,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Swap Spreads,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Auction Demand,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,TED Spread,TEDRATE,demoted to legacy,,FRED discontinued this series in 2022.
+T2_FI,LIBOR-OIS Spread,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Fed Balance Sheet,WALCL,retained / corrected definition,WALCL,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_FI,Repo Rates,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Treasury Volatility,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Inflation Swaps 5Y,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Bond Fund Flows,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Primary Dealer Positions,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,Credit Curve Slope,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,TIPS Real Yield Curve,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_FI,3M–10Y Curve,T10Y3M,consolidated duplicate,T10Y3M,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_CREDIT_BANK,Bank Lending Standards,DRTSCILM,retained / corrected definition,DRTSCILM,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_CREDIT_BANK,C&I Loans,BUSLOANS,retained / corrected definition,BUSLOANS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_CREDIT_BANK,Consumer Delinquency,DRCLACBS,retained / corrected definition,DRCLACBS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_CREDIT_BANK,Credit Card Delinquency,DRCCLACBS,retained / corrected definition,DRCCLACBS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_CREDIT_BANK,Auto Delinquency,DRALACBS,retained / corrected definition,DRALACBS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_CREDIT_BANK,Student Default Rate,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_CREDIT_BANK,Mortgage Delinquency,DRSFRMACBS,retained / corrected definition,DRSFRMACBS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_CREDIT_BANK,Bank Tier 1 Capital,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_CREDIT_BANK,Net Interest Margins,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_CREDIT_BANK,Loan Loss Provisions,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_CREDIT_BANK,FDIC Problem Banks,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_CREDIT_BANK,Sr Loan Officer Survey,DRTSCILM,consolidated duplicate,DRTSCILM,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_CREDIT_BANK,Leveraged Loan Index,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_CREDIT_BANK,ABS Spreads,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_CREDIT_BANK,Bank Deposit Flows,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Nasdaq Composite,NASDAQCOM,retained / corrected definition,NASDAQCOM,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_EQUITY_DEPTH,Russell 2000,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Dow Jones Industrial,DJIA,retained / corrected definition,DJIA,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_EQUITY_DEPTH,NYSE Advance/Decline,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,New Highs vs. Lows,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Equal vs. Cap Weight,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Small Value/Growth,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Sector Relative Strength,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Stock Correlation,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Short Interest,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,ETF Flows,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Earnings Revisions,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Earnings Surprise,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Dividend Yield Spread,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_EQUITY_DEPTH,Vol Term Structure,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,WTI Crude,DCOILWTICO,retained / corrected definition,DCOILWTICO,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_COMMODITIES,Brent Crude,DCOILBRENTEU,retained / corrected definition,DCOILBRENTEU,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_COMMODITIES,Gold,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Silver,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Copper,PCOPPUSDM,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T2_COMMODITIES,Nat Gas (Henry Hub),DHHNGSP,retained / corrected definition,DHHNGSP,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T2_COMMODITIES,Bloomberg Commodity,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Agricultural Index,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Industrial Metals,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Lumber,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Iron Ore,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Platinum/Palladium,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Commodity Curves,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,OPEC Spare Capacity,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_COMMODITIES,Strategic Reserve,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_INTL,Dollar Index (DXY),DTWEXBGS,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T2_INTL,Euro/Dollar,DEXUSEU,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T2_INTL,Dollar/Yen,DEXJPUS,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T2_INTL,Dollar/Yuan,DEXCHUS,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T2_INTL,EM Currency Index,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_INTL,Capital Flows,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_INTL,CB Reserves,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_INTL,Carry Trade Index,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T2_INTL,Trade-Weighted Dollar,DTWEXBGS,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T2_INTL,Cross-Ccy Basis,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HOUSING,Existing Home Sales,EXHOSLUSM495S,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_HOUSING,New Home Sales,HSN1F,retained / corrected definition,HSN1F,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,Housing Starts,HOUST,retained / corrected definition,HOUST,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,Building Permits,PERMIT,retained / corrected definition,PERMIT,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,Pending Home Sales,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HOUSING,Case-Shiller Index,CSUSHPINSA,retained / corrected definition,CSUSHPINSA,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,FHFA House Prices,USSTHPI,retained / corrected definition,USSTHPI,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,30Y Mortgage Rate,MORTGAGE30US,retained / corrected definition,MORTGAGE30US,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,Mortgage Applications,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HOUSING,Affordability Index,FIXHAI,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_HOUSING,Months Supply,MSACSR,retained / corrected definition,MSACSR,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,NAHB Confidence,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HOUSING,Rental Vacancy,RRVRUSQ156N,retained / corrected definition,RRVRUSQ156N,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,Rent Prices,CUSR0000SEHA,retained / corrected definition,CUSR0000SEHA,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,Commercial RE,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HOUSING,REIT Performance,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HOUSING,Mortgage Delinq 90+,DRSFRMACBS,consolidated duplicate,DRSFRMACBS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_HOUSING,Foreclosure Rate,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HOUSING,Home Equity Withdrawal,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HOUSING,Construction Spending,TTLCONS,retained / corrected definition,TTLCONS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Durable Goods Orders,DGORDER,retained / corrected definition,DGORDER,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Factory Orders,AMTMNO,retained / corrected definition,AMTMNO,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Capacity Utilization (Mfg),MCUMFN,retained / corrected definition,MCUMFN,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Mfg Employment,MANEMP,retained / corrected definition,MANEMP,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,New Orders (ISM),,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_MFG,Inventory/Sales,ISRATIO,retained / corrected definition,ISRATIO,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Trade Balance,BOPGSTB,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_MFG,Export Orders,BOPTEXP,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_MFG,Core CapEx Orders,NEWORDER,retained / corrected definition,NEWORDER,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Productivity,OPHPBS,retained / corrected definition,OPHPBS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Unit Labor Costs,ULCNFB,retained / corrected definition,ULCNFB,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Philly Fed Mfg,GACDFSA066MSFRBPHI,retained / corrected definition,GACDFSA066MSFRBPHI,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,Empire State Mfg,GACDISA066MSFRBNY,retained / corrected definition,GACDISA066MSFRBNY,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_MFG,KC Fed Mfg,FRBKCLMCILA,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_MFG,Chicago PMI,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_CONSUMER,Michigan Sentiment,UMCSENT,demoted to legacy,,Source publication embargo; core set favors directly observed household conditions.
+T3_CONSUMER,Personal Income,PI,retained / corrected definition,PI,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_CONSUMER,Savings Rate,PSAVERT,retained / corrected definition,PSAVERT,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_CONSUMER,Consumer Credit,TOTALSL,retained / corrected definition,TOTALSL,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_CONSUMER,Auto Sales,TOTALSA,retained / corrected definition,TOTALSA,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_CONSUMER,Redbook Retail,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_CONSUMER,E-Commerce,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_CONSUMER,Restaurant Index,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_CONSUMER,Hotel Occupancy,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_CONSUMER,CC Spending,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_CONSUMER,Durable Orders (Consumer),,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_CONSUMER,Consumer Expectations,MICH,demoted to legacy,,Source publication embargo; core set favors directly observed household conditions.
+T3_LABOR,Participation Rate,CIVPART,retained / corrected definition,CIVPART,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_LABOR,Hourly Earnings,CES0500000003,retained / corrected definition,CES0500000003,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_LABOR,JOLTS Openings,JTSJOL,retained / corrected definition,JTSJOL,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_LABOR,JOLTS Quits Rate,JTSQUR,retained / corrected definition,JTSQUR,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_LABOR,Employment Cost Index,ECIWAG,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_LABOR,Temp Employment,TEMPHELPS,retained / corrected definition,TEMPHELPS,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T3_LABOR,Job Postings,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_TECH,Semiconductor Sales,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_TECH,Software Spending,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_TECH,Cloud Revenue,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_TECH,VC Investment,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_TECH,AI/ML Investment,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_ENERGY,Oil Rig Count,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_ENERGY,Gasoline Inventories,PET.WGTSTUS1.W,demoted to legacy,,Specialized energy supply detail; use household energy prices in core. Some legacy routes lack unique facets.
+T3_ENERGY,Crude Inventories,PET.WCESTUS1.W,demoted to legacy,,Specialized energy supply detail; use household energy prices in core. Some legacy routes lack unique facets.
+T3_ENERGY,Refinery Utilization,PET.WPULRL3S3.W,demoted to legacy,,Specialized energy supply detail; use household energy prices in core. Some legacy routes lack unique facets.
+T3_ENERGY,Nat Gas Storage,NG.NW2_EPG0_SWO_R48_BCF.W,demoted to legacy,,Specialized energy supply detail; use household energy prices in core. Some legacy routes lack unique facets.
+T3_ENERGY,Renewable Investment,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_ENERGY,Carbon Credits,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_ENERGY,US Gas Demand,PET.WGFUPUS2.W,demoted to legacy,,Specialized energy supply detail; use household energy prices in core. Some legacy routes lack unique facets.
+T3_ENERGY,Global Oil Demand,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_ENERGY,LNG Exports,NG.N9133US2.M,demoted to legacy,,Specialized energy supply detail; use household energy prices in core. Some legacy routes lack unique facets.
+T3_FISCAL,Budget Deficit,FYFSD,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_FISCAL,Debt-to-GDP,GFDEGDQ188S,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_FISCAL,Tax Revenue,FYFRGDA188S,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_FISCAL,Govt Spending,FGEXPND,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T3_FISCAL,Treasury Issuance,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_FISCAL,Infrastructure,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_FISCAL,Defense Spending,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HEALTH,Healthcare Spending,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HEALTH,FDA Approvals,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HEALTH,Biotech Index,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T3_HEALTH,Population Growth,POPTHM,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T4_MICRO,Order Flow,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,Dark Pool Activity,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,Bid-Ask Spreads,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,AAII Sentiment,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,Fear & Greed,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,CBOE Skew,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,Gamma Exposure,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,VIX Term Structure,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,COT Positioning,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,Money Market Assets,RRPONTSYD,demoted to legacy,,"Lower household relevance, overlapping context or mapping needing further validation."
+T4_MICRO,HF Leverage,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_MICRO,Cross-Asset Momentum,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,China PMI,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,China Credit,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,Eurozone PMI,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,Global Trade,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,Baltic Dry,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,Global PMI,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,OECD Leading,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,Copper/Gold Ratio,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_GLOBAL,Geopolitical Risk,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_ALT,Satellite Activity,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_ALT,Social Sentiment,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_ALT,Search Trends,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_ALT,Supply Chain Pressure,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_ALT,Container Rates,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_ALT,Electricity Consumption,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_ALT,CEO Confidence,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_RISK,Correlation Events,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_RISK,Tail Risk Costs,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_RISK,Systemic Risk,NFCI,retained / corrected definition,NFCI,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T4_RISK,Liquidity Premium,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.
+T4_RISK,Financial Stress,STLFSI4,retained / corrected definition,STLFSI4,"Use the canonical name, units and transformation in risk_catalog.py; no preset signals."
+T4_RISK,Regime Change,,demoted to legacy,,No integrated public source mapping; unavailable in the working application.

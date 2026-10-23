@@ -1,0 +1,78 @@
+name: Live monitoring
+on:
+  schedule:
+    - cron: '23 13 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: live-monitoring
+  cancel-in-progress: false
+jobs:
+  live-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Audit authenticated feeds and freshness
+        run: python scripts/audit_live_sources.py --strict --output live-source-audit.json
+        env:
+          DATA_SOURCE_MODE: api
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-source-audit
+          path: live-source-audit.json
+          if-no-files-found: error
+          retention-days: 30
+  deployment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install monitoring tools
+        run: pip install -r requirements-monitoring.txt
+      - name: Read deployment status
+        id: target
+        run: |
+          python - <<'PY'
+          import os
+          from scripts.check_deployment import load_target
+          target = load_target('monitoring.json')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('status=' + target['deployment_status'] + '\n')
+          PY
+      - name: Install browser
+        if: steps.target.outputs.status == 'deployed'
+        run: python -m playwright install --with-deps chromium
+      - name: Check deployment and populated charts
+        run: |
+          set +e
+          python scripts/check_deployment.py --output deployment-report.json
+          result=$?
+          if [ "$result" -eq 2 ]; then
+            echo '### Not deployed — availability and charts remain unverified' >> "$GITHUB_STEP_SUMMARY"
+            echo '::notice::Deploy the app and update monitoring.json to enable production checks.'
+            exit 0
+          fi
+          exit "$result"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deployment-report
+          path: deployment-report.json
+          if-no-files-found: error
+          retention-days: 30

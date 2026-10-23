@@ -1,0 +1,622 @@
+{
+  "checked_at": "2026-10-08T12:13:56.548255+00:00",
+  "scope": "Public source page identity, not API observations",
+  "series": [
+    {
+      "series_id": "SP500",
+      "url": "https://fred.stlouisfed.org/series/SP500",
+      "http_status": 200,
+      "title": "S&P 500 (SP500) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "NASDAQCOM",
+      "url": "https://fred.stlouisfed.org/series/NASDAQCOM",
+      "http_status": 200,
+      "title": "NASDAQ Composite (NASDAQCOM) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DJIA",
+      "url": "https://fred.stlouisfed.org/series/DJIA",
+      "http_status": 200,
+      "title": "Dow Jones Industrial Average (DJIA) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "VIXCLS",
+      "url": "https://fred.stlouisfed.org/series/VIXCLS",
+      "http_status": 200,
+      "title": "CBOE Volatility Index: VIX (VIXCLS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "A191RL1Q225SBEA",
+      "url": "https://fred.stlouisfed.org/series/A191RL1Q225SBEA",
+      "http_status": 200,
+      "title": "Real Gross Domestic Product (A191RL1Q225SBEA) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "PAYEMS",
+      "url": "https://fred.stlouisfed.org/series/PAYEMS",
+      "http_status": 200,
+      "title": "All Employees, Total Nonfarm (PAYEMS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "UNRATE",
+      "url": "https://fred.stlouisfed.org/series/UNRATE",
+      "http_status": 200,
+      "title": "Unemployment Rate (UNRATE) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "IC4WSA",
+      "url": "https://fred.stlouisfed.org/series/IC4WSA",
+      "http_status": 200,
+      "title": "4-Week Moving Average of Initial Claims (IC4WSA) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "CCSA",
+      "url": "https://fred.stlouisfed.org/series/CCSA",
+      "http_status": 200,
+      "title": "Continued Claims (Insured Unemployment) (CCSA) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "INDPRO",
+      "url": "https://fred.stlouisfed.org/series/INDPRO",
+      "http_status": 200,
+      "title": "Industrial Production: Total Index (INDPRO) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "TCU",
+      "url": "https://fred.stlouisfed.org/series/TCU",
+      "http_status": 200,
+      "title": "Capacity Utilization: Total Index (TCU) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "PCE",
+      "url": "https://fred.stlouisfed.org/series/PCE",
+      "http_status": 200,
+      "title": "Personal Consumption Expenditures (PCE) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "RSXFS",
+      "url": "https://fred.stlouisfed.org/series/RSXFS",
+      "http_status": 200,
+      "title": "Advance Retail Sales: Retail Trade (RSXFS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "PI",
+      "url": "https://fred.stlouisfed.org/series/PI",
+      "http_status": 200,
+      "title": "Personal Income (PI) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "PSAVERT",
+      "url": "https://fred.stlouisfed.org/series/PSAVERT",
+      "http_status": 200,
+      "title": "Personal Saving Rate (PSAVERT) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "TOTALSA",
+      "url": "https://fred.stlouisfed.org/series/TOTALSA",
+      "http_status": 200,
+      "title": "Total Vehicle Sales (TOTALSA) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "CIVPART",
+      "url": "https://fred.stlouisfed.org/series/CIVPART",
+      "http_status": 200,
+      "title": "Labor Force Participation Rate (CIVPART) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "JTSJOL",
+      "url": "https://fred.stlouisfed.org/series/JTSJOL",
+      "http_status": 200,
+      "title": "Job Openings: Total Nonfarm (JTSJOL) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "JTSQUR",
+      "url": "https://fred.stlouisfed.org/series/JTSQUR",
+      "http_status": 200,
+      "title": "Quits: Total Nonfarm (JTSQUR) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "TEMPHELPS",
+      "url": "https://fred.stlouisfed.org/series/TEMPHELPS",
+      "http_status": 200,
+      "title": "All Employees, Temporary Help Services (TEMPHELPS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "MANEMP",
+      "url": "https://fred.stlouisfed.org/series/MANEMP",
+      "http_status": 200,
+      "title": "All Employees, Manufacturing (MANEMP) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DGORDER",
+      "url": "https://fred.stlouisfed.org/series/DGORDER",
+      "http_status": 200,
+      "title": "Manufacturers' New Orders: Durable Goods (DGORDER) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "AMTMNO",
+      "url": "https://fred.stlouisfed.org/series/AMTMNO",
+      "http_status": 200,
+      "title": "Manufacturers' New Orders: Total Manufacturing (AMTMNO) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "NEWORDER",
+      "url": "https://fred.stlouisfed.org/series/NEWORDER",
+      "http_status": 200,
+      "title": "Manufacturers' New Orders: Nondefense Capital Goods Excluding Aircraft (NEWORDER) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "ISRATIO",
+      "url": "https://fred.stlouisfed.org/series/ISRATIO",
+      "http_status": 200,
+      "title": "Total Business: Inventories to Sales Ratio (ISRATIO) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "OPHPBS",
+      "url": "https://fred.stlouisfed.org/series/OPHPBS",
+      "http_status": 200,
+      "title": "Business Sector: Labor Productivity (Output per Hour) for All Workers (OPHPBS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "GACDFSA066MSFRBPHI",
+      "url": "https://fred.stlouisfed.org/series/GACDFSA066MSFRBPHI",
+      "http_status": 200,
+      "title": "Current General Activity; Diffusion Index for Federal Reserve District 3: Philadelphia (GACDFSA066MSFRBPHI) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "GACDISA066MSFRBNY",
+      "url": "https://fred.stlouisfed.org/series/GACDISA066MSFRBNY",
+      "http_status": 200,
+      "title": "Current General Business Conditions; Diffusion Index for New York (GACDISA066MSFRBNY) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "MCUMFN",
+      "url": "https://fred.stlouisfed.org/series/MCUMFN",
+      "http_status": 200,
+      "title": "Capacity Utilization: Manufacturing (NAICS) (MCUMFN) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "CPIAUCSL",
+      "url": "https://fred.stlouisfed.org/series/CPIAUCSL",
+      "http_status": 200,
+      "title": "Consumer Price Index for All Urban Consumers: All Items in U.S. City Average (CPIAUCSL) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "CPILFESL",
+      "url": "https://fred.stlouisfed.org/series/CPILFESL",
+      "http_status": 200,
+      "title": "Consumer Price Index for All Urban Consumers: All Items Less Food and Energy in U.S. City Average (CPILFESL) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "PCEPI",
+      "url": "https://fred.stlouisfed.org/series/PCEPI",
+      "http_status": 200,
+      "title": "Personal Consumption Expenditures: Chain-type Price Index (PCEPI) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "PCEPILFE",
+      "url": "https://fred.stlouisfed.org/series/PCEPILFE",
+      "http_status": 200,
+      "title": "Personal Consumption Expenditures Excluding Food and Energy (Chain-Type Price Index) (PCEPILFE) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "CUSR0000SEHA",
+      "url": "https://fred.stlouisfed.org/series/CUSR0000SEHA",
+      "http_status": 200,
+      "title": "Consumer Price Index for All Urban Consumers: Rent of Primary Residence in U.S. City Average (CUSR0000SEHA) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "CES0500000003",
+      "url": "https://fred.stlouisfed.org/series/CES0500000003",
+      "http_status": 200,
+      "title": "Average Hourly Earnings of All Employees, Total Private (CES0500000003) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "ULCNFB",
+      "url": "https://fred.stlouisfed.org/series/ULCNFB",
+      "http_status": 200,
+      "title": "Nonfarm Business Sector: Unit Labor Costs for All Workers (ULCNFB) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "T5YIFR",
+      "url": "https://fred.stlouisfed.org/series/T5YIFR",
+      "http_status": 200,
+      "title": "5-Year, 5-Year Forward Inflation Expectation Rate (T5YIFR) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "T10YIE",
+      "url": "https://fred.stlouisfed.org/series/T10YIE",
+      "http_status": 200,
+      "title": "10-Year Breakeven Inflation Rate (T10YIE) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "T5YIE",
+      "url": "https://fred.stlouisfed.org/series/T5YIE",
+      "http_status": 200,
+      "title": "5-Year Breakeven Inflation Rate (T5YIE) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DCOILWTICO",
+      "url": "https://fred.stlouisfed.org/series/DCOILWTICO",
+      "http_status": 200,
+      "title": "Crude Oil Prices: West Texas Intermediate (WTI) - Cushing, Oklahoma (DCOILWTICO) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DCOILBRENTEU",
+      "url": "https://fred.stlouisfed.org/series/DCOILBRENTEU",
+      "http_status": 200,
+      "title": "Crude Oil Prices: Brent - Europe (DCOILBRENTEU) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DHHNGSP",
+      "url": "https://fred.stlouisfed.org/series/DHHNGSP",
+      "http_status": 200,
+      "title": "Henry Hub Natural Gas Spot Price (DHHNGSP) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "GASREGW",
+      "url": "https://fred.stlouisfed.org/series/GASREGW",
+      "http_status": 200,
+      "title": "US Regular All Formulations Gas Price (GASREGW) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DFF",
+      "url": "https://fred.stlouisfed.org/series/DFF",
+      "http_status": 200,
+      "title": "Federal Funds Effective Rate (DFF) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "SOFR",
+      "url": "https://fred.stlouisfed.org/series/SOFR",
+      "http_status": 200,
+      "title": "Secured Overnight Financing Rate (SOFR) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DGS3MO",
+      "url": "https://fred.stlouisfed.org/series/DGS3MO",
+      "http_status": 200,
+      "title": "Market Yield on U.S. Treasury Securities at 3-Month Constant Maturity, Quoted on an Investment Basis (DGS3MO) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DGS2",
+      "url": "https://fred.stlouisfed.org/series/DGS2",
+      "http_status": 200,
+      "title": "Market Yield on U.S. Treasury Securities at 2-Year Constant Maturity, Quoted on an Investment Basis (DGS2) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DGS5",
+      "url": "https://fred.stlouisfed.org/series/DGS5",
+      "http_status": 200,
+      "title": "Market Yield on U.S. Treasury Securities at 5-Year Constant Maturity, Quoted on an Investment Basis (DGS5) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DGS10",
+      "url": "https://fred.stlouisfed.org/series/DGS10",
+      "http_status": 200,
+      "title": "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis (DGS10) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DGS30",
+      "url": "https://fred.stlouisfed.org/series/DGS30",
+      "http_status": 200,
+      "title": "Market Yield on U.S. Treasury Securities at 30-Year Constant Maturity, Quoted on an Investment Basis (DGS30) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "T10Y2Y",
+      "url": "https://fred.stlouisfed.org/series/T10Y2Y",
+      "http_status": 200,
+      "title": "10-Year Treasury Constant Maturity Minus 2-Year Treasury Constant Maturity (T10Y2Y) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "T10Y3M",
+      "url": "https://fred.stlouisfed.org/series/T10Y3M",
+      "http_status": 200,
+      "title": "10-Year Treasury Constant Maturity Minus 3-Month Treasury Constant Maturity (T10Y3M) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DFII10",
+      "url": "https://fred.stlouisfed.org/series/DFII10",
+      "http_status": 200,
+      "title": "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis, Inflation-Indexed (DFII10) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "WALCL",
+      "url": "https://fred.stlouisfed.org/series/WALCL",
+      "http_status": 200,
+      "title": "Assets: Total Assets: Total Assets (Less Eliminations from Consolidation): Wednesday Level (WALCL) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "BAMLC0A0CM",
+      "url": "https://fred.stlouisfed.org/series/BAMLC0A0CM",
+      "http_status": 200,
+      "title": "ICE BofA US Corporate Index Option-Adjusted Spread (BAMLC0A0CM) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "BAMLH0A0HYM2",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
+      "http_status": 200,
+      "title": "ICE BofA US High Yield Index Option-Adjusted Spread (BAMLH0A0HYM2) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DRTSCILM",
+      "url": "https://fred.stlouisfed.org/series/DRTSCILM",
+      "http_status": 200,
+      "title": "Net Percentage of Domestic Banks Tightening Standards for Commercial and Industrial Loans to Large and Middle-Market Firms (DRTSCILM) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "BUSLOANS",
+      "url": "https://fred.stlouisfed.org/series/BUSLOANS",
+      "http_status": 200,
+      "title": "Commercial and Industrial Loans, All Commercial Banks (BUSLOANS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DRCLACBS",
+      "url": "https://fred.stlouisfed.org/series/DRCLACBS",
+      "http_status": 200,
+      "title": "Delinquency Rate on Consumer Loans, All Commercial Banks (DRCLACBS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DRCCLACBS",
+      "url": "https://fred.stlouisfed.org/series/DRCCLACBS",
+      "http_status": 200,
+      "title": "Delinquency Rate on Credit Card Loans, All Commercial Banks (DRCCLACBS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DRALACBS",
+      "url": "https://fred.stlouisfed.org/series/DRALACBS",
+      "http_status": 200,
+      "title": "Delinquency Rate on All Loans, All Commercial Banks (DRALACBS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "DRSFRMACBS",
+      "url": "https://fred.stlouisfed.org/series/DRSFRMACBS",
+      "http_status": 200,
+      "title": "Delinquency Rate on Single-Family Residential Mortgages, Booked in Domestic Offices, All Commercial Banks (DRSFRMACBS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "TOTALSL",
+      "url": "https://fred.stlouisfed.org/series/TOTALSL",
+      "http_status": 200,
+      "title": "Total Consumer Credit Owned and Securitized (TOTALSL) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "STLFSI4",
+      "url": "https://fred.stlouisfed.org/series/STLFSI4",
+      "http_status": 200,
+      "title": "St. Louis Fed Financial Stress Index (STLFSI4) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "NFCI",
+      "url": "https://fred.stlouisfed.org/series/NFCI",
+      "http_status": 200,
+      "title": "Chicago Fed National Financial Conditions Index (NFCI) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "TDSP",
+      "url": "https://fred.stlouisfed.org/series/TDSP",
+      "http_status": 200,
+      "title": "Household Debt Service Payments as a Percent of Disposable Personal Income (TDSP) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "HSN1F",
+      "url": "https://fred.stlouisfed.org/series/HSN1F",
+      "http_status": 200,
+      "title": "New One Family Houses Sold: United States (HSN1F) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "HOUST",
+      "url": "https://fred.stlouisfed.org/series/HOUST",
+      "http_status": 200,
+      "title": "New Privately-Owned Housing Units Started: Total Units (HOUST) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "PERMIT",
+      "url": "https://fred.stlouisfed.org/series/PERMIT",
+      "http_status": 200,
+      "title": "New Privately-Owned Housing Units Authorized in Permit-Issuing Places: Total Units (PERMIT) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "CSUSHPINSA",
+      "url": "https://fred.stlouisfed.org/series/CSUSHPINSA",
+      "http_status": 200,
+      "title": "S&P Cotality Case-Shiller U.S. National Home Price Index (CSUSHPINSA) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "USSTHPI",
+      "url": "https://fred.stlouisfed.org/series/USSTHPI",
+      "http_status": 200,
+      "title": "All-Transactions House Price Index for the United States (USSTHPI) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "MORTGAGE30US",
+      "url": "https://fred.stlouisfed.org/series/MORTGAGE30US",
+      "http_status": 200,
+      "title": "30-Year Fixed Rate Mortgage Average in the United States (MORTGAGE30US) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "MORTGAGE15US",
+      "url": "https://fred.stlouisfed.org/series/MORTGAGE15US",
+      "http_status": 200,
+      "title": "15-Year Fixed Rate Mortgage Average in the United States (MORTGAGE15US) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "MSACSR",
+      "url": "https://fred.stlouisfed.org/series/MSACSR",
+      "http_status": 200,
+      "title": "Monthly Supply of New Houses in the United States (MSACSR) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "RRVRUSQ156N",
+      "url": "https://fred.stlouisfed.org/series/RRVRUSQ156N",
+      "http_status": 200,
+      "title": "Rental Vacancy Rate in the United States (RRVRUSQ156N) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "TTLCONS",
+      "url": "https://fred.stlouisfed.org/series/TTLCONS",
+      "http_status": 200,
+      "title": "Total Construction Spending: Total Construction in the United States (TTLCONS) | FRED | St. Louis Fed",
+      "discontinued": false,
+      "status": "verified page"
+    },
+    {
+      "series_id": "ELEC.PRICE.US-RES.M",
+      "url": "https://www.eia.gov/electricity/data/browser/",
+      "http_status": 200,
+      "title": "Electricity Data Browser",
+      "discontinued": false,
+      "status": "official browser only; API needs key"
+    }
+  ]
+}
