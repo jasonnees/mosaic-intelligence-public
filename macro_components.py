@@ -63,7 +63,7 @@ def fetch_cpi():
             return series, pd.Series(dtype=float), f'{series}: source unavailable; no substitute data.'
     with ThreadPoolExecutor(max_workers=4) as pool:
         results = list(pool.map(one, {**CPI_GROUPS, **CPI_DETAIL}))
-    frame = pd.concat([values.rename(series) for series, values, _ in results],axis=1).sort_index()
+    frame = pd.concat([values.rename(series) for series, values, _ in results],axis=1,sort=True).sort_index()
     return MacroData(frame, [error for _,_,error in results if error], source='BLS CPI-U via FRED · unadjusted monthly indexes')
 
 

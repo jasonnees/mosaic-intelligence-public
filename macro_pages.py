@@ -18,14 +18,21 @@ def refresh():
     load_gdp.clear()
 
 
-def heatmap(frame, label, quarterly=False, percent=False):
+def heatmap(frame, label, quarterly=False, percent=False, periods=12, transpose=True):
     st.markdown(f'**{label}**')
     if frame.empty:
         st.info('No component observations in this window.')
         return
-    table = frame.tail(12).T
-    table.columns = [f'{d.year} Q{d.quarter}' if quarterly else d.strftime('%b %Y') for d in table.columns]
-    table.index.name = 'Component'
+    selected_frame = frame.tail(periods) if periods is not None else frame
+    if transpose:
+        table = selected_frame.T
+        table.columns = [f'{d.year} Q{d.quarter}' if quarterly else d.strftime('%b %Y') for d in table.columns]
+        index_label = 'Component'
+    else:
+        table = selected_frame.sort_index(ascending=False).copy()
+        table.index = table.index.strftime('%b %Y')
+        index_label = 'Month'
+    table.index.name = index_label
     def cell(value):
         if pd.isna(value):
             return 'color: #7f8790; background-color: #171b20'
@@ -37,8 +44,9 @@ def heatmap(frame, label, quarterly=False, percent=False):
         return f'background-color: rgb{color}; color: #f0f0f0'
     styled = table.style.map(cell).format('{:+.2f}%' if percent else '{:+.3f}',na_rep='—')
     st.dataframe(styled,use_container_width=True,height=min(850,38+36*len(table)),
-                 column_config={'_index':st.column_config.TextColumn('Component',width='medium')})
-    st.caption('Green = positive; rose = negative. Color shows arithmetic sign, not a risk rating. Missing values are blank. Table shows the latest 12 visible periods.')
+                 column_config={'_index':st.column_config.TextColumn(index_label,width='medium')})
+    scope = f'Table shows all {len(selected_frame):,} periods in the selected window, newest first. Scroll the rows to explore earlier readings.' if periods is None else f'Table shows the latest {min(periods,len(frame))} visible periods.'
+    st.caption('Green = positive; rose = negative. Color shows arithmetic sign, not a risk rating. Missing values are blank. ' + scope)
 
 
 def source_status(data,frame,budget):
@@ -73,7 +81,7 @@ def render_cpi(days):
     st.write('See which parts of the household basket are raising prices, and which are offsetting them.')
     period = st.radio('Inflation comparison',['12-month','1-month'],horizontal=True)
     months = 12 if period == '12-month' else 1
-    all_history = st.checkbox('Show all available CPI history')
+    all_history = st.checkbox('Show all available contribution history')
     with st.spinner('Loading CPI components…'):
         data = load_cpi()
     if not source_status(data,data.frame,100):
@@ -110,15 +118,43 @@ def render_cpi(days):
         st.download_button('Download CPI component effects',effects.to_csv(index_label='Month'),'cpi-effects.csv','text/csv')
     st.subheader('Component inflation history')
     st.caption('Each series is its own inflation rate. Subcomponents overlap; these rates must not be added together.')
+    history_options = {'All available': None, '20 years': 7300, '10 years': 3650, '5 years': 1825, '2 years': 730, '1 year': 365}
+    history = st.selectbox('Component history range', list(history_options), key='cpi_component_history')
+    st.caption('This range controls component inflation history below, independently of the sidebar and contribution chart.')
     available = rates.columns[rates.notna().any()].tolist()
     selected = st.multiselect('Compare CPI components',available,default=[c for c in ['Headline CPI','Core CPI','Shelter','Energy'] if c in available])
-    visible = window(rates,days,all_history)
+    visible = window(rates,history_options[history],history == 'All available')
+    if visible.first_valid_index() is not None:
+        visible = visible.loc[visible.first_valid_index():visible.last_valid_index()]
     if selected:
         import plotly.express as px
-        fig = px.line(visible[selected],labels={'value':'Percent change','index':'Observation month','variable':'Component'})
+        comparison = visible[selected]
+        if comparison.first_valid_index() is not None:
+            comparison = comparison.loc[comparison.first_valid_index():comparison.last_valid_index()]
+        fig = px.line(comparison,labels={'value':'Percent change','date':'Observation month','variable':'Component'})
         fig.update_layout(template='plotly_dark',paper_bgcolor='#090b0d',plot_bgcolor='#090b0d',height=400)
+        fig.update_traces(connectgaps=False)
+        fig.update_xaxes(rangeslider=dict(visible=True,thickness=.14,bgcolor='#111d2c',bordercolor='#405572',borderwidth=1), rangeselector=dict(buttons=[
+            dict(count=1,label='1y',step='year',stepmode='backward'),
+            dict(count=5,label='5y',step='year',stepmode='backward'),
+            dict(count=10,label='10y',step='year',stepmode='backward'),
+            dict(count=20,label='20y',step='year',stepmode='backward'),
+            dict(label='All',step='all')]))
+        fig.update_layout(height=490,legend=dict(orientation='h',y=1.18),margin=dict(l=65,r=30,t=105,b=55))
         st.plotly_chart(fig,use_container_width=True)
-    heatmap(visible,'Component inflation rates · percent',percent=True)
+        if not comparison.empty:
+            st.caption(f'History loaded: {comparison.index[0]:%b %Y} → {comparison.index[-1]:%b %Y}. Drag the handles below the chart to zoom. Each component begins when its own data becomes available; gaps remain gaps.')
+    table_history = st.radio('Component table history',['Full selected history','Latest 12 periods'],horizontal=True)
+    heatmap(visible,'Component inflation rates · percent',percent=True, periods=None if table_history == 'Full selected history' else 12, transpose=table_history != 'Full selected history')
+    with st.expander('Component history coverage'):
+        coverage = []
+        for name in visible:
+            observations = visible[name].dropna()
+            coverage.append({'Component':name,'First inflation reading':observations.index[0].strftime('%b %Y') if not observations.empty else 'Unavailable',
+                             'Latest inflation reading':observations.index[-1].strftime('%b %Y') if not observations.empty else 'Unavailable',
+                             'Monthly readings':len(observations)})
+        st.dataframe(pd.DataFrame(coverage),hide_index=True,use_container_width=True)
+        st.caption('Twelve-month inflation needs an index reading exactly one year earlier. Components can have different start dates; no common start date is imposed.')
     st.download_button('Download CPI inflation history',visible.to_csv(index_label='Month'),'cpi-inflation-history.csv','text/csv')
     with st.expander('CPI method, weights & cautions'):
         st.write('The chart estimates BLS-style percentage-point effects from unadjusted indexes and dated December CPI-U relative-importance shares. Shares are price-updated through each preceding month. Intervals crossing a December basket pivot are split into segments and expressed against the same comparison-period base. These are Mosaic estimates, not the official BLS effects tables. Rounded inputs and basket changes can create differences; the unallocated difference is shown explicitly.')
