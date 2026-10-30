@@ -24,6 +24,11 @@ def render_portfolio():
         return
     st.caption(f'Annual history: {data.index.min()}–{data.index.max()} · Snapshot updated {metadata["source_updated"]} · No live market prices')
     st.info('Annual observations can hide severe losses within a year. Drawdowns and recovery dates below use year-end values only; they are not daily peak-to-trough losses.')
+    mode = st.radio('Explore your portfolio', ['Stress test a custom allocation', 'Compare nine allocations'], horizontal=True)
+    if mode == 'Compare nine allocations':
+        from allocation_comparison import render_comparison
+        render_comparison(data, metadata)
+        return
     with st.expander('Edit allocation & inflation settings', expanded=False):
         columns = st.columns(3)
         weights = {a: col.number_input(label + ' (%)', min_value=0.0, max_value=100.0, value=default, step=5.0, key=f'portfolio:{a}')
