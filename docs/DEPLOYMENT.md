@@ -14,7 +14,7 @@
 
    Top-level Streamlit secrets are exposed as environment variables, which the existing app reads. Obtain keys from https://fred.stlouisfed.org/docs/api/api_key.html and https://www.eia.gov/opendata/register.php. Do not commit keys or paste them in chat.
 4. Click **Deploy**. Copy the resulting `https://…streamlit.app` URL. Open the app and check the overview, domain navigation and populated charts.
-5. Edit the repository's `monitoring.json`: set `deployment_status` to `deployed`, `site_url` to the actual app URL, and `health_url` to the actual app server health route. On the current Community Cloud deployment, the app is embedded at `/~/+/`, so its health route is `/~/+/_stcore/health` (a direct Streamlit server normally uses `/_stcore/health`). Keep `chart_views` configured. Commit this configuration only after deployment. For example, with your real hostname substituted:
+5. Edit the repository's `monitoring.json`: set `deployment_status` to `deployed`, `site_url` to the actual app URL, and `health_url` to the actual app server health route. On the current Community Cloud deployment the health route is `/_stcore/health`; `/~/+/_stcore/health` returned HTTP 400. Keep `chart_views` configured. Commit this configuration only after deployment. For example, with your real hostname substituted:
 
    ```json
    {
