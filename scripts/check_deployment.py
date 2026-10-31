@@ -55,6 +55,14 @@ def check_charts(target, timeout_ms=180000):
         current_view = 'startup'
         try:
             page.goto(target['site_url'], wait_until='domcontentloaded')
+            # Community Cloud may hibernate between scheduled checks. Wake only
+            # its explicit public prompt; still require real charts afterwards.
+            page.wait_for_function("""() => document.querySelector('iframe[title="streamlitApp"]')
+                || [...document.querySelectorAll('h1')].some(h => h.textContent.trim() === 'Boldin Market Risk Explorer')
+                || [...document.querySelectorAll('button')].some(b => b.textContent.trim() === 'Yes, get this app back up!')""")
+            wake = page.get_by_role('button', name='Yes, get this app back up!', exact=True)
+            if wake.count():
+                wake.click()
             # Community Cloud wraps the actual app in a named iframe. A direct
             # Streamlit server has no wrapper; wait for either surface to exist.
             page.wait_for_function("""() => document.querySelector('iframe[title="streamlitApp"]')
