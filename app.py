@@ -23,10 +23,11 @@ def table_row(indicator, result):
     return {
         'Indicator': indicator.name, 'Value': observation.value, 'Units': indicator.unit,
         'Observation date': observation.observed_at, 'Age (days)': observation.age_days,
+        'Publication deadline': freshness_context(indicator, observation.observed_at).get('deadline', ''),
         'Data status': observation.status, 'Watch condition': observation.watch,
         'Direction': movement.label, 'Interpretation': movement.explanation, 'Warning': warning,
         'Comparison date': movement.prior_date, 'Change': movement.change,
-        'Frequency': indicator.frequency, 'Age budget (days)': indicator.max_age_days,
+        'Frequency': indicator.frequency, 'Fallback age budget (days)': indicator.max_age_days,
         'Source': result.provenance, 'Retrieved (UTC)': result.fetched_at,
         'Source class': indicator.reliability, 'Series': indicator.series_id,
         'Source link': indicator.source_url, 'Notes': result.error or observation.detail,
@@ -84,10 +85,10 @@ def render_indicator_chart(indicator, result, days):
     if movement.change is not None:
         change_unit = 'percentage points' if '%' in indicator.unit or indicator.unit == 'percentage points' else indicator.unit
         st.caption(f'Change: {movement.change:+.3g} {change_unit} · {movement.prior_date} → {movement.current_date}. Direction compares displayed values, including year-over-year growth where selected.')
-    st.caption(f'Observation period: {observation.observed_at or "unavailable"} · Age: {observation.age_days if observation.age_days is not None else "unknown"} days · Freshness budget: {indicator.max_age_days} days · Units: {indicator.unit}')
+    st.caption(f'Observation period: {observation.observed_at or "unavailable"} · Age: {observation.age_days if observation.age_days is not None else "unknown"} days · Fallback age budget: {indicator.max_age_days} days · Units: {indicator.unit}')
     timing = freshness_context(indicator, observation.observed_at)
-    if timing['method'] == 'expected monthly release':
-        st.caption(f'Publication timing: next update expected {timing["next_update_expected"]}; {timing["grace_calendar_days"]} calendar days of operational grace, through {timing["deadline"]}. This is an expected schedule, not a guarantee of delivery.')
+    if 'deadline' in timing:
+        st.caption(f'Publication timing: next update budget ends {timing["next_update_expected"]}; {timing["grace_calendar_days"]} calendar days of operational grace, through {timing["deadline"]}. The publication deadline takes precedence over the fallback age budget; this is an operational assumption, not a guaranteed release date.')
         st.markdown(f'[Publisher release timing]({timing["source_url"]})')
     st.caption(f'Retrieved: {result.fetched_at} · Transformation: {indicator.transform}')
     if result.error:
@@ -179,7 +180,7 @@ def main():
             'Series': i.series_id, 'Indicator': i.name, 'Domain': DOMAINS[i.domain][0],
             'Source': i.source.upper(), 'Source link': i.source_url, 'Frequency': i.frequency,
             'Raw unit': i.raw_unit, 'Display unit': i.unit, 'Transformation': i.transform,
-            'Age budget (days)': i.max_age_days, 'Source class': i.reliability,
+            'Fallback age budget (days)': i.max_age_days, 'Source class': i.reliability,
             'Interpretation': GUIDES[i.series_id].rising + ' / ' + GUIDES[i.series_id].falling,
             'Warning': GUIDES[i.series_id].caution,
             'Watch condition': (f'{WATCH_RULES[i.series_id][0]} {WATCH_RULES[i.series_id][1]} {i.unit}' if i.series_id in WATCH_RULES else 'No fixed threshold'),
