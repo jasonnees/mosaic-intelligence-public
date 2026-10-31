@@ -1,3 +1,4 @@
+from risk_catalog import QUARTERLY_RELEASE_LAGS
 """Series-specific interpretation. Direction describes change, never a forecast."""
 from dataclasses import dataclass
 import math
@@ -132,7 +133,8 @@ def direction(frame, indicator, now=None):
 
 def data_warning(observation, indicator):
     """An actionable data warning for every invalid state; no market inference."""
-    if observation.status == 'stale' and indicator.series_id == 'CSUSHPINSA':
+    if observation.status == 'stale' and (indicator.series_id == 'CSUSHPINSA'
+            or indicator.series_id in QUARTERLY_RELEASE_LAGS):
         return (f'Last observation {observation.observed_at}: {observation.age_days} days old. '
                 f'{observation.detail}. Refresh or inspect the source release; '
                 'market warnings and direction are withheld.')

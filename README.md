@@ -1,4 +1,4 @@
-# Market Risk Explorer
+# Boldin Market Risk Explorer
 
 A household-focused Streamlit dashboard with **77 unique indicators** from free public feeds: 76 FRED series and one directly from EIA. This public deployment copy starts with clean history; the original development repository remains private.
 
@@ -38,9 +38,9 @@ pip install -r requirements-aws.txt
 
 In the Explorer, S3 supplements history and public APIs refresh observations. API values win overlapping dates, including revisions. If an API fails, archived observations remain visible with their actual observation age and archive provenance. No new AWS infrastructure is provisioned. The optional legacy `HybridDataManager` retains its S3-first contract for existing scripts. Data Exchange is disabled by default.
 
-## Mosaic Income theme and indicator guidance
+## Boldin theme and indicator guidance
 
-The app uses the original [Mosaic Income](https://mosaicincome.substack.com/) wordmark, a dark navy background and domain-specific cyan, violet, amber, blue, rose and mint chart colors. The wordmark is unchanged; display brightness is adjusted with CSS for contrast. Its source is recorded in `assets/README.md`.
+The app uses Boldin’s wordmark, a light neutral background, teal accents and distinct accessible chart colors. Asset provenance is recorded in `assets/README.md`. Existing repository and deployment URLs remain stable.
 
 Every one of the 77 indicators has a rising interpretation, a falling interpretation and a series-specific caution. Direction compares the displayed value with about three months earlier (one year for quarterly series); year-over-year series compare growth rates, not price levels. Actual comparison dates and changes are shown. Missing or stale observations, future dates and missing prior-year bases cannot support direction. Gappy comparison history produces “No comparison.”
 
@@ -108,7 +108,7 @@ with a link to Eric Basmajian's public EPB framework; it does not reproduce an
 EPB index.
 
 CPI uses BLS unadjusted indexes delivered by FRED. Its contribution bars are
-**Mosaic estimates**, using price-updated, dated December BLS CPI-U relative
+**app estimates**, using price-updated, dated December BLS CPI-U relative
 importance shares. Intervals crossing an annual basket pivot are calculated
 in separate segments and expressed against the same headline-index base.
 Rounded basket shares/indexes and reweighting can cause a difference from
@@ -254,3 +254,7 @@ the browser check enters that frame, waits for the new run to finish, rejects
 stale content and exceptions, and requires a drawn SVG data path on each of the
 11 configured chart pages. A direct Streamlit server is also supported. HTTP
 health alone does not verify charts, feeds or history controls.
+
+### Quarterly freshness monitoring
+
+FRED labels quarters at their start. For productivity/unit costs, bank delinquencies, household debt service and FHFA quarterly house prices, freshness now uses the successor quarter’s end plus a publication budget (45, 65, 95 and 65 days respectively), then seven days of operational grace. These are explicit cadence assumptions, not official release dates. The audit records each deadline and source URL. Missing, invalid and overdue observations still fail; other series retain their existing rules.

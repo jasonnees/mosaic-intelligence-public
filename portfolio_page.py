@@ -12,7 +12,7 @@ def style(fig, height):
     fig.update_layout(showlegend=True, legend=dict(orientation="h", y=-.25, x=0), margin=dict(l=25, r=25, t=45, b=100))
     return fig
 
-COLORS = {'stocks': '#48dff5', 'treasuries': '#a9a1ff', 'cash': '#ffbd69'}
+COLORS = {'stocks': '#087e8b', 'treasuries': '#6652ad', 'cash': '#a65c00'}
 
 def render_portfolio():
     st.subheader('Portfolio Stress Lab')
@@ -84,13 +84,13 @@ def render_portfolio():
     st.write(rf'Value at December 31, **{end}**: **\${result["ending_value"]:,.0f}** from \${balance:,.0f}. Worst calendar-year return: **{result["worst_year"]:+.1%} in {result["worst_year_date"]}**.')
     display_end = max(end, result['recovery'] or end)
     path = result['wealth'].loc[:display_end]
-    fig = go.Figure(go.Scatter(x=[f'{y}-12-31' for y in path.index], y=path.values, mode='lines+markers', name='Your allocation', line={'color': '#48dff5', 'width': 3}))
+    fig = go.Figure(go.Scatter(x=[f'{y}-12-31' for y in path.index], y=path.values, mode='lines+markers', name='Your allocation', line={'color': '#087e8b', 'width': 3}))
     tick_years = list(path.index[::max(1, (len(path) + 7) // 8)])
     if path.index[-1] not in tick_years:
         tick_years.append(path.index[-1])
     fig.update_xaxes(tickmode='array', tickvals=[f'{y}-12-31' for y in tick_years], ticktext=[str(y) for y in tick_years])
-    fig.add_hline(y=balance, line_dash='dot', line_color='#ffbd69', annotation_text='Starting balance')
-    fig.add_vrect(x0=f'{start}-01-01', x1=f'{end}-12-31', fillcolor='#ff839b', opacity=.1, line_width=0)
+    fig.add_hline(y=balance, line_dash='dot', line_color='#a65c00', annotation_text='Starting balance')
+    fig.add_vrect(x0=f'{start}-01-01', x1=f'{end}-12-31', fillcolor='#b64060', opacity=.1, line_width=0)
     fig.update_layout(title=f'{basis} portfolio value at year ends', yaxis_title='Dollars', xaxis_title='Year end', xaxis_type='date')
     readable_chart(style(fig, 350))
     if result['recovery'] is None and result['drawdown'] < -1e-12:

@@ -14,7 +14,7 @@
 
    Top-level Streamlit secrets are exposed as environment variables, which the existing app reads. Obtain keys from https://fred.stlouisfed.org/docs/api/api_key.html and https://www.eia.gov/opendata/register.php. Do not commit keys or paste them in chat.
 4. Click **Deploy**. Copy the resulting `https://…streamlit.app` URL. Open the app and check the overview, domain navigation and populated charts.
-5. Edit the repository's `monitoring.json`: set `deployment_status` to `deployed`, `site_url` to the actual app URL, and `health_url` to the actual app server health route. On the current Community Cloud deployment the health route is `/_stcore/health`; `/~/+/_stcore/health` returned HTTP 400. Keep `chart_views` configured. Commit this configuration only after deployment. For example, with your real hostname substituted:
+5. Configure `monitoring.json` with the actual `site_url`, `deployment_status: deployed`, `health_mode: browser`, and all `chart_views` for Community Cloud (see below). For a direct Streamlit server, omit `health_mode` and supply a verified `health_url` that returns `ok`. Example for a direct server:
 
    ```json
    {
@@ -61,3 +61,7 @@ route. The older `mosaic-intelligence.streamlit.app` hostname is a different
 deployment and must not be substituted for this target. The outer Community Cloud
 page can return HTML with HTTP 200 even at the wrong health path; a health check
 requires the literal `ok` response, followed separately by browser chart checks.
+
+### Community Cloud health verification
+
+This deployment uses `health_mode: browser`: its public `/_stcore/health` route returns the HTML shell instead of `ok`, and `/~/+/_stcore/health` returns HTTP 400. Neither is a valid standalone liveness probe. Monitoring requires HTTP availability **and** the expected app title, completed execution, no app exceptions, and a populated chart on every configured view. A shell/login page alone never passes. `--http-only` is incomplete and exits 2 in browser mode. Direct servers can retain endpoint mode with a verified health URL.

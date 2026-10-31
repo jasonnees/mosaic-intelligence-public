@@ -1,7 +1,6 @@
 {
   "deployment_status": "deployed",
   "site_url": "https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/",
-  "health_url": "https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/_stcore/health",
   "chart_views": [
     "Overview",
     "Equity risk",
@@ -14,5 +13,6 @@
     "GDP & components",
     "Market history",
     "Portfolio Stress Lab"
-  ]
+  ],
+  "health_mode": "browser"
 }

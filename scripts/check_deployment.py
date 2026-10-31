@@ -17,7 +17,10 @@ def load_target(path):
         if target.get('site_url') or target.get('health_url'):
             raise ValueError('Set deployment_status to deployed when supplying URLs')
         return target
-    for key in ('site_url', 'health_url'):
+    mode = target.get('health_mode', 'endpoint')
+    if mode not in {'endpoint', 'browser'}:
+        raise ValueError('health_mode must be endpoint or browser')
+    for key in (('site_url', 'health_url') if mode == 'endpoint' else ('site_url',)):
         url = urlsplit(target.get(key) or '')
         if url.scheme != 'https' or not url.hostname or url.username or url.password or url.query or url.fragment:
             raise ValueError(f'{key} must be an HTTPS URL without credentials, query or fragment')
@@ -29,7 +32,8 @@ def load_target(path):
 
 def check_http(target, get=requests.get):
     checks = []
-    for key in ('site_url', 'health_url'):
+    keys = ('site_url',) if target.get('health_mode') == 'browser' else ('site_url', 'health_url')
+    for key in keys:
         try:
             response = get(target[key], timeout=60)
             passed = response.status_code == 200
@@ -54,10 +58,10 @@ def check_charts(target, timeout_ms=180000):
             # Community Cloud wraps the actual app in a named iframe. A direct
             # Streamlit server has no wrapper; wait for either surface to exist.
             page.wait_for_function("""() => document.querySelector('iframe[title="streamlitApp"]')
-                || [...document.querySelectorAll('h1')].some(h => h.textContent.trim() === 'Market Risk Explorer')""")
+                || [...document.querySelectorAll('h1')].some(h => h.textContent.trim() === 'Boldin Market Risk Explorer')""")
             app = (page.frame_locator('iframe[title="streamlitApp"]')
                    if page.locator('iframe[title="streamlitApp"]').count() else page)
-            app.get_by_role('heading', name='Market Risk Explorer', exact=True).wait_for()
+            app.get_by_role('heading', name='Boldin Market Risk Explorer', exact=True).wait_for()
             for view in target['chart_views']:
                 current_view = view
                 app.get_by_test_id('stSidebar').get_by_text(view, exact=True).click()
@@ -99,7 +103,7 @@ def main():
                 report['checks'] += check_charts(target)
             if report['checks'] and all(check['passed'] for check in report['checks']):
                 report['status'] = 'http_only' if args.http_only else 'passed'
-                code = 0
+                code = 2 if args.http_only and target.get('health_mode') == 'browser' else 0
     except Exception:
         report['checks'].append({'check': 'configuration_or_runner', 'passed': False,
                                  'error': 'Invalid configuration or monitoring runner failure'})

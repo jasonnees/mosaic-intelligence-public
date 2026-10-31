@@ -151,9 +151,9 @@ def render_cpi(days):
         if comparison.first_valid_index() is not None:
             comparison = comparison.loc[comparison.first_valid_index():comparison.last_valid_index()]
         fig = px.line(comparison,labels={'value':'Percent change','date':'Observation month','variable':'Component'})
-        fig.update_layout(template='plotly_dark',paper_bgcolor='#090b0d',plot_bgcolor='#090b0d',height=400)
+        fig.update_layout(template='plotly_white',paper_bgcolor='#f6f6f4',plot_bgcolor='#f6f6f4',height=400)
         fig.update_traces(connectgaps=False)
-        fig.update_xaxes(rangeslider=dict(visible=True,thickness=.14,bgcolor='#111d2c',bordercolor='#405572',borderwidth=1), rangeselector=dict(buttons=[
+        fig.update_xaxes(rangeslider=dict(visible=True,thickness=.14,bgcolor='#eff2f5',bordercolor='#405572',borderwidth=1), rangeselector=dict(buttons=[
             dict(count=1,label='1y',step='year',stepmode='backward'),
             dict(count=5,label='5y',step='year',stepmode='backward'),
             dict(count=10,label='10y',step='year',stepmode='backward'),
@@ -176,7 +176,7 @@ def render_cpi(days):
         st.caption('Twelve-month inflation needs an index reading exactly one year earlier. Components can have different start dates; no common start date is imposed.')
     st.download_button('Download CPI inflation history',visible.to_csv(index_label='Month'),'cpi-inflation-history.csv','text/csv')
     with st.expander('CPI method, weights & cautions'):
-        st.write('The chart estimates BLS-style percentage-point effects from unadjusted indexes and dated December CPI-U relative-importance shares. Shares are price-updated through each preceding month. Intervals crossing a December basket pivot are split into segments and expressed against the same comparison-period base. These are Mosaic estimates, not the official BLS effects tables. Rounded inputs and basket changes can create differences; the unallocated difference is shown explicitly.')
+        st.write('The chart estimates BLS-style percentage-point effects from unadjusted indexes and dated December CPI-U relative-importance shares. Shares are price-updated through each preceding month. Intervals crossing a December basket pivot are split into segments and expressed against the same comparison-period base. These are app estimates, not the official BLS effects tables. Rounded inputs and basket changes can create differences; the unallocated difference is shown explicitly.')
         st.write('Weight coverage currently supports monthly effects during 2025–2026 and 12-month effects beginning December 2025. No later basket is projected backward, no missing comparison endpoint or weight pivot is filled, and weights expire after 12 months. Earlier index and inflation-rate histories remain available.')
         weights = pd.DataFrame(CPI_WEIGHTS).rename(index=CPI_GROUPS)
         weights.columns = [f'Dec {year} basket (%)' for year in weights.columns]

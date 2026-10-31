@@ -28,7 +28,7 @@ def test_mapping_meaning():
     assert BY_ID['T10Y2Y'].unit == 'percentage points'
 
 
-@pytest.mark.parametrize('sid,age,status', [('DGS10',10,'fresh'),('DGS10',11,'stale'),('IC4WSA',21,'fresh'),('IC4WSA',22,'stale'),('UNRATE',100,'fresh'),('UNRATE',101,'stale'),('DRALACBS',210,'fresh'),('DRALACBS',211,'stale')])
+@pytest.mark.parametrize('sid,age,status', [('DGS10',10,'fresh'),('DGS10',11,'stale'),('IC4WSA',21,'fresh'),('IC4WSA',22,'stale'),('UNRATE',100,'fresh'),('UNRATE',101,'stale'),('A191RL1Q225SBEA',210,'fresh'),('A191RL1Q225SBEA',211,'stale')])
 def test_frequency_specific_freshness(sid, age, status):
     now = pd.Timestamp('2026-10-08')
     result = assess(frame(sid,[now-pd.Timedelta(days=age)],[2]), BY_ID[sid], now)
@@ -183,3 +183,27 @@ def test_case_shiller_release_rollovers_and_missing_data_fail_closed():
     assert assess(frame(sid, [], []), BY_ID[sid], '2026-10-23').status == 'missing'
     assert assess(frame(sid, ['2026-11-01'], [100.]), BY_ID[sid], '2026-10-23').status == 'invalid'
     assert assess(frame(sid, ['2026-07-01'], [100.]), BY_ID[sid], '2026-10-23').status == 'insufficient history'
+
+
+def test_quarterly_publication_budgets_do_not_expire_before_next_cycle():
+    from risk_catalog import QUARTERLY_RELEASE_LAGS
+    from risk_data import freshness_context
+    for sid in QUARTERLY_RELEASE_LAGS:
+        indicator = BY_ID[sid]
+        values = frame(sid, ['2025-04-01', '2026-04-01'], [100., 102.])
+        timing = freshness_context(indicator, '2026-04-01')
+        assert timing['method'] == 'quarterly publication budget'
+        assert assess(values, indicator, '2026-10-31').status == 'fresh'
+        assert assess(values, indicator, timing['deadline']).status == 'fresh'
+        overdue = pd.Timestamp(timing['deadline']) + pd.Timedelta(days=1)
+        result = assess(values, indicator, overdue)
+        assert result.status == 'stale' and result.watch == 'Unavailable'
+        from indicator_guidance import data_warning
+        assert timing['deadline'] in data_warning(result, indicator)
+        assert assess(frame(sid, [], []), indicator, '2026-10-31').status == 'missing'
+        assert assess(frame(sid, ['2027-01-01'], [102.]), indicator, '2026-10-31').status == 'invalid'
+    assert freshness_context(BY_ID['OPHPBS'], '2026-04-01')['deadline'] == '2026-11-21'
+    assert freshness_context(BY_ID['TDSP'], '2026-04-01')['deadline'] == '2027-01-10'
+    # Calendar rollovers (including leap years) follow quarter ends.
+    assert freshness_context(BY_ID['OPHPBS'], '2023-10-01')['deadline'] == '2024-05-22'
+    assert freshness_context(BY_ID['A191RL1Q225SBEA'], '2026-04-01')['method'] == 'observation age'
