@@ -17,7 +17,10 @@ def load_target(path):
         if target.get('site_url') or target.get('health_url'):
             raise ValueError('Set deployment_status to deployed when supplying URLs')
         return target
-    for key in ('site_url', 'health_url'):
+    mode = target.get('health_mode', 'endpoint')
+    if mode not in {'endpoint', 'browser'}:
+        raise ValueError('health_mode must be endpoint or browser')
+    for key in (('site_url', 'health_url') if mode == 'endpoint' else ('site_url',)):
         url = urlsplit(target.get(key) or '')
         if url.scheme != 'https' or not url.hostname or url.username or url.password or url.query or url.fragment:
             raise ValueError(f'{key} must be an HTTPS URL without credentials, query or fragment')
@@ -29,7 +32,8 @@ def load_target(path):
 
 def check_http(target, get=requests.get):
     checks = []
-    for key in ('site_url', 'health_url'):
+    keys = ('site_url',) if target.get('health_mode') == 'browser' else ('site_url', 'health_url')
+    for key in keys:
         try:
             response = get(target[key], timeout=60)
             passed = response.status_code == 200
@@ -99,7 +103,7 @@ def main():
                 report['checks'] += check_charts(target)
             if report['checks'] and all(check['passed'] for check in report['checks']):
                 report['status'] = 'http_only' if args.http_only else 'passed'
-                code = 0
+                code = 2 if args.http_only and target.get('health_mode') == 'browser' else 0
     except Exception:
         report['checks'].append({'check': 'configuration_or_runner', 'passed': False,
                                  'error': 'Invalid configuration or monitoring runner failure'})

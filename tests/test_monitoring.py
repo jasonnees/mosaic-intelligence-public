@@ -86,3 +86,26 @@ def test_http_success_cannot_hide_browser_failure(tmp_path, monkeypatch):
          patch('scripts.check_deployment.check_charts', return_value=[{'check': 'browser', 'passed': False}]):
         assert deployment_main() == 1
     assert json.loads(output.read_text())['status'] == 'failed'
+
+
+def test_browser_health_mode_requires_populated_app_not_only_http(tmp_path, monkeypatch):
+    config = tmp_path / 'target.json'
+    output = tmp_path / 'report.json'
+    target = {'deployment_status': 'deployed', 'site_url': 'https://example.org',
+              'health_mode': 'browser', 'chart_views': ['Overview']}
+    config.write_text(json.dumps(target))
+    assert load_target(config)['health_mode'] == 'browser'
+    calls = []
+    def get(url, **kwargs):
+        calls.append(url)
+        return SimpleNamespace(status_code=200, text='<html>Shell</html>')
+    assert check_http(target, get) == [{'check': 'site_url', 'passed': True, 'status_code': 200}]
+    assert calls == ['https://example.org']
+    monkeypatch.setattr('sys.argv', ['monitor', '--config', str(config), '--output', str(output)])
+    with patch('scripts.check_deployment.check_http', return_value=[{'check': 'http', 'passed': True}]), \
+         patch('scripts.check_deployment.check_charts', return_value=[{'check': 'browser', 'passed': False}]):
+        assert deployment_main() == 1
+    monkeypatch.setattr('sys.argv', ['monitor', '--config', str(config), '--output', str(output), '--http-only'])
+    with patch('scripts.check_deployment.check_http', return_value=[{'check': 'http', 'passed': True}]):
+        assert deployment_main() == 2
+        assert json.loads(output.read_text())['status'] == 'http_only'
