@@ -139,7 +139,7 @@ def main():
     st.markdown('<p class="mosaic-intro">The macro picture, one piece at a time. Explore market conditions, follow the direction of change, and see where the evidence needs attention.</p>', unsafe_allow_html=True)
     st.caption(f'{len(INDICATORS)} curated indicators · Free public feeds · Hourly session cache · Educational context')
     with st.sidebar:
-        st.markdown('### MOSAIC INCOME')
+        st.markdown('### BOLDIN')
         st.caption('MARKET RISK EXPLORER')
         st.header('Explore risks')
         views = ['Overview'] + [d[0] for d in DOMAINS.values()] + ['CPI & components', 'GDP & components', 'Market history', 'Portfolio Stress Lab', 'Data catalog']

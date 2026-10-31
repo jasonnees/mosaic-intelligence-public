@@ -179,7 +179,7 @@ def render_market_history():
                      column_config={'Archived value':st.column_config.NumberColumn(format='%.3f')})
         st.caption('Missing archived observations do not prove the original statistic was unpublished or unknowable. Raw units are retained unless an archived growth calculation is explicitly labeled.')
     st.download_button('Download this period’s data & sources',export_evidence(data,regime,market,rows,archives,pre_only),
-                       f'mosaic-history-{regime.id}{"-pre-stress" if pre_only else ""}.zip','application/zip')
+                       f'boldin-history-{regime.id}{"-pre-stress" if pre_only else ""}.zip','application/zip')
     with st.expander('Sources, selection & calculation notes'):
         st.write('These are deliberately selected case studies, not all market corrections or independent statistical trials. Stress intervals are study windows; some are broad historical regimes, others are daily benchmark peak-to-trough windows. They are not comparable recession labels. No trading rule, causal estimate or calibrated warning probability is inferred.')
         st.markdown('[Market data library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html) · [Benchmark construction](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library/f-f_factors.html) · [Archived vintages](https://alfred.stlouisfed.org/)')
