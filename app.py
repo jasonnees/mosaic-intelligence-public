@@ -13,7 +13,7 @@ from portfolio_page import render_portfolio
 from app_cache import service, fetch
 from history_window import HISTORY_OPTIONS, HISTORY_LABELS, clip_history
 
-st.set_page_config(page_title='Market Risk Explorer', page_icon='◉', layout='wide')
+st.set_page_config(page_title='Boldin Market Risk Explorer', page_icon='◉', layout='wide')
 
 
 def table_row(indicator, result):
@@ -135,7 +135,7 @@ def remember_history():
 
 def main():
     masthead()
-    st.title('Market Risk Explorer')
+    st.title('Boldin Market Risk Explorer')
     st.markdown('<p class="mosaic-intro">The macro picture, one piece at a time. Explore market conditions, follow the direction of change, and see where the evidence needs attention.</p>', unsafe_allow_html=True)
     st.caption(f'{len(INDICATORS)} curated indicators · Free public feeds · Hourly session cache · Educational context')
     with st.sidebar:
@@ -240,7 +240,7 @@ def main():
         st.write('Observation date is the reported period, not the publication date. Age is measured from that date. Monthly and quarterly budgets allow for reporting lags. Year-over-year calculations require a matching prior-year period; absent comparisons remain gaps.')
         st.write('Watch rules are transparent descriptive heuristics, not recession probabilities or buy/sell advice. Other indicators are shown as context. Source data may be revised, and licensed market indexes may have shorter histories.')
         st.json({sid: {'operator': rule[0], 'threshold': rule[1], 'meaning': rule[2]} for sid, rule in WATCH_RULES.items()})
-    st.caption('Mosaic Income · Market Risk Explorer · Research & education; not individualized investment advice.')
+    st.caption('Boldin · Market Risk Explorer · Research & education; not individualized investment advice.')
 
 if __name__ == '__main__':
     main()

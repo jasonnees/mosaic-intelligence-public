@@ -21,6 +21,21 @@ AGE_BUDGET = {'daily': 10, 'weekly': 21, 'monthly': 100, 'quarterly': 210}
 CASE_SHILLER_GRACE_DAYS = 7
 CASE_SHILLER_SOURCE = 'https://www.spglobal.com/spdji/en/index-family/indicators/sp-cotality-case-shiller/'
 
+# Operational upper bounds after the *successor* quarter ends, plus a
+# seven-day delivery grace. FRED dates quarterly observations at period start.
+# These are cadence assumptions, not official scheduled release dates.
+QUARTERLY_RELEASE_LAGS = {
+    'OPHPBS': (45, 'https://www.bls.gov/schedule/news_release/prod2.htm'),
+    'ULCNFB': (45, 'https://www.bls.gov/schedule/news_release/prod2.htm'),
+    'DRCLACBS': (65, 'https://www.federalreserve.gov/releases/chargeoff/'),
+    'DRCCLACBS': (65, 'https://www.federalreserve.gov/releases/chargeoff/'),
+    'DRALACBS': (65, 'https://www.federalreserve.gov/releases/chargeoff/'),
+    'DRSFRMACBS': (65, 'https://www.federalreserve.gov/releases/chargeoff/'),
+    'TDSP': (95, 'https://www.federalreserve.gov/releases/DSR/'),
+    'USSTHPI': (65, 'https://www.fhfa.gov/reports/house-price-index'),
+}
+QUARTERLY_GRACE_DAYS = 7
+
 @dataclass(frozen=True)
 class Indicator:
     series_id: str

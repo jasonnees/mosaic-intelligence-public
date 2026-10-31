@@ -1,4 +1,4 @@
-"""Interactive historical stress atlas inside the existing Mosaic app."""
+"""Interactive historical stress atlas inside the Boldin app."""
 import io
 import json
 import zipfile
@@ -20,33 +20,33 @@ def snapshot():
 
 
 def style(fig,height=350):
-    fig.update_layout(template='plotly_dark',paper_bgcolor='#0b121d',plot_bgcolor='#0b121d',
-                      font=dict(color='#dce8f5',size=14),height=height,margin=dict(l=25,r=25,t=40,b=35),
+    fig.update_layout(template='plotly_white',paper_bgcolor='#f6f6f4',plot_bgcolor='#f6f6f4',
+                      font=dict(color='#111921',size=14),height=height,margin=dict(l=25,r=25,t=40,b=35),
                       hovermode='x unified',showlegend=False)
-    fig.update_xaxes(showgrid=True,gridcolor='#233043')
-    fig.update_yaxes(gridcolor='#233043',zerolinecolor='#526277')
+    fig.update_xaxes(showgrid=True,gridcolor='#e1e5ea')
+    fig.update_yaxes(gridcolor='#e1e5ea',zerolinecolor='#526277')
     return fig
 
 
 def shade(fig,regime,pre_only=False):
     if not pre_only:
-        fig.add_vrect(x0=regime.start,x1=regime.end,fillcolor='#ff839b',opacity=.11,line_width=0)
+        fig.add_vrect(x0=regime.start,x1=regime.end,fillcolor='#b64060',opacity=.11,line_width=0)
     return fig
 
 
 def market_chart(frame,regime,pre_only=False):
     fig=make_subplots(rows=2,cols=1,shared_xaxes=True,vertical_spacing=.08,row_heights=[.65,.35])
     fig.add_trace(go.Scatter(x=frame.index,y=frame.index_100,name='Broad U.S. total return',
-        line=dict(color='#48dff5',width=2),connectgaps=False,
+        line=dict(color='#087e8b',width=2),connectgaps=False,
         hovertemplate='%{x|%d %b %Y}<br>Index %{y:.2f}<extra></extra>'),row=1,col=1)
     fig.add_trace(go.Scatter(x=frame.index,y=frame.drawdown_pct,name='Drawdown',fill='tozeroy',
-        line=dict(color='#ff839b',width=1.5),connectgaps=False,
+        line=dict(color='#b64060',width=1.5),connectgaps=False,
         hovertemplate='%{x|%d %b %Y}<br>Drawdown %{y:.2f}%<extra></extra>'),row=2,col=1)
     style(fig,470)
     fig.update_yaxes(title_text='Total return · 100 at start',row=1,col=1)
     fig.update_yaxes(title_text='Drawdown · %',row=2,col=1,rangemode='tozero')
     if not pre_only:
-        fig.add_vrect(x0=regime.start,x1=regime.end,fillcolor='#ff839b',opacity=.11,line_width=0,row='all',col=1)
+        fig.add_vrect(x0=regime.start,x1=regime.end,fillcolor='#b64060',opacity=.11,line_width=0,row='all',col=1)
     return fig
 
 
@@ -155,7 +155,7 @@ def render_market_history():
                     st.warning('No usable observations for this period. This series may begin later; no backfill or substitute is shown.')
                     continue
                 fig=go.Figure(go.Scatter(x=frame.index,y=frame.value,name=definition.name,
-                    line=dict(color='#a9a1ff' if definition.transform=='yoy' else '#48dff5',width=2),
+                    line=dict(color='#6652ad' if definition.transform=='yoy' else '#087e8b',width=2),
                     connectgaps=False,hovertemplate='%{x|%d %b %Y}<br>%{y:.3f}<extra></extra>'))
                 style(fig,285)
                 shade(fig,regime,pre_only)

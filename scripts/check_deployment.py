@@ -54,10 +54,10 @@ def check_charts(target, timeout_ms=180000):
             # Community Cloud wraps the actual app in a named iframe. A direct
             # Streamlit server has no wrapper; wait for either surface to exist.
             page.wait_for_function("""() => document.querySelector('iframe[title="streamlitApp"]')
-                || [...document.querySelectorAll('h1')].some(h => h.textContent.trim() === 'Market Risk Explorer')""")
+                || [...document.querySelectorAll('h1')].some(h => h.textContent.trim() === 'Boldin Market Risk Explorer')""")
             app = (page.frame_locator('iframe[title="streamlitApp"]')
                    if page.locator('iframe[title="streamlitApp"]').count() else page)
-            app.get_by_role('heading', name='Market Risk Explorer', exact=True).wait_for()
+            app.get_by_role('heading', name='Boldin Market Risk Explorer', exact=True).wait_for()
             for view in target['chart_views']:
                 current_view = view
                 app.get_by_test_id('stSidebar').get_by_text(view, exact=True).click()
