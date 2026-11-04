@@ -255,6 +255,13 @@ stale content and exceptions, and requires a drawn SVG data path on each of the
 11 configured chart pages. A direct Streamlit server is also supported. HTTP
 health alone does not verify charts, feeds or history controls.
 
+Startup failures get one retry in a fresh browser. A retry must still verify
+every configured chart page; failures after startup are not retried. Failed
+reports include a `stage` (such as `app_title` or `populated_chart`). Reports
+from a second attempt include `attempt: 2` and `first_attempt_failure_stage`,
+even when that attempt passes. Request URLs and exception text are omitted
+to avoid exposing credentials.
+
 ### Quarterly freshness monitoring
 
 FRED labels quarters at their start. For productivity/unit costs, bank delinquencies, household debt service and FHFA quarterly house prices, freshness now uses the successor quarter’s end plus a publication budget (45, 65, 95 and 65 days respectively), then seven days of operational grace. These are explicit cadence assumptions, not official release dates. The audit records each deadline and source URL. Missing, invalid and overdue observations still fail; other series retain their existing rules.
