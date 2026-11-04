@@ -1,0 +1,91 @@
+name: Minimal preview checks
+on:
+  push:
+    branches: [preview/minimal-streamlit]
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [fixtures, paired]
+        default: fixtures
+      production_url:
+        type: string
+        default: https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/
+      preview_url:
+        type: string
+        description: Required for paired mode; use the separately deployed preview
+      rounds:
+        type: number
+        default: 3
+      timeout:
+        type: number
+        default: 30
+      interval:
+        type: number
+        default: 5
+      runtime_metadata:
+        type: string
+        description: Optional JSON keyed by URL with observed Python and package versions
+        default: '{}'
+permissions:
+  contents: read
+jobs:
+  fixture-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.10'
+      - run: pip install -r requirements-check.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m pytest -q --junitxml=test-results.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: preview-fixture-tests
+          path: test-results.xml
+          retention-days: 30
+  paired:
+    needs: fixture-tests
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'paired' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PREVIEW_PRODUCTION_URL: ${{ inputs.production_url }}
+      PREVIEW_TEST_URL: ${{ inputs.preview_url }}
+      PREVIEW_ROUNDS: ${{ inputs.rounds }}
+      PREVIEW_TIMEOUT: ${{ inputs.timeout }}
+      PREVIEW_INTERVAL: ${{ inputs.interval }}
+      PREVIEW_RUNTIME_METADATA: ${{ inputs.runtime_metadata }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.10'
+      - run: pip install -r requirements-check.txt
+      - run: python -m playwright install --with-deps chromium
+      - name: Save checker environment and supplied app versions
+        run: |
+          pip freeze > checker-environment.txt
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          metadata = json.loads(os.environ['PREVIEW_RUNTIME_METADATA'])
+          if not isinstance(metadata, dict):
+              raise SystemExit('Runtime metadata must be an object keyed by app URL')
+          Path('runtime-metadata.json').write_text(json.dumps(metadata))
+          PY
+      - name: Compare production and preview in fresh browser contexts
+        run: |
+          python paired_check.py --label github-runner --runs "$PREVIEW_ROUNDS" --timeout "$PREVIEW_TIMEOUT" --interval "$PREVIEW_INTERVAL" --budget 900 --metadata runtime-metadata.json "$PREVIEW_PRODUCTION_URL" "$PREVIEW_TEST_URL"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: preview-paired-results
+          path: |
+            results.jsonl
+            checker-environment.txt
+            runtime-metadata.json
+          retention-days: 30

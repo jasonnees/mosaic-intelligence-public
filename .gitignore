@@ -1,0 +1,8 @@
+.venv*/
+__pycache__/
+.pytest_cache/
+results*.jsonl
+runtime-metadata.json
+checker-environment.txt
+test-results.xml
+.DS_Store
