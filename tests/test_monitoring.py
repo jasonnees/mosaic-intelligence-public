@@ -6,7 +6,31 @@ import pytest
 import requests
 
 from scripts.audit_live_sources import audit_failures, main as audit_main
-from scripts.check_deployment import check_http, load_target, main as deployment_main
+from scripts.check_deployment import check_charts, check_http, load_target, main as deployment_main
+
+
+def test_startup_retry_requires_successful_chart_verification():
+    failed = [{'check': 'browser', 'passed': False, 'view': 'startup', 'stage': 'app_title'}]
+    with patch('scripts.check_deployment._check_charts_once', side_effect=[
+        failed, [{'check': 'chart:Overview', 'passed': True}],
+    ]) as attempt:
+        checks = check_charts({'chart_views': ['Overview']}, timeout_ms=100)
+    assert attempt.call_count == 2
+    assert all(check['passed'] for check in checks)
+    assert checks[0]['attempt'] == 2
+    assert checks[0]['first_attempt_failure_stage'] == 'app_title'
+    with patch('scripts.check_deployment._check_charts_once', return_value=failed) as attempt:
+        assert not all(check['passed'] for check in check_charts({}))
+    assert attempt.call_count == 2
+
+
+@pytest.mark.parametrize('stage', ['navigation', 'view_heading', 'completed_run',
+                                 'application_exception', 'populated_chart'])
+def test_retry_cannot_hide_broken_views(stage):
+    failed = [{'check': 'browser', 'passed': False, 'view': 'Overview', 'stage': stage}]
+    with patch('scripts.check_deployment._check_charts_once', return_value=failed) as attempt:
+        assert check_charts({}) == failed
+    assert attempt.call_count == 1
 
 
 def test_target_requires_explicit_deployment_and_valid_urls(tmp_path):

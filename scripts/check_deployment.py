@@ -46,6 +46,20 @@ def check_http(target, get=requests.get):
 
 
 def check_charts(target, timeout_ms=180000):
+    """Retry startup once in a fresh browser; never retry failed chart checks."""
+    checks = _check_charts_once(target, timeout_ms)
+    startup_stages = {'page_load', 'cloud_wrapper_or_wake_prompt', 'wake_app',
+                      'app_surface', 'app_title'}
+    failure = next((check for check in checks if not check['passed']), None)
+    if failure and failure.get('stage') in startup_stages:
+        checks = _check_charts_once(target, timeout_ms)
+        for check in checks:
+            check['attempt'] = 2
+            check['first_attempt_failure_stage'] = failure['stage']
+    return checks
+
+
+def _check_charts_once(target, timeout_ms):
     from playwright.sync_api import sync_playwright, expect
     checks = []
     with sync_playwright() as playwright:
@@ -53,8 +67,10 @@ def check_charts(target, timeout_ms=180000):
         page = browser.new_page(viewport={'width': 1440, 'height': 1000})
         page.set_default_timeout(timeout_ms)
         current_view = 'startup'
+        stage = 'page_load'
         try:
             page.goto(target['site_url'], wait_until='domcontentloaded')
+            stage = 'cloud_wrapper_or_wake_prompt'
             # Community Cloud may hibernate between scheduled checks. Wake only
             # its explicit public prompt; still require real charts afterwards.
             page.wait_for_function("""() => document.querySelector('iframe[title="streamlitApp"]')
@@ -62,31 +78,40 @@ def check_charts(target, timeout_ms=180000):
                 || [...document.querySelectorAll('button')].some(b => b.textContent.trim() === 'Yes, get this app back up!')""")
             wake = page.get_by_role('button', name='Yes, get this app back up!', exact=True)
             if wake.count():
+                stage = 'wake_app'
                 wake.click()
             # Community Cloud wraps the actual app in a named iframe. A direct
             # Streamlit server has no wrapper; wait for either surface to exist.
+            stage = 'app_surface'
             page.wait_for_function("""() => document.querySelector('iframe[title="streamlitApp"]')
                 || [...document.querySelectorAll('h1')].some(h => h.textContent.trim() === 'Boldin Market Risk Explorer')""")
             app = (page.frame_locator('iframe[title="streamlitApp"]')
                    if page.locator('iframe[title="streamlitApp"]').count() else page)
+            stage = 'app_title'
             app.get_by_role('heading', name='Boldin Market Risk Explorer', exact=True).wait_for()
             for view in target['chart_views']:
                 current_view = view
+                stage = 'navigation'
                 app.get_by_test_id('stSidebar').get_by_text(view, exact=True).click()
+                stage = 'view_heading'
                 app.get_by_role('heading', name=view if view != 'Overview' else 'Household risk overview', exact=True).wait_for()
                 # Wait for the new run, not a stale chart left by the prior view.
+                stage = 'completed_run'
                 expect(app.get_by_test_id('stApp')).to_have_attribute(
                     'data-test-script-state', 'notRunning', timeout=timeout_ms)
                 expect(app.locator('[data-testid="stElementContainer"][data-stale="true"]')).to_have_count(0, timeout=timeout_ms)
+                stage = 'application_exception'
                 if app.locator('[data-testid="stException"]').count():
                     raise RuntimeError('Application exception')
                 # An actual SVG data path is required, not an empty plot container.
+                stage = 'populated_chart'
                 expect(app.locator('[data-testid="stPlotlyChart"] .js-line').first).to_have_attribute(
                     'd', re.compile(r'.{11,}'), timeout=timeout_ms)
                 checks.append({'check': f'chart:{view}', 'passed': True})
         except Exception:
             # Browser exceptions can contain URLs; keep diagnostics credential free.
-            checks.append({'check': 'browser', 'passed': False, 'view': current_view, 'error': 'App title, navigation, completed run or populated chart check failed'})
+            checks.append({'check': 'browser', 'passed': False, 'view': current_view,
+                           'stage': stage, 'error': 'App title, navigation, completed run or populated chart check failed'})
         finally:
             browser.close()
     return checks
