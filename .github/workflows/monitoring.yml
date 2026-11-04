@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '23 13 * * *'
   workflow_dispatch:
+    inputs:
+      diagnostics_only:
+        description: Compare hosted startup files with a local production-version server
+        type: boolean
+        default: false
   push:
     branches: [main]
 permissions:
@@ -12,6 +17,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   live-sources:
+    if: ${{ !inputs.diagnostics_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -35,6 +41,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   deployment:
+    if: ${{ !inputs.diagnostics_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -75,4 +82,43 @@ jobs:
           name: deployment-report
           path: deployment-report.json
           if-no-files-found: error
+          retention-days: 30
+  frontend-assets:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.diagnostics_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14.10'
+      - name: Install observed production frontend versions
+        run: pip install -r requirements.txt streamlit==1.66.1 pyarrow==24.0.0 pandas==3.1.0 numpy==2.5.4
+      - name: Start local comparison server
+        run: |
+          pip freeze > frontend-environment.txt
+          python -m streamlit run app.py --server.headless true --server.address 127.0.0.1 --server.port 8511 --browser.gatherUsageStats false > frontend-server.log 2>&1 &
+          python - <<'PY'
+          import requests, time
+          for attempt in range(30):
+              try:
+                  response = requests.get('http://127.0.0.1:8511/', timeout=2)
+                  if response.status_code == 200:
+                      break
+              except requests.RequestException:
+                  pass
+              time.sleep(1)
+          else:
+              raise SystemExit('Local comparison server did not start')
+          PY
+      - name: Compare hosted and local startup assets
+        run: python scripts/probe_frontend_assets.py --app-url https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/~/+/ --output frontend-assets.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-diagnostics
+          path: |
+            frontend-assets.json
+            frontend-environment.txt
+            frontend-server.log
           retention-days: 30

@@ -262,6 +262,19 @@ from a second attempt include `attempt: 2` and `first_attempt_failure_stage`,
 even when that attempt passes. Request URLs and exception text are omitted
 to avoid exposing credentials.
 
+For startup investigations, manually run Live monitoring with
+`diagnostics_only: true`. This skips the feed/browser jobs and starts a local
+comparison server on the runner using the observed production versions
+(Python 3.14.10, Streamlit 1.66.1, PyArrow 24.0.0, pandas 3.1.0 and NumPy 2.5.4).
+It compares same-origin JavaScript/CSS files listed in the hosted app HTML
+against local files by status, byte count and SHA-256. Each remote request has
+a 12-second read timeout and one retry. A recovered timeout still fails this
+diagnostic gate and remains visible in the report. An empty manifest cannot
+pass. This checks startup file delivery, not JavaScript execution, WebSockets,
+or every dynamically imported file. Versions are an investigation snapshot,
+not new production constraints. Reports, installed versions and local server
+logs are saved in the `frontend-diagnostics` artifact.
+
 ### Quarterly freshness monitoring
 
 FRED labels quarters at their start. For productivity/unit costs, bank delinquencies, household debt service and FHFA quarterly house prices, freshness now uses the successor quarter’s end plus a publication budget (45, 65, 95 and 65 days respectively), then seven days of operational grace. These are explicit cadence assumptions, not official release dates. The audit records each deadline and source URL. Missing, invalid and overdue observations still fail; other series retain their existing rules.
