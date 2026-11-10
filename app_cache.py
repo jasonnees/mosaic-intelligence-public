@@ -26,7 +26,8 @@ def service():
 def indicator_payload(series_id, days):
     result = service().fetch(BY_ID[series_id], days)
     return dict(frame=result.frame, provenance=result.provenance,
-                fetched_at=result.fetched_at, error=result.error)
+                fetched_at=result.fetched_at, error=result.error,
+                release=getattr(result, 'release', None), live_ok=getattr(result, 'live_ok', None))
 
 def fetch(series_id, days):
     from risk_data import FetchResult

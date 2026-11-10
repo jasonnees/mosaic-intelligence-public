@@ -6,7 +6,7 @@ import config
 from risk_catalog import INDICATORS, BY_ID, DOMAINS, WATCH_RULES, RULE_SOURCES
 from indicator_guidance import GUIDES, direction, data_warning
 from brand import masthead, style_chart
-from risk_data import assess, transform_frame, freshness_context
+from risk_data import assess_result, transform_frame, result_freshness_context
 from macro_pages import render_cpi, render_gdp, refresh as refresh_macro
 from market_history_page import render_market_history
 from portfolio_page import render_portfolio
@@ -17,13 +17,13 @@ st.set_page_config(page_title='Boldin Market Risk Explorer', page_icon='◉', la
 
 
 def table_row(indicator, result):
-    observation = assess(result.frame, indicator)
-    movement = direction(result.frame, indicator)
+    observation = assess_result(result, indicator)
+    movement = direction(result.frame, indicator, observation=observation)
     warning = data_warning(observation, indicator) or (observation.detail if indicator.series_id in WATCH_RULES else GUIDES[indicator.series_id].caution)
     return {
         'Indicator': indicator.name, 'Value': observation.value, 'Units': indicator.unit,
         'Observation date': observation.observed_at, 'Age (days)': observation.age_days,
-        'Publication deadline': freshness_context(indicator, observation.observed_at).get('deadline', ''),
+        'Publication deadline': result_freshness_context(result, indicator, observation.observed_at).get('deadline', ''),
         'Data status': observation.status, 'Watch condition': observation.watch,
         'Direction': movement.label, 'Interpretation': movement.explanation, 'Warning': warning,
         'Comparison date': movement.prior_date, 'Change': movement.change,
@@ -44,7 +44,7 @@ def render_indicator_table(rows, key):
     primary = (['Indicator', 'Domain', 'Frequency', 'Display unit', 'Watch condition'] if key == 'catalog'
                else ['Indicator', 'Value', 'Units', 'Data status', 'Watch condition', 'Direction'])
     status_colors = {'fresh': '#8ce5bd', 'Watch': '#ffbd69', 'stale': '#ff839b',
-                     'missing': '#ff839b', 'invalid': '#ff839b', 'insufficient history': '#ffbd69',
+                     'unverified': '#ff839b', 'missing': '#ff839b', 'invalid': '#ff839b', 'insufficient history': '#ffbd69',
                      'Unavailable': '#ff839b', 'Not evaluated': '#ff839b',
                      'Rising': '#78b7ff', 'Falling': '#a9a1ff'}
     status_columns = [column for column in ['Data status', 'Watch condition', 'Direction'] if column in rows]
@@ -63,11 +63,11 @@ def render_indicator_table(rows, key):
 
 def render_indicator_chart(indicator, result, days):
     st.subheader(indicator.name)
-    observation = assess(result.frame, indicator)
+    observation = assess_result(result, indicator)
     st.markdown(f'**{indicator.name}** · [{indicator.source.upper()} source notes]({indicator.source_url})')
     st.caption(f'{indicator.series_id} · {indicator.frequency} · {indicator.reliability} · {observation.status} · {result.provenance}')
     guide = GUIDES[indicator.series_id]
-    movement = direction(result.frame, indicator)
+    movement = direction(result.frame, indicator, observation=observation)
     warning = data_warning(observation, indicator)
     if warning:
         st.warning(warning)
@@ -86,7 +86,9 @@ def render_indicator_chart(indicator, result, days):
         change_unit = 'percentage points' if '%' in indicator.unit or indicator.unit == 'percentage points' else indicator.unit
         st.caption(f'Change: {movement.change:+.3g} {change_unit} · {movement.prior_date} → {movement.current_date}. Direction compares displayed values, including year-over-year growth where selected.')
     st.caption(f'Observation period: {observation.observed_at or "unavailable"} · Age: {observation.age_days if observation.age_days is not None else "unknown"} days · Fallback age budget: {indicator.max_age_days} days · Units: {indicator.unit}')
-    timing = freshness_context(indicator, observation.observed_at)
+    timing = result_freshness_context(result, indicator, observation.observed_at)
+    if timing.get('published_at'):
+        st.caption(f'Publisher release date: {timing["published_at"]} · Next scheduled release: {timing["next_update_expected"]}')
     if 'deadline' in timing:
         st.caption(f'Publication timing: next update budget ends {timing["next_update_expected"]}; {timing["grace_calendar_days"]} calendar days of operational grace, through {timing["deadline"]}. The publication deadline takes precedence over the fallback age budget; this is an operational assumption, not a guaranteed release date.')
         st.markdown(f'[Publisher release timing]({timing["source_url"]})')

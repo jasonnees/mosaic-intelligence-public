@@ -70,7 +70,7 @@ def freshness_context(indicator, observed_at):
             'max_age_days': indicator.max_age_days, 'source_url': CASE_SHILLER_SOURCE}
 
 
-def assess(frame, indicator, now=None):
+def assess(frame, indicator, now=None, release=None):
     now = pd.Timestamp(now if now is not None else datetime.now(timezone.utc))
     if now.tzinfo is not None:
         now = now.tz_convert('UTC').tz_localize(None)
@@ -84,7 +84,8 @@ def assess(frame, indicator, now=None):
     value = float(value) if pd.notna(value) and math.isfinite(value) else None
     if age < 0:
         return Observation(None, date.date().isoformat(), age, 'invalid', 'Unavailable', 'Future-dated observation')
-    timing = freshness_context(indicator, date)
+    from release_timing import verified_release_context
+    timing = verified_release_context(indicator, date, release, now) or freshness_context(indicator, date)
     overdue = (now.normalize() > pd.Timestamp(timing['deadline'])
                if 'deadline' in timing else age > indicator.max_age_days)
     if overdue:
@@ -114,6 +115,8 @@ class FetchResult:
     provenance: str
     fetched_at: str
     error: str = ''
+    release: dict | None = None
+    live_ok: bool | None = None
 
 
 class RiskDataService:
@@ -133,6 +136,7 @@ class RiskDataService:
         empty = pd.DataFrame(columns=['date', indicator.series_id])
         archive, live = empty, empty
         errors = []
+        release = None
         if self.archive is not None:
             try:
                 if indicator.source == 'fred':
@@ -157,6 +161,16 @@ class RiskDataService:
             errors.append(f'{indicator.source.upper()} request failed; check key, connectivity or source availability')
         archive = clean_frame(archive, indicator.series_id)
         live = clean_frame(live, indicator.series_id)
+        if not live.empty:
+            # Archives supplement history only, never override the API's latest period.
+            archive = archive[archive['date'] < live['date'].min()]
+        if indicator.series_id == 'ELEC.PRICE.US-RES.M' and not live.empty:
+            try:
+                release = client.get_release_calendar()
+                if not isinstance(release, dict):
+                    release = None
+            except Exception:
+                errors.append('EIA release calendar unavailable; using observation-age budget')
         merged = clean_frame(pd.concat([archive, live], ignore_index=True), indicator.series_id)
         if not merged.empty:
             merged = merged[merged['date'] >= pd.Timestamp(start.date())].reset_index(drop=True)
@@ -165,4 +179,20 @@ class RiskDataService:
             provenance = 'S3 archive'
         if not live.empty:
             provenance = f'{indicator.source.upper()} API' + (' + S3 history' if not archive.empty else '')
-        return FetchResult(merged, provenance, current.isoformat(), '; '.join(errors))
+        return FetchResult(merged, provenance, current.isoformat(), '; '.join(errors), release, not live.empty)
+
+
+def assess_result(result, indicator, now=None):
+    observation = assess(result.frame, indicator, now, release=result.release)
+    if result.live_ok is False and observation.status not in {'missing', 'invalid', 'stale'}:
+        return Observation(observation.value, observation.observed_at, observation.age_days,
+                           'unverified', 'Unavailable',
+                           'Live source unavailable; archive history cannot establish current data health')
+    return observation
+
+
+def result_freshness_context(result, indicator, observed_at, now=None):
+    from release_timing import verified_release_context
+    return (verified_release_context(indicator, observed_at, result.release,
+                                     now if now is not None else datetime.now(timezone.utc))
+            or freshness_context(indicator, observed_at))

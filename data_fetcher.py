@@ -356,6 +356,12 @@ class EIAClient:
     def __init__(self, api_key: str = None):
         self.api_key = api_key or config.EIA_API_KEY
 
+    def get_release_calendar(self):
+        from release_timing import EIA_RELEASE_URL, parse_eia_release
+        response = requests.get(EIA_RELEASE_URL, timeout=15)
+        response.raise_for_status()
+        return parse_eia_release(response.text)
+
     def get_series(self, series_id: str, days: int = None) -> pd.DataFrame:
         """Fetch a series from EIA API v2"""
 
