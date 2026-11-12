@@ -5,12 +5,11 @@ import argparse
 import json
 from pathlib import Path
 import sys
-import time
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-import requests
 import config
+from data_fetcher import FREDClient, source_error
 from risk_catalog import INDICATORS
-from risk_data import RiskDataService, assess, freshness_context
+from risk_data import RiskDataService, assess_result, result_freshness_context
 
 def audit_failures(rows, expected_ids):
     """Fail closed on incomplete coverage, unhealthy observations or source errors."""
@@ -39,29 +38,26 @@ def main():
             Path(args.output).write_text(json.dumps(report, indent=2) + '\n')
         print(json.dumps(report, indent=2))
         return 1
-    service = RiskDataService()
+    fred = FREDClient() if config.FRED_API_KEY else None
+    service = RiskDataService(fred=fred)
     rows = []
     for indicator in INDICATORS:
         row = {'series_id': indicator.series_id, 'url': indicator.source_url}
         if indicator.source == 'fred':
             try:
-                response = requests.get('https://api.stlouisfed.org/fred/series',
-                    params={'series_id': indicator.series_id, 'api_key': config.FRED_API_KEY, 'file_type':'json'},timeout=30)
-                response.raise_for_status()
-                metadata = response.json()['seriess'][0]
-                row['metadata'] = {k:metadata[k] for k in ['title','frequency','units','seasonal_adjustment','observation_end','last_updated']}
-            except Exception:
-                row['metadata_error'] = 'Metadata request failed'
+                row['metadata'] = fred.get_metadata(indicator.series_id)
+            except Exception as error:
+                row['metadata_error'] = source_error('fred', error)
         fetched = service.fetch(indicator,730)
-        row['observation'] = asdict(assess(fetched.frame,indicator))
-        row['freshness_rule'] = freshness_context(indicator, row['observation']['observed_at'])
+        row['observation'] = asdict(assess_result(fetched,indicator))
+        row['freshness_rule'] = result_freshness_context(fetched, indicator, row['observation']['observed_at'])
         row['provenance'] = fetched.provenance
         row['error'] = fetched.error
         rows.append(row)
-        time.sleep(1.2)
     failures = audit_failures(rows, [indicator.series_id for indicator in INDICATORS])
     report = {'checked_at': datetime.now(timezone.utc).isoformat(),
               'scope': 'Authenticated API metadata and observations; point-in-time availability only',
+              'fred_requests': fred.request_diagnostics if fred is not None else {},
               'status': 'failed' if failures else 'passed', 'failures': failures, 'series': rows}
     if args.output:
         Path(args.output).write_text(json.dumps(report, indent=2) + '\n')

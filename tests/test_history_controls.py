@@ -34,7 +34,7 @@ def test_indicator_cache_survives_result_class_replacement(monkeypatch):
     app_cache.fetch.clear()
     old = FetchResult(pd.DataFrame({'date': pd.to_datetime(['2026-10-01']), 'DGS10': [4.]}), 'fixture', 'now')
     # Reproduce the PicklingError that a stale class identity causes on reload.
-    replacement = make_dataclass('FetchResult', ['frame','provenance','fetched_at','error'])
+    replacement = make_dataclass('FetchResult', ['frame','provenance','fetched_at','error','release','live_ok'])
     monkeypatch.setattr(risk_data, 'FetchResult', replacement)
     with pytest.raises(pickle.PicklingError):
         pickle.dumps(old)

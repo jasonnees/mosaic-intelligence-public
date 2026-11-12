@@ -42,6 +42,22 @@ The two independent jobs check:
 
 Each run saves timestamped JSON reports as Actions artifacts for 30 days, including failed runs. Reports in `docs/` remain historical evidence and are not silently rewritten by monitoring. Offline CI remains independent and credential free. A green offline test does not mean production is healthy, and a `not_deployed` report does not verify availability.
 
+FRED metadata and observations share one paced client (at least 0.6 seconds
+between requests). Transient connection errors, timeouts, HTTP 429 and selected
+server errors receive at most three attempts. A 429 waits at least 60 seconds;
+`Retry-After` can extend the wait up to 120 seconds. Larger waits fail the request
+instead of retrying early. Reports include sanitized HTTP status codes and
+`fred_requests` attempt, retry and error counts so a recovered throttle remains
+visible. Other processes using the same key can still consume the provider quota.
+
+An October 2026 CPI observation may have no usable October 2025 comparison:
+[BLS did not collect October 2025 CPI data during the federal shutdown](https://www.bls.gov/cpi/additional-resources/2025-federal-government-shutdown-impact-cpi.htm).
+The dashboard explains this specific gap when the prior-year observation is
+absent. Inflation and direction remain unavailable, and strict monitoring still
+fails. Longer history cannot recreate an unpublished observation. No prior month,
+interpolated index or older inflation rate is substituted. Stale observations also
+continue to fail under the unchanged catalog budgets.
+
 For local diagnostics:
 
 ```sh

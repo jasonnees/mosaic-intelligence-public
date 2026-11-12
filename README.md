@@ -278,3 +278,20 @@ logs are saved in the `frontend-diagnostics` artifact.
 ### Quarterly freshness monitoring
 
 FRED labels quarters at their start. For productivity/unit costs, bank delinquencies, household debt service and FHFA quarterly house prices, freshness now uses the successor quarter’s end plus a publication budget (45, 65, 95 and 65 days respectively), then seven days of operational grace. These are explicit cadence assumptions, not official release dates. The audit records each deadline and source URL. Missing, invalid and overdue observations still fail; other series retain their existing rules.
+
+### Publisher timing and missing comparisons
+
+Residential electricity freshness uses the current [EIA Electric Power Monthly](https://www.eia.gov/electricity/monthly/)
+release header when its data month matches the API observation. The app shows the
+publication date and next scheduled release, with seven calendar days of operational
+grace. Missing, malformed, future-published or mismatched metadata cannot extend the
+existing 100-day fallback budget. This is a source-specific check, not a larger budget
+for all monthly feeds. The live audit uses the same assessment as the dashboard.
+
+For October 2026, CPI, core CPI and rent year-over-year values remain unavailable
+when their October 2025 comparison is missing. The warning links the
+[BLS notice](https://www.bls.gov/cpi/notices/2026/12m-changes-202610.htm);
+refreshing cannot reconstruct that source observation. No interpolation, alternate
+indicator or older growth reading is substituted. An optional archive can supplement
+history, but an unavailable live feed cannot establish current health or clear a watch
+condition, and an archive tail cannot supersede the API's latest observation.
