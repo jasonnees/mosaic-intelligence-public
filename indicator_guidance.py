@@ -148,16 +148,12 @@ def data_warning(observation, indicator):
         return 'No usable observations. Check the API key, source availability and connection; no substitute signal is shown.'
     if observation.status == 'invalid':
         return 'The latest observation is future-dated. Check source dates; it cannot support a current signal.'
-    if (observation.status == 'insufficient history'
-            and observation.observed_at == '2026-10-01'
-            and indicator.series_id in {'CPIAUCSL', 'CPILFESL', 'CUSR0000SEHA'}):
-        return ('October 2026 year-over-year growth is unavailable because the October 2025 '
-                'comparison is missing. BLS did not collect October 2025 survey data during the '
-                'funding lapse. Refreshing or loading more history cannot reconstruct that observation; '
-                'no estimate or older growth reading is substituted. '
-                'BLS notice: https://www.bls.gov/cpi/notices/2026/12m-changes-202610.htm')
+    if observation.status == 'insufficient history' and 'BLS notice:' in observation.detail:
+        return (f'{observation.detail}. Refreshing or loading more history cannot reconstruct '
+                'that observation; no estimate or older growth reading is substituted.')
     if observation.status == 'insufficient history':
-        return 'The latest period has no usable prior-year comparison. Load more history or inspect the source; an older growth value is not substituted.'
+        return (f'{observation.detail}. Load more history or inspect the source; '
+                'an older growth value is not substituted.')
     return ''
 
 

@@ -85,7 +85,7 @@ def test_missing_credentials_fail_before_any_network_request(tmp_path, monkeypat
     monkeypatch.setattr('config.FRED_API_KEY', '')
     monkeypatch.setattr('config.EIA_API_KEY', '')
     monkeypatch.setattr('sys.argv', ['audit', '--strict', '--output', str(output)])
-    with patch('scripts.audit_live_sources.requests.get') as get:
+    with patch('data_fetcher.requests.get') as get:
         assert audit_main() == 1
         get.assert_not_called()
     assert json.loads(output.read_text())['status'] == 'failed'

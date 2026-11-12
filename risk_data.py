@@ -94,7 +94,15 @@ def assess(frame, indicator, now=None, release=None):
                   if 'deadline' in timing else 'Observation exceeds the freshness budget')
         return Observation(value, date.date().isoformat(), age, 'stale', 'Unavailable', detail)
     if value is None:
-        return Observation(None, date.date().isoformat(), age, 'insufficient history', 'Unavailable', 'Prior-year comparison is missing or nonpositive')
+        prior = date - pd.DateOffset(years=1)
+        detail = f'Prior-year comparison for {prior.date().isoformat()} is missing or nonpositive'
+        if (indicator.series_id in {'CPIAUCSL', 'CPILFESL', 'CUSR0000SEHA'}
+                and prior == pd.Timestamp('2025-10-01')
+                and prior not in set(raw['date'])):
+            detail += ('; BLS did not collect October 2025 CPI data during the federal shutdown. '
+                       'Year-over-year inflation remains unavailable. BLS notice: '
+                       'https://www.bls.gov/cpi/notices/2026/12m-changes-202610.htm')
+        return Observation(None, date.date().isoformat(), age, 'insufficient history', 'Unavailable', detail)
     rule = WATCH_RULES.get(indicator.series_id)
     watch, detail = 'No fixed threshold', 'No fixed warning threshold assigned; use direction and series-specific guidance'
     if rule:
@@ -127,7 +135,7 @@ class RiskDataService:
         self.archive = archive
 
     def fetch(self, indicator, lookback_days=730, now=None):
-        from data_fetcher import FREDClient, EIAClient
+        from data_fetcher import FREDClient, EIAClient, source_error
         current = pd.Timestamp(now if now is not None else datetime.now(timezone.utc))
         start = history_start(lookback_days, current)
         if indicator.transform == 'yoy' and lookback_days != 0:
@@ -148,17 +156,18 @@ class RiskDataService:
                 errors.append('Optional archive unavailable')
         try:
             if indicator.source == 'fred':
-                client = self.fred if self.fred is not None else FREDClient()
-                live = client.get_series(indicator.series_id, start_date=start.date().isoformat(),
+                if self.fred is None:
+                    self.fred = FREDClient()
+                live = self.fred.get_series(indicator.series_id, start_date=start.date().isoformat(),
                                          end_date=current.date().isoformat())
             elif indicator.source == 'eia':
                 client = self.eia if self.eia is not None else EIAClient()
                 live = client.get_series(indicator.series_id, days=(pd.Timestamp(current.date()) - start).days)
             else:
                 raise ValueError('Unsupported source')
-        except Exception:
+        except Exception as error:
             # Exception text from requests can contain API keys in URLs.
-            errors.append(f'{indicator.source.upper()} request failed; check key, connectivity or source availability')
+            errors.append(source_error(indicator.source, error))
         archive = clean_frame(archive, indicator.series_id)
         live = clean_frame(live, indicator.series_id)
         if not live.empty:

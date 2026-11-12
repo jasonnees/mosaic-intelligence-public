@@ -5,11 +5,13 @@ Used as the API fallback layer when S3 data is unavailable.
 
 import requests
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from typing import Optional, Dict, List, Any
 import json
 import os
 from functools import lru_cache
+from threading import Lock
 import time
 
 # Load .env if python-dotenv is available
@@ -24,7 +26,21 @@ import config
 
 class DataFetchError(Exception):
     """Custom exception for data fetch errors"""
-    pass
+    def __init__(self, message, *, reason=None, status_code=None):
+        super().__init__(message)
+        self.reason = reason
+        self.status_code = status_code
+
+
+def source_error(source, error):
+    """Only expose controlled diagnostics; request exceptions may contain keys."""
+    detail = ''
+    if isinstance(error, DataFetchError):
+        if type(error.status_code) is int:
+            detail = f' (HTTP {error.status_code})'
+        elif error.reason in {'timeout', 'connection', 'invalid response'}:
+            detail = f' ({error.reason})'
+    return f'{source.upper()} request failed{detail}; check key, connectivity or source availability'
 
 
 # =============================================================================
@@ -38,8 +54,77 @@ class FREDClient:
 
     def __init__(self, api_key: str = None):
         self.api_key = api_key or config.FRED_API_KEY
+        self._last_request = None
+        self._request_lock = Lock()
+        self.request_diagnostics = {'attempts': 0, 'retries': 0, 'http_errors': {}}
         if not self.api_key:
             raise DataFetchError("FRED API key not configured")
+
+    def _request(self, endpoint, params):
+        with self._request_lock:
+            return self._request_locked(endpoint, params)
+
+    def _request_locked(self, endpoint, params):
+        """Pace metadata and observations together, retrying transient failures.
+
+        FRED documents a 120/minute limit. A 0.6-second minimum interval keeps
+        this client below it; shared-key traffic may still require a cooldown.
+        https://fred.stlouisfed.org/docs/api/fred/errors.html
+        """
+        for attempt in range(3):
+            if self._last_request is not None:
+                time.sleep(max(0, 0.6 - (time.monotonic() - self._last_request)))
+            self._last_request = time.monotonic()
+            self.request_diagnostics['attempts'] += 1
+            try:
+                response = requests.get(f'{self.BASE_URL}/{endpoint}',
+                    params={**params, 'api_key': self.api_key, 'file_type': 'json'}, timeout=30)
+                response.raise_for_status()
+                payload = response.json()
+                if not isinstance(payload, dict) or 'error_code' in payload:
+                    raise DataFetchError('Invalid FRED response', reason='invalid response')
+                return payload
+            except requests.exceptions.JSONDecodeError:
+                raise DataFetchError('Invalid FRED response', reason='invalid response') from None
+            except requests.exceptions.RequestException as error:
+                status = error.response.status_code if error.response is not None else None
+                if status is not None:
+                    counts = self.request_diagnostics['http_errors']
+                    counts[str(status)] = counts.get(str(status), 0) + 1
+                reason = ('timeout' if isinstance(error, requests.Timeout) else 'connection')
+                failure = DataFetchError('FRED request failed', reason=reason, status_code=status)
+                retryable = status in {429, 500, 502, 503, 504} or isinstance(
+                    error, (requests.Timeout, requests.ConnectionError))
+                if not retryable or attempt == 2:
+                    raise failure from None
+                delay = 60 if status == 429 else 2 ** attempt
+                retry_after = error.response.headers.get('Retry-After') if error.response is not None else None
+                if retry_after:
+                    try:
+                        wait = float(retry_after)
+                    except (ValueError, TypeError):
+                        try:
+                            wait = (parsedate_to_datetime(retry_after) - datetime.now(timezone.utc)).total_seconds()
+                        except (ValueError, TypeError, OverflowError):
+                            wait = 0
+                    # Do not retry earlier than the provider allows, or block
+                    # indefinitely on an unbounded/malformed Retry-After.
+                    if not 0 <= wait <= 120:
+                        raise failure from None
+                    delay = max(delay, wait)
+                self.request_diagnostics['retries'] += 1
+                time.sleep(delay)
+            except ValueError:
+                raise DataFetchError('Invalid FRED response', reason='invalid response') from None
+
+    def get_metadata(self, series_id):
+        payload = self._request('series', {'series_id': series_id})
+        try:
+            metadata = payload['seriess'][0]
+            return {key: metadata[key] for key in ('title', 'frequency', 'units',
+                'seasonal_adjustment', 'observation_end', 'last_updated')}
+        except (KeyError, IndexError, TypeError):
+            raise DataFetchError('Invalid FRED metadata', reason='invalid response') from None
 
     def get_series(
         self,
@@ -55,11 +140,8 @@ class FREDClient:
         if not end_date:
             end_date = datetime.now().strftime("%Y-%m-%d")
 
-        url = f"{self.BASE_URL}/series/observations"
         params = {
             "series_id": series_id,
-            "api_key": self.api_key,
-            "file_type": "json",
             "observation_start": start_date,
             "observation_end": end_date,
             "limit": limit,
@@ -67,12 +149,10 @@ class FREDClient:
         }
 
         try:
-            response = requests.get(url, params=params, timeout=30)
-            response.raise_for_status()
-            data = response.json()
+            data = self._request('series/observations', params)
 
             if "observations" not in data:
-                return pd.DataFrame()
+                raise DataFetchError('Invalid FRED observations', reason='invalid response')
 
             df = pd.DataFrame(data["observations"])
             if df.empty:
@@ -86,8 +166,8 @@ class FREDClient:
 
             return df
 
-        except requests.exceptions.RequestException as e:
-            raise DataFetchError(f"FRED API error for {series_id}: {str(e)}")
+        except (KeyError, TypeError, ValueError):
+            raise DataFetchError('Invalid FRED observations', reason='invalid response') from None
 
     def get_multiple_series(self, series_ids: List[str], **kwargs) -> pd.DataFrame:
         """Fetch multiple series and merge them"""
