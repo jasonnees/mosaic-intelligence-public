@@ -1,4 +1,4 @@
-name: Live monitoring
+name: Deployment monitoring
 on:
   schedule:
     - cron: '23 13 * * *'
@@ -16,30 +16,6 @@ concurrency:
   group: live-monitoring
   cancel-in-progress: false
 jobs:
-  live-sources:
-    if: ${{ !inputs.diagnostics_only }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: pip
-      - run: pip install -r requirements.txt
-      - name: Audit authenticated feeds and freshness
-        run: python scripts/audit_live_sources.py --strict --output live-source-audit.json
-        env:
-          DATA_SOURCE_MODE: api
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: live-source-audit
-          path: live-source-audit.json
-          if-no-files-found: error
-          retention-days: 30
   deployment:
     if: ${{ !inputs.diagnostics_only }}
     runs-on: ubuntu-latest

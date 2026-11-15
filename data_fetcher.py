@@ -47,6 +47,22 @@ def source_error(source, error):
 # FRED API
 # =============================================================================
 
+_fred_clients = {}
+_fred_clients_lock = Lock()
+
+
+def get_fred_client(api_key=None):
+    """One paced client per credential per process, including concurrent cold starts.
+
+    Separate processes using the same key still rely on bounded HTTP 429 retries.
+    """
+    key = api_key or config.FRED_API_KEY
+    with _fred_clients_lock:
+        if key not in _fred_clients:
+            _fred_clients[key] = FREDClient(key)
+        return _fred_clients[key]
+
+
 class FREDClient:
     """Client for Federal Reserve Economic Data API"""
 

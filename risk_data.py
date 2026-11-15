@@ -42,6 +42,7 @@ class Observation:
     status: str
     watch: str
     detail: str
+    known_limitation: str | None = None
 
 
 def freshness_context(indicator, observed_at):
@@ -96,13 +97,15 @@ def assess(frame, indicator, now=None, release=None):
     if value is None:
         prior = date - pd.DateOffset(years=1)
         detail = f'Prior-year comparison for {prior.date().isoformat()} is missing or nonpositive'
+        limitation = None
         if (indicator.series_id in {'CPIAUCSL', 'CPILFESL', 'CUSR0000SEHA'}
                 and prior == pd.Timestamp('2025-10-01')
                 and prior not in set(raw['date'])):
+            limitation = 'bls_cpi_october_2025_missing_base'
             detail += ('; BLS did not collect October 2025 CPI data during the federal shutdown. '
                        'Year-over-year inflation remains unavailable. BLS notice: '
                        'https://www.bls.gov/cpi/notices/2026/12m-changes-202610.htm')
-        return Observation(None, date.date().isoformat(), age, 'insufficient history', 'Unavailable', detail)
+        return Observation(None, date.date().isoformat(), age, 'insufficient history', 'Unavailable', detail, limitation)
     rule = WATCH_RULES.get(indicator.series_id)
     watch, detail = 'No fixed threshold', 'No fixed warning threshold assigned; use direction and series-specific guidance'
     if rule:
@@ -125,6 +128,7 @@ class FetchResult:
     error: str = ''
     release: dict | None = None
     live_ok: bool | None = None
+    warnings: tuple = ()
 
 
 class RiskDataService:
@@ -135,7 +139,7 @@ class RiskDataService:
         self.archive = archive
 
     def fetch(self, indicator, lookback_days=730, now=None):
-        from data_fetcher import FREDClient, EIAClient, source_error
+        from data_fetcher import get_fred_client, EIAClient, source_error
         current = pd.Timestamp(now if now is not None else datetime.now(timezone.utc))
         start = history_start(lookback_days, current)
         if indicator.transform == 'yoy' and lookback_days != 0:
@@ -144,6 +148,7 @@ class RiskDataService:
         empty = pd.DataFrame(columns=['date', indicator.series_id])
         archive, live = empty, empty
         errors = []
+        warnings = []
         release = None
         if self.archive is not None:
             try:
@@ -153,11 +158,11 @@ class RiskDataService:
                 else:
                     archive = self.archive.get_eia_series(indicator.series_id)
             except Exception:
-                errors.append('Optional archive unavailable')
+                warnings.append('Optional archive unavailable')
         try:
             if indicator.source == 'fred':
                 if self.fred is None:
-                    self.fred = FREDClient()
+                    self.fred = get_fred_client()
                 live = self.fred.get_series(indicator.series_id, start_date=start.date().isoformat(),
                                          end_date=current.date().isoformat())
             elif indicator.source == 'eia':
@@ -177,9 +182,21 @@ class RiskDataService:
             try:
                 release = client.get_release_calendar()
                 if not isinstance(release, dict):
-                    release = None
+                    raise ValueError('Missing release calendar')
             except Exception:
-                errors.append('EIA release calendar unavailable; using observation-age budget')
+                warnings.append('EIA release calendar unavailable; using observation-age budget')
+        if indicator.series_id == 'ISRATIO' and not live.empty:
+            try:
+                from release_timing import get_census_release_calendar
+                release = get_census_release_calendar()
+                if not isinstance(release, dict):
+                    raise ValueError('Missing release calendar')
+            except Exception:
+                warnings.append('Census release calendar unavailable; using observation-age budget')
+        if release is not None and not live.empty:
+            from release_timing import verified_release_context
+            if verified_release_context(indicator, live['date'].iloc[-1], release, current) is None:
+                warnings.append('Publisher release evidence invalid or mismatched; using observation-age budget')
         merged = clean_frame(pd.concat([archive, live], ignore_index=True), indicator.series_id)
         if not merged.empty:
             merged = merged[merged['date'] >= pd.Timestamp(start.date())].reset_index(drop=True)
@@ -188,7 +205,7 @@ class RiskDataService:
             provenance = 'S3 archive'
         if not live.empty:
             provenance = f'{indicator.source.upper()} API' + (' + S3 history' if not archive.empty else '')
-        return FetchResult(merged, provenance, current.isoformat(), '; '.join(errors), release, not live.empty)
+        return FetchResult(merged, provenance, current.isoformat(), '; '.join(errors), release, not live.empty, tuple(warnings))
 
 
 def assess_result(result, indicator, now=None):

@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-11-15T19:25:17.764281+00:00",
+  "status": "passed",
+  "checks": [
+    {
+      "check": "site_url",
+      "passed": true,
+      "status_code": 200
+    },
+    {
+      "check": "chart:Overview",
+      "passed": true
+    },
+    {
+      "check": "chart:Equity risk",
+      "passed": true
+    },
+    {
+      "check": "chart:Recession & growth risk",
+      "passed": true
+    },
+    {
+      "check": "chart:Inflation risk",
+      "passed": true
+    },
+    {
+      "check": "chart:Interest-rate risk",
+      "passed": true
+    },
+    {
+      "check": "chart:Credit stress",
+      "passed": true
+    },
+    {
+      "check": "chart:Housing conditions",
+      "passed": true
+    },
+    {
+      "check": "chart:CPI & components",
+      "passed": true
+    },
+    {
+      "check": "chart:GDP & components",
+      "passed": true
+    },
+    {
+      "check": "chart:Market history",
+      "passed": true
+    },
+    {
+      "check": "chart:Portfolio Stress Lab",
+      "passed": true
+    }
+  ]
+}

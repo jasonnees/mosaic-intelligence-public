@@ -52,12 +52,13 @@ def calendar_change(frame, periods=12):
 
 
 def fetch_cpi():
-    from data_fetcher import FREDClient
+    from data_fetcher import get_fred_client
     if not config.FRED_API_KEY:
         return MacroData(errors=['Add FRED_API_KEY to Streamlit secrets to load CPI components.'])
+    client = get_fred_client()
     def one(series):
         try:
-            raw = FREDClient().get_series(series, start_date='1913-01-01')
+            raw = client.get_series(series, start_date='1913-01-01')
             return series, clean_frame(raw, series).set_index('date')[series], None
         except Exception:
             return series, pd.Series(dtype=float), f'{series}: source unavailable; no substitute data.'
@@ -146,11 +147,12 @@ def fetch_gdp():
             errors.append('Direct BEA service unavailable; trying official BEA contributions delivered by FRED.')
     if not config.FRED_API_KEY:
         return MacroData(errors=errors+['Add FRED_API_KEY or BEA_API_KEY to Streamlit secrets to load official GDP contributions.'])
-    from data_fetcher import FREDClient
+    from data_fetcher import get_fred_client
+    client = get_fred_client()
     def one(item):
         line, series = item
         try:
-            raw = FREDClient().get_series(series,start_date='1947-01-01')
+            raw = client.get_series(series,start_date='1947-01-01')
             values = clean_frame(raw,series).set_index('date')[series]
             return line, values, None
         except Exception:

@@ -1,0 +1,60 @@
+name: Source monitoring
+on:
+  schedule:
+    # 11:23 CST / 12:23 CDT; GitHub may start later than the target time.
+    - cron: '23 17 * * 2-5'
+    # Monday includes the heavier metadata/frequency-contract checks.
+    - cron: '23 17 * * 1'
+  workflow_dispatch:
+    inputs:
+      include_metadata:
+        description: Include FRED metadata and frequency-contract checks
+        type: boolean
+        default: true
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: source-monitoring
+  cancel-in-progress: false
+jobs:
+  live-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Audit feeds and observation freshness
+        env:
+          DATA_SOURCE_MODE: api
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          INCLUDE_METADATA: ${{ github.event.schedule == '23 17 * * 1' || (github.event_name == 'workflow_dispatch' && inputs.include_metadata) || github.event_name == 'push' }}
+        run: |
+          args=()
+          if [ "$INCLUDE_METADATA" != "true" ]; then
+            args+=(--observations-only)
+          fi
+          python scripts/audit_live_sources.py --strict "${args[@]}" --output live-source-audit.json --summary source-summary.md
+      - name: Publish source summary
+        if: always()
+        run: |
+          if [ -f source-summary.md ]; then
+            cat source-summary.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Source audit did not produce a report; inspect the failed step.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-source-audit
+          path: |
+            live-source-audit.json
+            source-summary.md
+          if-no-files-found: error
+          retention-days: 30
