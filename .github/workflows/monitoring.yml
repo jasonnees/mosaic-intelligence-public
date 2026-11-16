@@ -60,7 +60,9 @@ jobs:
         if: always()
         with:
           name: deployment-report
-          path: deployment-report.json
+          path: |
+            deployment-report.json
+            deployment-failure.png
           if-no-files-found: error
           retention-days: 30
   frontend-assets:
