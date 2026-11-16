@@ -66,6 +66,30 @@ def _check_charts_once(target, timeout_ms):
         browser = playwright.chromium.launch()
         page = browser.new_page(viewport={'width': 1440, 'height': 1000})
         page.set_default_timeout(timeout_ms)
+        diagnostics = {'failed_requests': [], 'http_errors': [], 'page_error_types': [],
+                       'websockets': 0, 'websocket_errors': 0}
+        def safe_request(request):
+            path = urlsplit(request.url).path
+            return {'type': request.resource_type,
+                    'asset': path.rsplit('/', 1)[-1] if '/static/' in path else '(non-asset)'}
+        def failed(request):
+            if len(diagnostics['failed_requests']) < 30:
+                diagnostics['failed_requests'].append(safe_request(request))
+        def response_seen(response):
+            if response.status >= 400 and len(diagnostics['http_errors']) < 30:
+                diagnostics['http_errors'].append(safe_request(response.request) | {'status': response.status})
+        def socket_seen(socket):
+            diagnostics['websockets'] += 1
+            def socket_error(error):
+                diagnostics['websocket_errors'] += 1
+            socket.on('socketerror', socket_error)
+        def page_error(error):
+            name = error.name
+            diagnostics['page_error_types'].append(name if name in {'Error', 'TypeError', 'SyntaxError', 'ReferenceError'} else 'Other')
+        page.on('requestfailed', failed)
+        page.on('response', response_seen)
+        page.on('websocket', socket_seen)
+        page.on('pageerror', page_error)
         current_view = 'startup'
         stage = 'page_load'
         try:
@@ -88,6 +112,10 @@ def _check_charts_once(target, timeout_ms):
             app = (page.frame_locator('iframe[title="streamlitApp"]')
                    if page.locator('iframe[title="streamlitApp"]').count() else page)
             stage = 'app_title'
+            app.locator('h1, [data-testid="stException"]').first.wait_for()
+            if app.get_by_test_id('stException').count():
+                stage = 'application_exception'
+                raise RuntimeError('Application exception before title')
             app.get_by_role('heading', name='Boldin Market Risk Explorer', exact=True).wait_for()
             if target.get('expected_release'):
                 stage = 'release_version'
@@ -113,8 +141,23 @@ def _check_charts_once(target, timeout_ms):
                 checks.append({'check': f'chart:{view}', 'passed': True})
         except Exception:
             # Browser exceptions can contain URLs; keep diagnostics credential free.
+            try:
+                page.screenshot(path='deployment-failure.png', full_page=True, timeout=10000)
+                diagnostics['screenshot'] = 'deployment-failure.png'
+            except Exception:
+                diagnostics['screenshot'] = 'unavailable'
+            diagnostics['frames'] = []
+            for frame in page.frames:
+                try:
+                    diagnostics['frames'].append({
+                        'headings': frame.locator('h1').count(),
+                        'app_containers': frame.get_by_test_id('stApp').count(),
+                        'app_exceptions': frame.get_by_test_id('stException').count()})
+                except Exception:
+                    diagnostics['frames'].append({'inspection': 'unavailable'})
             checks.append({'check': 'browser', 'passed': False, 'view': current_view,
-                           'stage': stage, 'error': 'App title, navigation, completed run or populated chart check failed'})
+                           'stage': stage, 'error': 'App title, navigation, completed run or populated chart check failed',
+                           'diagnostics': diagnostics})
         finally:
             browser.close()
     return checks
