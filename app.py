@@ -12,6 +12,7 @@ from market_history_page import render_market_history
 from portfolio_page import render_portfolio
 from app_cache import service, fetch
 from history_window import HISTORY_OPTIONS, HISTORY_LABELS, clip_history
+from release_info import APP_RELEASE
 
 st.set_page_config(page_title='Boldin Market Risk Explorer', page_icon='◉', layout='wide')
 
@@ -151,6 +152,7 @@ def remember_history():
 def main():
     masthead()
     st.title('Boldin Market Risk Explorer')
+    st.caption(f'Build {APP_RELEASE}')
     st.markdown('<p class="mosaic-intro">The macro picture, one piece at a time. Explore market conditions, follow the direction of change, and see where the evidence needs attention.</p>', unsafe_allow_html=True)
     st.caption(f'{len(INDICATORS)} curated indicators · Free public feeds · Hourly session cache · Educational context')
     with st.sidebar:

@@ -25,7 +25,7 @@ def test_startup_retry_requires_successful_chart_verification():
 
 
 @pytest.mark.parametrize('stage', ['navigation', 'view_heading', 'completed_run',
-                                 'application_exception', 'populated_chart'])
+                                 'application_exception', 'populated_chart', 'release_version'])
 def test_retry_cannot_hide_broken_views(stage):
     failed = [{'check': 'browser', 'passed': False, 'view': 'Overview', 'stage': stage}]
     with patch('scripts.check_deployment._check_charts_once', return_value=failed) as attempt:

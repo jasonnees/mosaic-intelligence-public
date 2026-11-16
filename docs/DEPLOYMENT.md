@@ -35,6 +35,17 @@ In this repository, open **Settings → Secrets and variables → Actions → Ne
 
 Open **Actions → Source monitoring → Run workflow** for authenticated feed checks. Scheduled observation checks target weekdays at 17:23 UTC (11:23 CST / 12:23 CDT); Monday also checks FRED metadata and catalog frequency. Manual runs include metadata by default. **Deployment monitoring** independently checks the hosted app daily at 13:23 UTC. Both run on pushes to main. Scheduled Actions are best effort and can be delayed; these are periodic checks, not continuous uptime monitoring.
 
+Before merging, dispatch `monitoring.yml` on the candidate branch with
+`validate_candidate: true`. This runs the authenticated catalog audit and starts
+that checkout on loopback with a cold cache, then opens all configured views.
+Artifacts identify the candidate commit and explicitly distinguish this test
+from production. It uses the existing Actions source credentials.
+
+The dashboard shows the public build identifier from `release_info.py`.
+`monitoring.json` records the expected release, and production monitoring requires
+that exact marker before checking the views. Bump both values for each release.
+A healthy older deployment cannot pass the new release check.
+
 The two independent workflows check:
 
 - Every catalog entry using authenticated APIs and complete, unique catalog coverage. JSON and the job summary distinguish feed status, observation status, metadata status, known limitations and actionable reasons. Missing credentials, exhausted requests, malformed responses, unrelated missing comparisons and overdue observations fail. Documented October CPI comparison gaps retain warnings and unavailable values but do not fail the job. A triggered market watch rule is not an operational failure.

@@ -1,5 +1,6 @@
 {
   "deployment_status": "deployed",
+  "expected_release": "2026.11.16.1",
   "site_url": "https://mosaic-intelligence-public-fxeuzgnmvbhihv8cchxjaj.streamlit.app/",
   "chart_views": [
     "Overview",
