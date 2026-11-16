@@ -89,6 +89,9 @@ def _check_charts_once(target, timeout_ms):
                    if page.locator('iframe[title="streamlitApp"]').count() else page)
             stage = 'app_title'
             app.get_by_role('heading', name='Boldin Market Risk Explorer', exact=True).wait_for()
+            if target.get('expected_release'):
+                stage = 'release_version'
+                app.get_by_text(f'Build {target["expected_release"]}', exact=True).wait_for()
             for view in target['chart_views']:
                 current_view = view
                 stage = 'navigation'

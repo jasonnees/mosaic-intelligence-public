@@ -50,7 +50,7 @@ Seven explicit watch rules remain separate from direction and data-quality warni
 
 Each displayed observation includes date, age, frequency, freshness budget, source class, retrieval timestamp, actual transport provenance and transformation. The Data catalog links directly to source notes and can be downloaded without API access.
 
-Freshness means observation age is within an operational budget: daily 10 days, weekly 21, monthly 100 and quarterly 210. Budgets allow for weekends, reference-period dating and release lags; they do not implement official release calendars. They can miss a delayed monthly release within the budget. A fresh series can still be revised, and is not necessarily real-time. The source date is the observation period, not the publication date.
+Freshness uses operational age budgets (daily 10 days, weekly 21, monthly 100 and quarterly 210), with series-specific publication timing for selected indicators. Validated Census and EIA release evidence takes precedence for inventories and electricity; other publication budgets are documented below. Generic budgets can miss a delayed release within the cutoff. A fresh series can still be revised, and is not necessarily real-time. The source date is the observation period, not the publication date.
 
 FRED carries both official public-agency data and third-party series. Third-party market indexes, mortgage surveys and credit spreads are identified explicitly; free access does not imply unrestricted redistribution. Index histories may be shorter than the selected chart window; equity price growth excludes dividends. No synthetic history is inserted.
 
@@ -262,7 +262,7 @@ from a second attempt include `attempt: 2` and `first_attempt_failure_stage`,
 even when that attempt passes. Request URLs and exception text are omitted
 to avoid exposing credentials.
 
-For startup investigations, manually run Live monitoring with
+For startup investigations, manually run Deployment monitoring with
 `diagnostics_only: true`. This skips the feed/browser jobs and starts a local
 comparison server on the runner using the observed production versions
 (Python 3.14.10, Streamlit 1.66.1, PyArrow 24.0.0, pandas 3.1.0 and NumPy 2.5.4).
@@ -278,3 +278,42 @@ logs are saved in the `frontend-diagnostics` artifact.
 ### Quarterly freshness monitoring
 
 FRED labels quarters at their start. For productivity/unit costs, bank delinquencies, household debt service and FHFA quarterly house prices, freshness now uses the successor quarter’s end plus a publication budget (45, 65, 95 and 65 days respectively), then seven days of operational grace. These are explicit cadence assumptions, not official release dates. The audit records each deadline and source URL. Missing, invalid and overdue observations still fail; other series retain their existing rules.
+
+### Publisher timing and missing comparisons
+
+Residential electricity freshness uses the current [EIA Electric Power Monthly](https://www.eia.gov/electricity/monthly/)
+release header when its data month matches the API observation. The app shows the
+publication date and next scheduled release, with seven calendar days of operational
+grace. Missing, malformed, future-published or mismatched metadata cannot extend the
+existing 100-day fallback budget. This is a source-specific check, not a larger budget
+for all monthly feeds. The live audit uses the same assessment as the dashboard.
+
+For October 2026, CPI, core CPI and rent year-over-year values remain unavailable
+when their October 2025 comparison is missing. The warning links the
+[BLS notice](https://www.bls.gov/cpi/notices/2026/12m-changes-202610.htm);
+refreshing cannot reconstruct that source observation. No interpolation, alternate
+indicator or older growth reading is substituted. An optional archive can supplement
+history, but an unavailable live feed cannot establish current health or clear a watch
+condition, and an archive tail cannot supersede the API's latest observation.
+
+Source monitoring runs on weekdays at 17:23 UTC, with FRED metadata and catalog
+frequency checks on Mondays. Deployment monitoring has its own daily workflow,
+so a source failure no longer marks the deployment workflow red. Source reports
+separate feed health, observation availability, known limitations and actionable
+failure reasons. The documented October CPI gaps produce `passed_with_warnings`
+when all other checks pass; the missing values stay unavailable in the dashboard.
+Other history gaps, invalid observations, exhausted requests and overdue releases
+remain failures. Job summaries and JSON artifacts retain the evidence.
+
+ISRATIO also uses validated Census publication and successor-release dates, with
+seven calendar days of operational grace. Missing or mismatched evidence falls
+back to its existing 100-day cutoff. Catalog, CPI and GDP loading share one paced
+FRED client per credential per process, including concurrent cold starts. Separate
+processes using the same credential still depend on bounded HTTP 429 recovery.
+
+Overview and risk-domain pages show separate counts for fresh readings, market
+watch flags, actionable data issues and known comparison gaps. Feed availability
+is visible in the compact table; the Known gaps filter opens affected indicators
+without mixing them into the actionable list. Observation downloads include feed
+status, known limitations and the publication deadline. These counts describe the
+selected view, not the full catalog or a market-risk score.

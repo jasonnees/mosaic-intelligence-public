@@ -107,8 +107,8 @@ class Direction:
     explanation: str
 
 
-def direction(frame, indicator, now=None):
-    observation = assess(frame, indicator, now)
+def direction(frame, indicator, now=None, observation=None):
+    observation = observation if observation is not None else assess(frame, indicator, now)
     if observation.status != 'fresh':
         return Direction('Not evaluated', None, None, observation.observed_at,
                          f'{observation.status.capitalize()}: {observation.detail}. Direction is withheld.')
@@ -133,7 +133,9 @@ def direction(frame, indicator, now=None):
 
 def data_warning(observation, indicator):
     """An actionable data warning for every invalid state; no market inference."""
-    if observation.status == 'stale' and (indicator.series_id == 'CSUSHPINSA'
+    if observation.status == 'unverified':
+        return observation.detail + '. Refresh or inspect the live source; signals and direction are withheld.'
+    if observation.status == 'stale' and (indicator.series_id in {'CSUSHPINSA', 'ELEC.PRICE.US-RES.M'}
             or indicator.series_id in QUARTERLY_RELEASE_LAGS):
         return (f'Last observation {observation.observed_at}: {observation.age_days} days old. '
                 f'{observation.detail}. Refresh or inspect the source release; '
@@ -146,8 +148,12 @@ def data_warning(observation, indicator):
         return 'No usable observations. Check the API key, source availability and connection; no substitute signal is shown.'
     if observation.status == 'invalid':
         return 'The latest observation is future-dated. Check source dates; it cannot support a current signal.'
+    if observation.status == 'insufficient history' and 'BLS notice:' in observation.detail:
+        return (f'{observation.detail}. Refreshing or loading more history cannot reconstruct '
+                'that observation; no estimate or older growth reading is substituted.')
     if observation.status == 'insufficient history':
-        return 'The latest period has no usable prior-year comparison. Load more history or inspect the source; an older growth value is not substituted.'
+        return (f'{observation.detail}. Load more history or inspect the source; '
+                'an older growth value is not substituted.')
     return ''
 
 

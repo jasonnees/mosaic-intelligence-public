@@ -25,7 +25,7 @@ def test_startup_retry_requires_successful_chart_verification():
 
 
 @pytest.mark.parametrize('stage', ['navigation', 'view_heading', 'completed_run',
-                                 'application_exception', 'populated_chart'])
+                                 'application_exception', 'populated_chart', 'release_version'])
 def test_retry_cannot_hide_broken_views(stage):
     failed = [{'check': 'browser', 'passed': False, 'view': 'Overview', 'stage': stage}]
     with patch('scripts.check_deployment._check_charts_once', return_value=failed) as attempt:
@@ -85,7 +85,7 @@ def test_missing_credentials_fail_before_any_network_request(tmp_path, monkeypat
     monkeypatch.setattr('config.FRED_API_KEY', '')
     monkeypatch.setattr('config.EIA_API_KEY', '')
     monkeypatch.setattr('sys.argv', ['audit', '--strict', '--output', str(output)])
-    with patch('scripts.audit_live_sources.requests.get') as get:
+    with patch('data_fetcher.requests.get') as get:
         assert audit_main() == 1
         get.assert_not_called()
     assert json.loads(output.read_text())['status'] == 'failed'

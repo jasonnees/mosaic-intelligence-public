@@ -6,31 +6,40 @@ import config
 from risk_catalog import INDICATORS, BY_ID, DOMAINS, WATCH_RULES, RULE_SOURCES
 from indicator_guidance import GUIDES, direction, data_warning
 from brand import masthead, style_chart
-from risk_data import assess, transform_frame, freshness_context
+from risk_data import assess_result, transform_frame, result_freshness_context
 from macro_pages import render_cpi, render_gdp, refresh as refresh_macro
 from market_history_page import render_market_history
 from portfolio_page import render_portfolio
 from app_cache import service, fetch
 from history_window import HISTORY_OPTIONS, HISTORY_LABELS, clip_history
+from release_info import APP_RELEASE
 
 st.set_page_config(page_title='Boldin Market Risk Explorer', page_icon='◉', layout='wide')
 
 
 def table_row(indicator, result):
-    observation = assess(result.frame, indicator)
-    movement = direction(result.frame, indicator)
+    observation = assess_result(result, indicator)
+    feed_status = ('Unavailable' if result.error or result.live_ok is False else
+                   'Available' if result.live_ok is True else 'Unverified')
+    known_gap = bool(observation.known_limitation)
+    movement = direction(result.frame, indicator, observation=observation)
     warning = data_warning(observation, indicator) or (observation.detail if indicator.series_id in WATCH_RULES else GUIDES[indicator.series_id].caution)
     return {
         'Indicator': indicator.name, 'Value': observation.value, 'Units': indicator.unit,
         'Observation date': observation.observed_at, 'Age (days)': observation.age_days,
-        'Publication deadline': freshness_context(indicator, observation.observed_at).get('deadline', ''),
+        'Publication deadline': result_freshness_context(result, indicator, observation.observed_at).get('deadline', ''),
         'Data status': observation.status, 'Watch condition': observation.watch,
+        'Feed status': feed_status,
+        'Known limitation': 'October 2025 CPI comparison missing' if known_gap else '',
+        'Action needed': (feed_status == 'Unavailable' or
+                          (observation.status != 'fresh' and not known_gap)),
         'Direction': movement.label, 'Interpretation': movement.explanation, 'Warning': warning,
         'Comparison date': movement.prior_date, 'Change': movement.change,
         'Frequency': indicator.frequency, 'Fallback age budget (days)': indicator.max_age_days,
         'Source': result.provenance, 'Retrieved (UTC)': result.fetched_at,
         'Source class': indicator.reliability, 'Series': indicator.series_id,
-        'Source link': indicator.source_url, 'Notes': result.error or observation.detail,
+        'Source link': indicator.source_url,
+        'Notes': '; '.join(filter(None, [result.error, *result.warnings, observation.detail])),
     }
 
 
@@ -42,9 +51,9 @@ def render_indicator_table(rows, key):
     identity = '|'.join(rows['Series'].tolist())
     detailed = st.checkbox('Show interpretation, warnings & source columns', key=f'details:{key}')
     primary = (['Indicator', 'Domain', 'Frequency', 'Display unit', 'Watch condition'] if key == 'catalog'
-               else ['Indicator', 'Value', 'Units', 'Data status', 'Watch condition', 'Direction'])
+               else ['Indicator', 'Value', 'Units', 'Feed status', 'Data status', 'Watch condition', 'Direction'])
     status_colors = {'fresh': '#8ce5bd', 'Watch': '#ffbd69', 'stale': '#ff839b',
-                     'missing': '#ff839b', 'invalid': '#ff839b', 'insufficient history': '#ffbd69',
+                     'unverified': '#ff839b', 'missing': '#ff839b', 'invalid': '#ff839b', 'insufficient history': '#ffbd69',
                      'Unavailable': '#ff839b', 'Not evaluated': '#ff839b',
                      'Rising': '#78b7ff', 'Falling': '#a9a1ff'}
     status_columns = [column for column in ['Data status', 'Watch condition', 'Direction'] if column in rows]
@@ -63,13 +72,15 @@ def render_indicator_table(rows, key):
 
 def render_indicator_chart(indicator, result, days):
     st.subheader(indicator.name)
-    observation = assess(result.frame, indicator)
+    observation = assess_result(result, indicator)
     st.markdown(f'**{indicator.name}** · [{indicator.source.upper()} source notes]({indicator.source_url})')
     st.caption(f'{indicator.series_id} · {indicator.frequency} · {indicator.reliability} · {observation.status} · {result.provenance}')
     guide = GUIDES[indicator.series_id]
-    movement = direction(result.frame, indicator)
+    movement = direction(result.frame, indicator, observation=observation)
     warning = data_warning(observation, indicator)
-    if warning:
+    if warning and observation.known_limitation:
+        st.info('Known source limitation. ' + warning)
+    elif warning:
         st.warning(warning)
     elif observation.watch == 'Watch':
         st.warning(observation.detail)
@@ -86,13 +97,17 @@ def render_indicator_chart(indicator, result, days):
         change_unit = 'percentage points' if '%' in indicator.unit or indicator.unit == 'percentage points' else indicator.unit
         st.caption(f'Change: {movement.change:+.3g} {change_unit} · {movement.prior_date} → {movement.current_date}. Direction compares displayed values, including year-over-year growth where selected.')
     st.caption(f'Observation period: {observation.observed_at or "unavailable"} · Age: {observation.age_days if observation.age_days is not None else "unknown"} days · Fallback age budget: {indicator.max_age_days} days · Units: {indicator.unit}')
-    timing = freshness_context(indicator, observation.observed_at)
+    timing = result_freshness_context(result, indicator, observation.observed_at)
+    if timing.get('published_at'):
+        st.caption(f'Publisher release date: {timing["published_at"]} · Next scheduled release: {timing["next_update_expected"]}')
     if 'deadline' in timing:
         st.caption(f'Publication timing: next update budget ends {timing["next_update_expected"]}; {timing["grace_calendar_days"]} calendar days of operational grace, through {timing["deadline"]}. The publication deadline takes precedence over the fallback age budget; this is an operational assumption, not a guaranteed release date.')
         st.markdown(f'[Publisher release timing]({timing["source_url"]})')
     st.caption(f'Retrieved: {result.fetched_at} · Transformation: {indicator.transform}')
     if result.error:
         st.warning(result.error)
+    for warning in result.warnings:
+        st.warning(warning)
     if indicator.note:
         st.write(indicator.note)
     frame = transform_frame(result.frame, indicator)
@@ -137,6 +152,7 @@ def remember_history():
 def main():
     masthead()
     st.title('Boldin Market Risk Explorer')
+    st.caption(f'Build {APP_RELEASE}')
     st.markdown('<p class="mosaic-intro">The macro picture, one piece at a time. Explore market conditions, follow the direction of change, and see where the evidence needs attention.</p>', unsafe_allow_html=True)
     st.caption(f'{len(INDICATORS)} curated indicators · Free public feeds · Hourly session cache · Educational context')
     with st.sidebar:
@@ -213,20 +229,30 @@ def main():
     rows = pd.DataFrame([table_row(i, results[i.series_id]) for i in selected])
     fresh = int((rows['Data status'] == 'fresh').sum())
     watches = int((rows['Watch condition'] == 'Watch').sum())
-    left, middle, right = st.columns(3)
-    left.metric('Fresh data', f'{fresh}/{len(selected)}')
+    known_gaps = rows['Known limitation'].ne('')
+    issues = rows['Action needed']
+    left, middle, right, gaps = st.columns(4)
+    left.metric('Fresh readings', f'{fresh}/{len(selected)}')
     middle.metric('Watch flags', watches)
-    right.metric('Needs attention', len(selected) - fresh)
+    right.metric('Data issues', int(issues.sum()), help='Unavailable feeds, overdue observations and unexplained data gaps.')
+    gaps.metric('Known gaps', int(known_gaps.sum()), help='Documented missing comparisons. Values remain unavailable; refreshing cannot recreate them.')
     st.caption('Watch flags reflect explicit thresholds. Direction describes change. Data issues are separate. None of these is a calibrated risk score.')
-    if fresh < len(selected):
-        issues = rows.loc[rows['Data status'] != 'fresh', 'Data status'].value_counts()
-        st.warning('Data needs attention: ' + ' · '.join(f'{count} {state}' for state, count in issues.items()) + '. Signals are withheld for these observations; open a row for the reason and next step.')
-    status = st.radio('Filter observations', ['All', 'Fresh', 'Needs attention', 'Watch'], horizontal=True)
+    available = int(rows['Feed status'].eq('Available').sum())
+    st.caption(f'Feeds verified at retrieval: {available}/{len(selected)} in this view. A successful feed can still have an unavailable comparison or an overdue observation. Refresh data checks the sources again.')
+    if issues.any():
+        counts = rows.loc[issues, 'Data status'].value_counts()
+        st.warning('Data needs attention: ' + ' · '.join(f'{count} {state}' for state, count in counts.items()) + '. Open an affected row for the source status and publication deadline.')
+    if known_gaps.any():
+        st.info(f'{int(known_gaps.sum())} known comparison gap(s): BLS did not collect October 2025 CPI data. October 2026 year-over-year readings remain unavailable. '
+                '[Read the BLS explanation](https://www.bls.gov/cpi/notices/2026/12m-changes-202610.htm).')
+    status = st.radio('Filter observations', ['All', 'Fresh', 'Needs attention', 'Known gaps', 'Watch'], horizontal=True)
     filtered = rows
     if status == 'Fresh':
         filtered = rows[rows['Data status'] == 'fresh']
     elif status == 'Needs attention':
-        filtered = rows[rows['Data status'] != 'fresh']
+        filtered = rows[issues]
+    elif status == 'Known gaps':
+        filtered = rows[known_gaps]
     elif status == 'Watch':
         filtered = rows[rows['Watch condition'] == 'Watch']
     indicator = render_indicator_table(filtered, f'observations:{view}:{status}')
