@@ -112,6 +112,10 @@ def _check_charts_once(target, timeout_ms):
             app = (page.frame_locator('iframe[title="streamlitApp"]')
                    if page.locator('iframe[title="streamlitApp"]').count() else page)
             stage = 'app_title'
+            app.locator('h1, [data-testid="stException"]').first.wait_for()
+            if app.get_by_test_id('stException').count():
+                stage = 'application_exception'
+                raise RuntimeError('Application exception before title')
             app.get_by_role('heading', name='Boldin Market Risk Explorer', exact=True).wait_for()
             if target.get('expected_release'):
                 stage = 'release_version'

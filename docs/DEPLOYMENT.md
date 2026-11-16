@@ -46,6 +46,15 @@ The dashboard shows the public build identifier from `release_info.py`.
 that exact marker before checking the views. Bump both values for each release.
 A healthy older deployment cannot pass the new release check.
 
+Streamlit is pinned to 1.67.0, the version used by the successful authenticated
+candidate validation. Updating the dependency file prompts Community Cloud to
+resolve the environment again. This is also the supported deployment path for
+refreshing a running environment after imported module APIs change. See
+[Streamlit's upgrade instructions](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app/upgrade-streamlit).
+Production browser failures now retain a screenshot and bounded connection
+diagnostics without request URLs or exception text. An exception before the title
+fails immediately rather than being mistaken for a slow cold start.
+
 The two independent workflows check:
 
 - Every catalog entry using authenticated APIs and complete, unique catalog coverage. JSON and the job summary distinguish feed status, observation status, metadata status, known limitations and actionable reasons. Missing credentials, exhausted requests, malformed responses, unrelated missing comparisons and overdue observations fail. Documented October CPI comparison gaps retain warnings and unavailable values but do not fail the job. A triggered market watch rule is not an operational failure.

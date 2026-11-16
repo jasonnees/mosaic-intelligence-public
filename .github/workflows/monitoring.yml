@@ -74,8 +74,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14.10'
-      - name: Install observed production frontend versions
-        run: pip install -r requirements.txt streamlit==1.66.1 pyarrow==24.0.0 pandas==3.1.0 numpy==2.5.4
+      - name: Install deployment requirements
+        run: pip install -r requirements.txt
       - name: Start local comparison server
         run: |
           pip freeze > frontend-environment.txt
